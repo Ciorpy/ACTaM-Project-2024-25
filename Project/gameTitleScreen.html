@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ACTaM Project</title>
+    <meta author="marcoPorcella" />
+    <meta author="giacomoDeToni" />
+    <meta author="filippoLonghi" />
+    <meta author="andreaCrisafulli" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Audiowide&family=Rubik+Puddles&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Slackey&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <audio
+      id="mainMenuSoundtrack"
+      src="Sounds/Frere Jacques (Instrumental).wav"
+      loop
+      autoplay
+      vol
+    ></audio>
+    <div class="gameScreen">
+      <div class="mainMenu">
+        <div class="funnyMainMenuMSG" id="funnyMSG"></div>
+        <div class="title">Musicmind</div>
+        <div class="menu">
+          <div class="menuElement" id="SP_Key">SINGLEPLAYER</div>
+          <div class="menuElement" id="MP_Key">MULTIPLAYER</div>
+          <div class="menuElement" id="H2P_Key">TUTORIAL</div>
+          <div class="menuElement" id="S_Key">SETTINGS</div>
+          <div class="menuElement" id="C_Key">CREDITS</div>
+        </div>
+        <div class="footerCredits">
+          PoliMi - Music And Acoustic Engineering - ACTaM 2024/25
+        </div>
+      </div>
+    </div>
+
+    <script src="gameTitleScreen.js"></script>
+  </body>
+</html>

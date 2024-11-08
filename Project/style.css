@@ -1,0 +1,81 @@
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.gameScreen {
+  display: flex;
+  height: 100vh;
+  background-color: darkgrey;
+}
+
+.mainMenu {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  text-align: center;
+  position: relative;
+}
+
+.funnyMainMenuMSG {
+  position: absolute;
+  right: -90px;
+  rotate: 30deg;
+  font-size: 20px;
+  font-weight: 800;
+  animation: pulse 2s infinite;
+  font-family: "Audiowide", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+}
+
+.title {
+  font-family: "Slackey", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 150px;
+  padding-bottom: 10px;
+  color: darkgreen;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: auto;
+}
+
+.menuElement{
+  font-size: 30px;
+  border: 4px solid darkgreen;
+  height: 70px;
+  line-height: 70px;
+  width: 650px;
+  cursor: pointer;
+  font-family: "Audiowide", serif;
+  font-weight: 400;
+  font-style: normal;
+  color: darkgreen;
+}
+
+.menuElement:hover{
+  background-color: green;
+  border-color: darkgreen;
+}
+
+.footerCredits{
+  padding-top: 20px;
+  font-family: "Audiowide", serif;
+  font-weight: 400;
+  font-style: normal;
+}

@@ -25,18 +25,18 @@
   <body>
     <audio
       id="mainMenuSoundtrack"
-      src="Sounds/Frere Jacques (Instrumental).wav"
+      src="./Sounds/Frere Jacques (Instrumental).wav"
       loop
       autoplay
-      vol
     ></audio>
     <div class="gameScreen">
-      <div class="mainMenu">
+      <div class="menu" id="mainMenu">
         <div class="funnyMainMenuMSG" id="funnyMSG"></div>
         <div class="title">Musicmind</div>
-        <div class="menu">
+        <div class="menuButtonList">
           <div class="menuElement" id="SP_Key">SINGLEPLAYER</div>
           <div class="menuElement" id="MP_Key">MULTIPLAYER</div>
+          <div class="menuElement" id="SB_Key">SCOREBOARD</div>
           <div class="menuElement" id="H2P_Key">TUTORIAL</div>
           <div class="menuElement" id="S_Key">SETTINGS</div>
           <div class="menuElement" id="C_Key">CREDITS</div>
@@ -44,6 +44,35 @@
         <div class="footerCredits">
           PoliMi - Music And Acoustic Engineering - ACTaM 2024/25
         </div>
+      </div>
+      <div class="menu" id="settingsMenu" style="display: none">
+        <div class="title">Settings</div>
+        <div class="menu">
+          <div class="settingsItem">
+            <div class="settingsItemTitle">VOLUME</div>
+            <input type="range" id="volume">
+          </div>
+          <div class="settingsItem">
+            <div class="settingsItemTitle">LANGUAGE</div>
+            <form>
+              <label>
+                <input type="radio" name="lang" value="en" checked> English
+              </label><br>
+              <label>
+                <input type="radio" name="lang" value="it"> Italian
+              </label><br>
+              <label>
+                <input type="radio" name="lang" value="sp"> Spanish
+              </label><br>
+              <label>
+                <input type="radio" name="lang" value="fr"> French
+              </label><br>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="menu" id="tutorialMenu" style="display: none">
+        <div class="title">Tutorial</div>
       </div>
     </div>
 

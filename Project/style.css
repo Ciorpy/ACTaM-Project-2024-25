@@ -1,7 +1,15 @@
+*{
+  font-family: "Audiowide", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-family: "Audiowide", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
 }
 
 .gameScreen {
@@ -10,7 +18,7 @@ body {
   background-color: darkgrey;
 }
 
-.mainMenu {
+.menu {
   display: flex;
   flex-direction: column;
   margin: auto;
@@ -48,16 +56,17 @@ body {
   color: darkgreen;
 }
 
-.menu {
+.menuButtonList {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin: auto;
+  width: 650px;
 }
 
 .menuElement{
   font-size: 30px;
-  border: 4px solid darkgreen;
+  border: 4px solid green;
   height: 70px;
   line-height: 70px;
   width: 650px;
@@ -65,16 +74,35 @@ body {
   font-family: "Audiowide", serif;
   font-weight: 400;
   font-style: normal;
-  color: darkgreen;
+  color: green;
 }
 
 .menuElement:hover{
-  background-color: green;
+  color: darkgreen;
   border-color: darkgreen;
+  background-color: #A0A0A0
 }
 
 .footerCredits{
   padding-top: 20px;
+  font-family: "Audiowide", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.settingsMenu, .tutorialMenu {
+  border: 2px solid darkgreen;
+  padding: 30px;
+  border-radius: 20px;
+}
+
+.settingsItem{
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsItemTitle{
+  font-weight: 800;  
   font-family: "Audiowide", serif;
   font-weight: 400;
   font-style: normal;

@@ -1,4 +1,3 @@
-
 // Funny msg print handler
 funnyMSGS = [
   "Da Cremona tutto bene?",
@@ -25,14 +24,23 @@ tutorialMenu = document.getElementById("tutorialMenu");
 settingsKey = document.getElementById("S_Key");
 tutorialKey = document.getElementById("H2P_Key");
 
-settingsKey.addEventListener("click", () =>{
-  mainMenu.style.display = "none"
-  settingsMenu.style.display = "block"
-  tutorialMenu.style.display = "none"
+settingsKey.addEventListener("click", () => {
+  mainMenu.style.display = "none";
+  settingsMenu.style.display = "block";
+  tutorialMenu.style.display = "none";
 });
 
-tutorialKey.addEventListener("click", () =>{
-  mainMenu.style.display = "none"
-  settingsMenu.style.display = "none"
-  tutorialMenu.style.display = "block"
+tutorialKey.addEventListener("click", () => {
+  mainMenu.style.display = "none";
+  settingsMenu.style.display = "none";
+  tutorialMenu.style.display = "block";
+});
+
+// Settings Menu
+backButtonS = document.getElementById("backS");
+
+backButtonS.addEventListener("click", () => {
+  mainMenu.style.display = "block";
+  settingsMenu.style.display = "none";
+  tutorialMenu.style.display = "none";
 });

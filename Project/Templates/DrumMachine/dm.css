@@ -1,0 +1,67 @@
+*{
+    font-family: "Audiowide", serif;
+    font-weight: 400;
+    font-style: normal;
+    box-sizing: border-box;
+}
+
+.drumMachineInput {
+    background-color: grey;
+    margin: auto;
+}
+
+.drumMachineItem {
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    max-width: 75%;
+}
+
+.drumMachineItemTitle{
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+    padding: 10px 30px;
+    width: 140px;
+    text-align: center;
+}
+
+.semicroma {
+    height: 45px;
+    width: 45px;
+    border-radius: 5px;
+    border: 2px solid black;
+    cursor: pointer;
+    margin: auto;
+}
+
+.semicroma:hover {
+    border: 5px solid darkgreen;
+}
+
+.newQuarto {
+    margin-left: 25px;
+}
+
+#BD .active { background-color: #FF0000; }
+#SN .active { background-color: #FF8700; }
+#T1 .active { background-color: #FFD300; }
+#T2 .active { background-color: #DEFF0A; }
+#FT .active { background-color: #A1FF0A; }
+#HH .active { background-color: #0AFF99; }
+#HO .active { background-color: #0AEFFF; }
+#RD .active { background-color: #147DF5; }
+#BR .active { background-color: #580AFF; }
+#CR .active { background-color: #BE0AFF; }
+
+.highlighted {
+    border: 5px solid white;
+}
+
+#startStopButton, #resetButton{
+    padding: 30px;
+    border: 2px solid red;
+    width: 300px;
+    text-align: center;
+    cursor: pointer;
+}

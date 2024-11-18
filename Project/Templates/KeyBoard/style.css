@@ -1,0 +1,33 @@
+.piano {
+    display: flex;
+    position: relative;
+    height: 200px;
+    user-select: none;
+}
+.key {
+    width: 40px;
+    height: 100%;
+    border: 1px solid black;
+    box-sizing: border-box;
+    background: white;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    font-size: 10px;
+}
+.key.black {
+    width: 30px;
+    height: 60%;
+    background: black;
+    position: absolute;
+    margin-left: -15px;
+    z-index: 2;
+    color: white;
+}
+.key:active {
+    background: lightgrey;
+}
+.key.black:active {
+    background: grey;
+}

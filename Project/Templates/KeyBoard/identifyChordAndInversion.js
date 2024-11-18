@@ -6,39 +6,39 @@ const chordDatabase = {
     "D_major": [2, 6, 9],
     "D#_major": [3, 7, 10],
     "E_major": [4, 8, 11],
-    "F_major": [5, 9, 0],
-    "F#_major": [6, 10, 1],
-    "G_major": [7, 11, 2],
-    "G#_major": [8, 0, 3],
-    "A_major": [9, 1, 4],
-    "A#_major": [10, 2, 5],
-    "B_major": [11, 3, 6],
+    "F_major": [0, 5, 9],
+    "F#_major": [1, 6, 10],
+    "G_major": [2, 7, 11],
+    "G#_major": [0, 3, 8],
+    "A_major": [1, 4, 9],
+    "A#_major": [2, 5, 10],
+    "B_major": [3, 6, 11],
     // Triadi Minori
     "C_minor": [0, 3, 7],
     "C#_minor": [1, 4, 8],
     "D_minor": [2, 5, 9],
     "D#_minor": [3, 6, 10],
     "E_minor": [4, 7, 11],
-    "F_minor": [5, 8, 0],
-    "F#_minor": [6, 9, 1],
-    "G_minor": [7, 10, 2],
-    "G#_minor": [8, 11, 3],
-    "A_minor": [9, 0, 4],
-    "A#_minor": [10, 1, 5],
-    "B_minor": [11, 2, 6],
+    "F_minor": [0, 5, 8],
+    "F#_minor": [1, 6, 9],
+    "G_minor": [2, 7, 10],
+    "G#_minor": [3, 8, 11],
+    "A_minor": [0, 4, 9],
+    "A#_minor": [1, 5, 10],
+    "B_minor": [2, 6, 11],
     // Triadi Aumentate
     "C_augmented": [0, 4, 8],
     "C#_augmented": [1, 5, 9],
     "D_augmented": [2, 6, 10],
     "D#_augmented": [3, 7, 11],
-    "E_augmented": [4, 8, 0],
-    "F_augmented": [5, 9, 1],
-    "F#_augmented": [6, 10, 2],
-    "G_augmented": [7, 11, 3],
-    "G#_augmented": [8, 0, 4],
-    "A_augmented": [9, 1, 5],
-    "A#_augmented": [10, 2, 6],
-    "B_augmented": [11, 3, 7],
+    "E_augmented": [0, 4, 8],
+    "F_augmented": [1, 5, 9],
+    "F#_augmented": [2, 6, 10],
+    "G_augmented": [3, 7, 11],
+    "G#_augmented": [0, 4, 8],
+    "A_augmented": [1, 5, 9],
+    "A#_augmented": [2, 6, 10],
+    "B_augmented": [3, 7, 11],
     // Triadi Diminuite
     "C_diminished": [0, 3, 6],
     "C#_diminished": [1, 4, 7],
@@ -46,12 +46,12 @@ const chordDatabase = {
     "D#_diminished": [3, 6, 9],
     "E_diminished": [4, 7, 10],
     "F_diminished": [5, 8, 11],
-    "F#_diminished": [6, 9, 0],
-    "G_diminished": [7, 10, 1],
-    "G#_diminished": [8, 11, 2],
-    "A_diminished": [9, 0, 3],
-    "A#_diminished": [10, 1, 4],
-    "B_diminished": [11, 2, 5]
+    "F#_diminished": [0, 6, 9],
+    "G_diminished": [1, 7, 10],
+    "G#_diminished": [2, 8, 11],
+    "A_diminished": [0, 3, 9],
+    "A#_diminished": [1, 4, 10],
+    "B_diminished": [2, 5, 11]
 };
 
 // Database degli intervalli per ogni tipo di accordo e rivolto
@@ -90,7 +90,7 @@ function identifyChordAndInversion(midiNotes) {
         if (JSON.stringify(normalizedInput) === JSON.stringify(chordNotes)) {
             // Identifica il tipo di accordo
             const chordType = chordName.split("_")[1];  // E.g., "major", "minor"
-            const intervals = calculateIntervalPattern(normalizedInput);
+            const intervals = calculateIntervalPattern(midiNotes.map(normalizeNote));
 
             // Confronta il pattern di intervalli per trovare il rivolto
             for (const [inversionName, expectedIntervals] of Object.entries(chordIntervals[chordType])) {
@@ -105,6 +105,6 @@ function identifyChordAndInversion(midiNotes) {
 }
 
 // Esempio di utilizzo:
-const userNotes = [11, 6, 26];  // Note MIDI per un C maggiore
+const userNotes = [0, 4, 8];  // Note MIDI per un B maggiore
 const chordInfo = identifyChordAndInversion(userNotes);
-print(chordInfo);  // Output: { chordName: "C_major", inversion: "root" }
+console.log(chordInfo);  // Output: { chordName: "B_major", inversion: "root" }

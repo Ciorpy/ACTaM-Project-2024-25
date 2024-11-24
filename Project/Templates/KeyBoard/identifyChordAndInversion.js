@@ -1,11 +1,12 @@
-// Dizionario per mappare le note ai loro indici MIDI
+// Dizionario per mappare le note ai loro indici MIDI (solo naturali e diesis)
 const noteToIndex = {
-    "C": 0, "C#": 1,
-    "D": 2, "D#": 3,
-    "E": 4, "F": 5,
-    "F#": 6, "G": 7,
-    "G#": 8, "A": 9,
-    "A#": 10, "B": 11
+    "Cb": 11, "C": 0, "C#": 1,
+    "Db": 1, "D": 2, "D#": 3,
+    "Eb": 3, "E": 4, "E#": 5,
+    "Fb": 4, "F": 5, "F#": 6,
+    "Gb": 6, "G": 7, "G#": 8,
+    "Ab": 8, "A": 9, "A#": 10, 
+    "Bb": 10, "B": 11, "B#": 0,
 };
 
 // Dizionario inverso per convertire indici in note
@@ -17,60 +18,96 @@ const indexToNote = Object.entries(noteToIndex).reduce((acc, [note, index]) => {
 // Database degli accordi con i nomi delle note
 const chordDatabase = {
     // Triadi Maggiori
-    "C_major": [["C", "E", "G"], ["C"]],
-    "C#_major": [["C#", "F", "G#"], ["C#"]],
-    "D_major": [["D", "F#", "A"], ["D"]],
-    "D#_major": [["D#", "G", "A#"], ["D#"]],
-    "E_major": [["E", "G#", "B"], ["E"]],
-    "F_major": [["F", "A", "C"], ["F"]],
-    "F#_major": [["F#", "A#", "C#"], ["F#"]],
-    "G_major": [["G", "B", "D"], ["G"]],
-    "G#_major": [["G#", "C", "D#"], ["G#"]],
-    "A_major": [["A", "C#", "E"], ["A"]],
-    "A#_major": [["A#", "D", "F"], ["A#"]],
-    "B_major": [["B", "D#", "F#"], ["B"]],
+    "Cb_major": ["Cb", "Eb", "Gb"],
+    "C_major": ["C", "E", "G"],
+    "C#_major": ["C#", "F", "G#"],
+    "Db_major": ["Db", "F", "Ab"],
+    "D_major": ["D", "F#", "A"],
+    "D#_major": ["D#", "G", "A#"],
+    "Eb_major": ["Eb", "G", "Bb"],
+    "E_major": ["E", "G#", "B"],
+    "E#_major": ["E#", "A", "B#"],
+    "Fb_major": ["Fb", "Ab", "Cb"],
+    "F_major": ["F", "A", "C"],
+    "F#_major": ["F#", "A#", "C#"],
+    "Gb_major": ["Gb", "Bb", "Db"],
+    "G_major": ["G", "B", "D"],
+    "G#_major": ["G#", "C", "D#"],
+    "Ab_major": ["Ab", "C", "Eb"],
+    "A_major": ["A", "C#", "E"],
+    "A#_major": ["A#", "D", "E#"],
+    "Bb_major": ["Bb", "D", "F"],
+    "B_major": ["B", "D#", "F#"],
+    "B#_major": ["B#", "E", "G"],
 
     // Triadi Minori
-    "C_minor": [["C", "D#", "G"], ["C"]],
-    "C#_minor": [["C#", "E", "G#"], ["C#"]],
-    "D_minor": [["D", "F", "A"], ["D"]],
-    "D#_minor": [["D#", "F#", "A#"], ["D#"]],
-    "E_minor": [["E", "G", "B"], ["E"]],
-    "F_minor": [["F", "G#", "C"], ["F"]],
-    "F#_minor": [["F#", "A", "C#"], ["F#"]],
-    "G_minor": [["G", "A#", "D"], ["G"]],
-    "G#_minor": [["G#", "B", "D#"], ["G#"]],
-    "A_minor": [["A", "C", "E"], ["A"]],
-    "A#_minor": [["A#", "C#", "F"], ["A#"]],
-    "B_minor": [["B", "D", "F#"], ["B"]],
+    "Cb_minor": ["Cb", "D", "Gb"],
+    "C_minor": ["C", "Eb", "G"],
+    "C#_minor": ["C#", "E", "G#"],
+    "Db_minor": ["Db", "Fb", "Ab"],
+    "D_minor": ["D", "F", "A"],
+    "D#_minor": ["D#", "F#", "A#"],
+    "Eb_minor": ["Eb", "Gb", "Bb"],
+    "E_minor": ["E", "G", "B"],
+    "E#_minor": ["E#", "G#", "B#"],
+    "Fb_minor": ["Fb", "G", "Cb"],
+    "F_minor": ["F", "Ab", "C"],
+    "F#_minor": ["F#", "A", "C#"],
+    "Gb_minor": ["Gb", "A", "Db"],
+    "G_minor": ["G", "Bb", "D"],
+    "G#_minor": ["G#", "B", "D#"],
+    "Ab_minor": ["Ab", "Cb", "Eb"],
+    "A_minor": ["A", "C", "E"],
+    "A#_minor": ["A#", "C#", "E#"],
+    "Bb_minor": ["Bb", "Db", "F"],
+    "B_minor": ["B", "D", "F#"],
+    "B#_minor": ["B#", "D#", "G"],
 
     // Triadi Aumentate
-    "C_augmented": [["C", "E", "G#"], ["C"]],
-    "C#_augmented": [["C#", "F", "A"], ["C#"]],
-    "D_augmented": [["D", "F#", "A#"], ["D"]],
-    "D#_augmented": [["D#", "G", "B"], ["D#"]],
-    "E_augmented": [["E", "G#", "C"], ["E"]],
-    "F_augmented": [["F", "A", "C#"], ["F"]],
-    "F#_augmented": [["F#", "A#", "D"], ["F#"]],
-    "G_augmented": [["G", "B", "D#"], ["G"]],
-    "G#_augmented": [["G#", "C", "E"], ["G#"]],
-    "A_augmented": [["A", "C#", "F"], ["A"]],
-    "A#_augmented": [["A#", "D", "F#"], ["A#"]],
-    "B_augmented": [["B", "D#", "G"], ["B"]],
+    "Cb_augmented": ["Cb", "Eb", "G"],
+    "C_augmented": ["C", "E", "G#"],
+    "C#_augmented": ["C#", "F", "A"],
+    "Db_augmented": ["Db", "F", "A"],
+    "D_augmented": ["D", "F#", "A#"],
+    "D#_augmented": ["D#", "G", "B"],
+    "Eb_augmented": ["Eb", "G", "B"],
+    "E_augmented": ["E", "G#", "B#"],
+    "E#_augmented": ["E#", "A", "C"],
+    "Fb_augmented": ["Fb", "Ab", "C"],
+    "F_augmented": ["F", "A", "C#"],
+    "F#_augmented": ["F#", "A#", "D"],
+    "Gb_augmented": ["Gb", "Bb", "D"],
+    "G_augmented": ["G", "B", "D#"],
+    "G#_augmented": ["G#", "C", "E"],
+    "Ab_augmented": ["Ab", "C", "E"],
+    "A_augmented": ["A", "C#", "E#"],
+    "A#_augmented": ["A#", "D", "F"],
+    "Bb_augmented": ["Bb", "D", "F#"],
+    "B_augmented": ["B", "D#", "G"],
+    "B#_augmented": ["B#", "E", "G#"],
 
     // Triadi Diminuite
-    "C_diminished": [["C", "D#", "F#"], ["C"]],
-    "C#_diminished": [["C#", "E", "G"], ["C#"]],
-    "D_diminished": [["D", "F", "G#"], ["D"]],
-    "D#_diminished": [["D#", "F#", "A"], ["D#"]],
-    "E_diminished": [["E", "G", "A#"], ["E"]],
-    "F_diminished": [["F", "G#", "B"], ["F"]],
-    "F#_diminished": [["F#", "A", "C"], ["F#"]],
-    "G_diminished": [["G", "A#", "C#"], ["G"]],
-    "G#_diminished": [["G#", "B", "D"], ["G#"]],
-    "A_diminished": [["A", "C", "D#"], ["A"]],
-    "A#_diminished": [["A#", "C#", "E"], ["A#"]],
-    "B_diminished": [["B", "D", "F"], ["B"]]
+    "Cb_diminished": ["Cb", "D", "A"],
+    "C_diminished": ["C", "Eb", "Gb"],
+    "C#_diminished": ["C#", "E", "G"],
+    "Db_diminished": ["Db", "Fb", "G"],
+    "D_diminished": ["D", "F", "Ab"],
+    "D#_diminished": ["D#", "F#", "A"],
+    "Eb_diminished": ["Eb", "Gb", "A"],
+    "E_diminished": ["E", "G", "Bb"],
+    "E#_diminished": ["E#", "G#", "B"],
+    "Fb_diminished": ["Fb", "G", "B"],
+    "F_diminished": ["F", "Ab", "Cb"],
+    "F#_diminished": ["F#", "A", "C"],
+    "Gb_diminished": ["Gb", "A", "C"],
+    "G_diminished": ["G", "Bb", "Db"],
+    "G#_diminished": ["G#", "B", "D"],
+    "Ab_diminished": ["Ab", "Cb", "D"],
+    "A_diminished": ["A", "C", "Eb"],
+    "A#_diminished": ["A#", "C#", "E"],
+    "Bb_diminished": ["Bb", "Db", "Fb"],
+    "B_diminished": ["B", "D", "F"],
+    "B#_diminished": ["B#", "D#", "F#"],
 };
 
 // Funzione per verificare se l'input è numerico o testuale
@@ -89,8 +126,8 @@ function normalizeChord(noteNames) {
     return indices.sort((a, b) => a - b).map(index => indexToNote[index]);
 }
 
-// Funzione per identificare un accordo
-function identifyChord(input) {
+// Funzione per identificare tutti gli accordi corrispondenti
+function identifyAllChords(input) {
     let noteNames = input;
 
     // Se l'input è numerico, converti in nomi di note
@@ -99,50 +136,36 @@ function identifyChord(input) {
     }
 
     const normalizedInput = normalizeChord(noteNames);
+    const matchingChords = [];
+
     for (const [chordName, chordData] of Object.entries(chordDatabase)) {
-        const chordNotes = chordData[0];
+        const chordNotes = chordData;
         if (JSON.stringify(normalizedInput) === JSON.stringify(normalizeChord(chordNotes))) {
-            return chordName;
+            matchingChords.push(chordName);
         }
     }
-    return null; // Accordo non riconosciuto
+
+    return matchingChords.length > 0 ? matchingChords : null;
 }
 
-// Funzione per determinare il rivolto
-function determineInversion(input, chordName) {
-    if (!chordName) return "Accordo non riconosciuto";
-
-    let noteNames = input;
-    if (isNumericInput(input)) {
-        noteNames = indicesToNoteNames(input);
-    }
-
-    const chordKey = chordDatabase[chordName][1][0]; // Nota chiave
-    const keyPosition = noteNames.indexOf(chordKey);
-
-    switch (keyPosition) {
-        case 0:
-            return "Posizione fondamentale";
-        case 1:
-            return "Secondo rivolto";
-        case 2:
-            return "Primo rivolto";
-        default:
-            return "Rivolto non determinato";
-    }
+// Funzione principale aggiornata: identifica solo gli accordi
+function identifyChords(input) {
+    const matchingChords = identifyAllChords(input);
+    return matchingChords ? { chords: matchingChords } : { chords: null };
 }
 
-// Funzione principale: identifica l'accordo e il rivolto
-function identifyChordAndInversion(input) {
-    const chordName = identifyChord(input);
-    const inversion = determineInversion(input, chordName);
-    return { chordName, inversion };
-}
+
 
 // Esempio di utilizzo con indici MIDI
 const midiNotes = [48, 64, 55]; // C (Do), E (Mi), G (Sol)
-console.log(identifyChordAndInversion(midiNotes)); // { chordName: "C_major", inversion: "Posizione fondamentale" }
+const result = identifyChords(midiNotes); // { chordName: "C_major", inversion: "Posizione fondamentale" }
 
 // Esempio di utilizzo con note
-//const noteNames = ["E", "G#", "C"];
-//console.log(identifyChordAndInversion(noteNames)); // { chordName: "C_major", inversion: "Posizione fondamentale" }
+//const noteNames = ["C", "E", "G"];
+//const result = identifyChords(noteNames);
+
+if (result.chords) {
+    console.log("Accordi riconosciuti:", result.chords.join(", "));
+} else {
+    console.log("Nessun accordo trovato");
+}

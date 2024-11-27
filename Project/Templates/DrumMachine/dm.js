@@ -37,17 +37,45 @@ playSound = function (sampleID) {
     let sound;
     switch (sampleID) {
         case 0:
+            sound = new Audio(
+                '../../Sounds/Drum Samples/BD.wav');
+                break;    
         case 1:
+            sound = new Audio(
+                '../../Sounds/Drum Samples/SN.wav');
+                break;    
         case 2:
+            sound = new Audio(
+                '../../Sounds/Drum Samples/T1.wav');
+                break;    
         case 3:
+            sound = new Audio(
+                '../../Sounds/Drum Samples/T2.wav');
+                break;    
         case 4:
+            sound = new Audio(
+                '../../Sounds/Drum Samples/T3.wav');
+                break;    
         case 5:
+            sound = new Audio(
+                '../../Sounds/Drum Samples/CHH.wav');
+                break;    
         case 6:
+            sound = new Audio(
+                '../../Sounds/Drum Samples/OHH.wav');
+                break;    
         case 7:
+            sound = new Audio(
+                '../../Sounds/Drum Samples/RD.wav');
+                break;    
         case 8:
+            sound = new Audio(
+                '../../Sounds/Drum Samples/RB.wav');
+                break;    
         case 9:
             sound = new Audio(
-                'https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3');    
+                '../../Sounds/Drum Samples/CR.wav');
+                break;    
     }
     
     sound.play();
@@ -64,13 +92,12 @@ playBeat = function () {
         item.getElementsByClassName("semicroma")[i].classList.toggle("highlighted", true)
     })
 
-    //drumMachineController.map(row => row[i]).forEach((item, sampleID) => {
-    //    if (item) {
-    //        playSound(sampleID)
-    //    }
-    //})
+    drumMachineController.map(row => row[i]).forEach((item, sampleID) => {
+        if (item) {
+            playSound(sampleID)
+        }
+    })
 
-    console.log("palle")
     i = (i + 1) % semicrome
 }
 

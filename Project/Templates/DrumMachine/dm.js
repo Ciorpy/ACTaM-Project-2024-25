@@ -7,6 +7,10 @@ console.log(drumMachineController);
 
 drumMachineItems = document.getElementsByClassName("drumMachineItem");
 
+solution = Array.from({ length: drumSamples }, () => Array(semicrome).fill(false));
+
+console.log(solution)
+
 console.log(drumMachineItems);
 
 Array.from(drumMachineItems).forEach((item, index) => {
@@ -30,7 +34,9 @@ Array.from(drumMachineItems).forEach((item, index) => {
 });
 
 let isPlaying = false;
+let isSolutionPlaying = false;
 let i = 0;
+let j = 0;
 let metronomeInterval;
 
 playSound = function (sampleID) {
@@ -90,6 +96,15 @@ playBeat = function () {
     i = (i + 1) % semicrome;
 };
 
+playSolution = function () {
+    solution.map(row => row[j]).forEach((item, sampleID) => {
+        if (item) {
+            playSound(sampleID);
+        }
+    });
+    j = (j + 1) % semicrome;
+}
+
 function setBpm(n) {
     let minute = 1000 * 60;
     return (minute / n) / 4;
@@ -145,12 +160,115 @@ bpmSlider = document.getElementById("bpmSlider");
 bpmDisplay = document.getElementById("bpmDisplay")
 bpmSlider.addEventListener("input", () => {
     let newBpm = bpmSlider.value;
-    bpmDisplay.innerHTML = bpmSlider.value
+    bpmDisplay.innerHTML = bpmSlider.value;
     if (newBpm !== bpm) {  // Only adjust if BPM is changed
         bpm = newBpm;
+
+        // Clear and reset the metronome interval
         if (isPlaying) {
-            clearInterval(metronomeInterval);  // Clear the current interval
-            metronomeInterval = setInterval(playBeat, setBpm(bpm));  // Start a new interval with the updated BPM
+            clearInterval(metronomeInterval);  // Clear the current metronome interval
+            metronomeInterval = setInterval(playBeat, setBpm(bpm));  // Start a new metronome interval with updated BPM
+        }
+
+        // Clear and reset the solution interval
+        if (isSolutionPlaying) {
+            clearInterval(solutionInterval);  // Clear the current solution interval
+            solutionInterval = setInterval(playSolution, setBpm(bpm));  // Start a new solution interval with updated BPM
         }
     }
 });
+
+easyGroovesPanel = document.getElementById("presetsEasy")
+mediumGroovesPanel = document.getElementById("presetsMedium")
+hardGroovesPanel = document.getElementById("presetsHard")
+
+
+easyGrooves.forEach((item, index) => {
+    let newGroove = document.createElement("div")
+    newGroove.classList.add("groove")
+    newGroove.innerHTML = "Easy preset N°" + (index + 1)
+
+    newGroove.addEventListener("click", () => {
+        solution = item
+    })
+
+    easyGroovesPanel.appendChild(newGroove)
+})
+
+mediumGrooves.forEach((item, index) => {
+    let newGroove = document.createElement("div")
+    newGroove.classList.add("groove")
+    newGroove.innerHTML = "Medium preset N°" + (index + 1)
+
+    newGroove.addEventListener("click", () => {
+        solution = item
+    })
+
+    mediumGroovesPanel.appendChild(newGroove)
+})
+
+hardGrooves.forEach((item, index) => {
+    let newGroove = document.createElement("div")
+    newGroove.classList.add("groove")
+    newGroove.innerHTML = "Hard preset N°" + (index + 1)
+
+    newGroove.addEventListener("click", () => {
+        solution = item
+    })
+
+    hardGroovesPanel.appendChild(newGroove)
+})
+
+
+function checkSolution(guess, correctAnswer) {
+    // First, check if the matrices have the same number of rows
+    if (guess.length !== correctAnswer.length) {
+      return false; // Different number of rows
+    }
+  
+    // Then, check if each row has the same number of columns
+    for (let i = 0; i < guess.length; i++) {
+      if (guess[i].length !== correctAnswer[i].length) {
+        return false; // Row lengths are different
+      }
+  
+      // Compare each element in the row
+      for (let j = 0; j < guess[i].length; j++) {
+        if (guess[i][j] !== correctAnswer[i][j]) {
+          return false; // Element mismatch
+        }
+      }
+    }
+  
+    // If no differences were found, the matrices are identical
+    return true;
+  }
+
+checkInputButton = document.getElementById("checkInputButton")
+
+checkInputButton.addEventListener("click", () => {
+
+    console.log(solution)
+    console.log(drumMachineController)
+    if (checkSolution(solution, drumMachineController))
+        console.log("DAJE ROMA")
+    else
+        console.log("ER SAMBUCONE YAYAYYAHOOOOOOOOOOOO")
+})
+
+playSolutionButton = document.getElementById("playSolutionButton")
+
+let solutionInterval = null;
+
+playSolutionButton.addEventListener("click", () =>{
+    if(solutionInterval != null){
+        clearInterval(solutionInterval)
+        solutionInterval = null;
+        playSolutionButton.innerHTML = "PLAY SOLUTION"
+        isSolutionPlaying = false;
+    } else {
+        solutionInterval = setInterval(playSolution, setBpm(bpm));
+        playSolutionButton.innerHTML = "STOP SOLUTION"
+        isSolutionPlaying = true;
+    }
+})

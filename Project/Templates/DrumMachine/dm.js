@@ -97,6 +97,15 @@ playBeat = function () {
 };
 
 playSolution = function () {
+    let toTurnOff = j == 0 ? 15 : j - 1;
+
+    Array.from(drumMachineItems).forEach((item) => {
+        item.getElementsByClassName("semicroma")[toTurnOff].classList.toggle("highlightedSolution", false);
+    });
+    Array.from(drumMachineItems).forEach((item) => {
+        item.getElementsByClassName("semicroma")[j].classList.toggle("highlightedSolution", true);
+    });
+
     solution.map(row => row[j]).forEach((item, sampleID) => {
         if (item) {
             playSound(sampleID);
@@ -110,9 +119,17 @@ function setBpm(n) {
     return (minute / n) / 4;
 }
 
+
+
+
+// Start/Stop button event listener
+startStopButton = document.getElementById("startStopButton");
+
 function startMetronome() {
     console.log("start");
     metronomeInterval = setInterval(playBeat, setBpm(bpm));  // Start the interval with the current BPM
+    startStopButton.innerHTML = "STOP";
+    isPlaying = true;
 }
 
 function stopMetronome() {
@@ -123,6 +140,8 @@ function stopMetronome() {
         for (let i = 0; i < semicrome; i++)
             item.getElementsByClassName("semicroma")[i].classList.toggle("highlighted", false);
     });
+    startStopButton.innerHTML = "START";
+    isPlaying = false;
 }
 
 function resetDrumMachine() {
@@ -133,20 +152,16 @@ function resetDrumMachine() {
 
     drumMachineController = Array.from({ length: drumSamples }, () => Array(semicrome).fill(false));
 }
-
-// Start/Stop button event listener
-startStopButton = document.getElementById("startStopButton");
 startStopButton.addEventListener("click", () => {
     i = 0;
     if (isPlaying) {
         stopMetronome();
-        startStopButton.innerHTML = "START";
     } else {
+        if(isSolutionPlaying){
+            stopSolution();
+        }
         startMetronome();
-        startStopButton.innerHTML = "STOP";
     }
-
-    isPlaying = !isPlaying;
 });
 
 // Reset button event listener
@@ -260,15 +275,33 @@ playSolutionButton = document.getElementById("playSolutionButton")
 
 let solutionInterval = null;
 
+function startSolution()  {
+    if(isPlaying) {
+        stopMetronome()
+    }
+    solutionInterval = setInterval(playSolution, setBpm(bpm));
+    playSolutionButton.innerHTML = "STOP SOLUTION"
+    isSolutionPlaying = true;
+}
+
+function stopSolution() {
+    clearInterval(solutionInterval)
+    solutionInterval = null;
+    playSolutionButton.innerHTML = "PLAY SOLUTION"
+    isSolutionPlaying = false;
+
+    Array.from(drumMachineItems).forEach((item) => {
+        for (let i = 0; i < semicrome; i++)
+            item.getElementsByClassName("semicroma")[i].classList.toggle("highlightedSolution", false);
+    });
+
+    j = 0
+}
+
 playSolutionButton.addEventListener("click", () =>{
     if(solutionInterval != null){
-        clearInterval(solutionInterval)
-        solutionInterval = null;
-        playSolutionButton.innerHTML = "PLAY SOLUTION"
-        isSolutionPlaying = false;
+        stopSolution()
     } else {
-        solutionInterval = setInterval(playSolution, setBpm(bpm));
-        playSolutionButton.innerHTML = "STOP SOLUTION"
-        isSolutionPlaying = true;
+        startSolution()
     }
 })

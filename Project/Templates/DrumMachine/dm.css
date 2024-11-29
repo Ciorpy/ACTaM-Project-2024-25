@@ -54,8 +54,12 @@
 #BR .active { background-color: #580AFF; }
 #CR .active { background-color: #BE0AFF; }
 
-.highlighted {
+.highlighted, .highlightedSolution {
     border: 5px solid white;
+}
+
+.highlightedSolution {
+    border-color: red;
 }
 
 #startStopButton, #resetButton, #checkInputButton, #playSolutionButton{

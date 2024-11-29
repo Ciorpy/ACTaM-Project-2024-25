@@ -92,7 +92,7 @@ playBeat = function () {
 
 function setBpm(n) {
     let minute = 1000 * 60;
-    return minute / n;
+    return (minute / n) / 4;
 }
 
 function startMetronome() {
@@ -142,8 +142,10 @@ resetButton.addEventListener("click", () => {
 
 // BPM slider event listener
 bpmSlider = document.getElementById("bpmSlider");
+bpmDisplay = document.getElementById("bpmDisplay")
 bpmSlider.addEventListener("input", () => {
     let newBpm = bpmSlider.value;
+    bpmDisplay.innerHTML = bpmSlider.value
     if (newBpm !== bpm) {  // Only adjust if BPM is changed
         bpm = newBpm;
         if (isPlaying) {

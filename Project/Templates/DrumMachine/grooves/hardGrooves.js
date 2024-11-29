@@ -10,6 +10,7 @@ const hardGrooves = [
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+        
     ],
     [
         [true, false, false, true, true, false, false, true, true, false, false, true, true, false, false, true],
@@ -22,30 +23,36 @@ const hardGrooves = [
         [true, false, true, true, true, false, true, true, true, false, true, true, true, false, true, true],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+
+
     ],
     [
-        [true, false, true, true, false, false, true, false, true, false, false, true, false, false, false, true],
+        [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
         [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],
+        [false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true],
+        [true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-        [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+
+
     ],
     [
-        [true, false, false, true, false, false, true, false, true, false, false, true, false, false, false, false],
-        [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],
+        [false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true],
+        [false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false],
+        [false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-        [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],
-        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-        [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],
+        [true, false, true, false, true, true, false, true, false, false, true, false, true, true, false, true],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+        
+        
     ],
     [
         [true, true, false, true, false, true, false, true, false, true, false, true, false, false, false, true],
@@ -58,6 +65,22 @@ const hardGrooves = [
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+        
+        
+    ],
+    [
+        [true, false, false, false, false, false, false, true, false, false, false, true, false, false, false, true],
+        [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        [true, false, false, true, true, false, false, true, true, false, false, true, true, false, false, true],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+        
+        
     ],
     [
         [true, false, false, false, false, false, false, true, false, true, false, false, false, false, false, true],
@@ -70,5 +93,7 @@ const hardGrooves = [
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
         [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+
+
     ]
 ];

@@ -2,7 +2,6 @@ let semicrome = 16;
 let drumSamples = 10;
 
 let drumMachineController = Array.from({ length: drumSamples }, () => Array(semicrome).fill(false));
-let defaultLayout = drumMachineController;
 
 console.log(drumMachineController)
 
@@ -124,7 +123,7 @@ function resetDrumMachine() {
             item.getElementsByClassName("semicroma")[i].classList.toggle("active", false)
     })
 
-    drumMachineController = defaultLayout
+    drumMachineController = Array.from({ length: drumSamples }, () => Array(semicrome).fill(false));
 }
 
 
@@ -141,6 +140,7 @@ startStopButton.addEventListener("click", () => {
 })
 
 resetButton = document.getElementById("resetButton")
+
 resetButton.addEventListener("click", () => {
     resetDrumMachine()
 })

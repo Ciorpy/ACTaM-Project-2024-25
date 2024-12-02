@@ -54,14 +54,53 @@
 #BR .active { background-color: #580AFF; }
 #CR .active { background-color: #BE0AFF; }
 
-.highlighted {
+.highlighted, .highlightedSolution {
     border: 5px solid white;
 }
 
-#startStopButton, #resetButton{
+.highlightedSolution {
+    border-color: red;
+}
+
+#startStopButton, #resetButton, #checkInputButton, #playSolutionButton{
     padding: 30px;
     border: 2px solid red;
     width: 300px;
     text-align: center;
     cursor: pointer;
+}
+
+.presets {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 30px;
+    max-width: 400px;
+}
+
+.groove {
+    border: 2px solid black;
+    cursor: pointer;
+    background-color: white;
+}
+
+.groove:hover {
+    background-color: grey;
+}
+
+#presetsEasy{
+    background-color: green;
+}
+
+#presetsMedium{
+    background-color: yellow;
+}
+
+#presetsHard{
+    background-color: red;
+}
+
+.debugArea{
+    display: flex;
+    flex-direction: row;
 }

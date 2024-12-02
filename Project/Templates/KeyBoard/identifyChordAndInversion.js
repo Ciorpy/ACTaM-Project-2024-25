@@ -172,12 +172,5 @@ function identifyChords(input) {
 
 // Export delle funzioni utili da utilizzare in altri file
 module.exports = {
-    noteToIndex,
-    indexToNote,
-    chordDatabase,
-    isNumericInput,
-    indicesToNoteNames,
-    normalizeChord,
-    identifyAllChords,
     identifyChords,
 };

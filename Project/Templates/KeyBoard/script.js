@@ -42,3 +42,4 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 60) {
 
 // Genera una tastiera con 36 tasti a partire dal Do centrale (60)
 createPiano("piano", 36, 60);
+

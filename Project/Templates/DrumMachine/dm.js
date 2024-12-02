@@ -1,13 +1,12 @@
 let semicrome = 16;
 let drumSamples = 10;
-let bpm = 150;
+let defaultBpm = 150;
+let bpm = defaultBpm;
 let isPlaying = false;
 let isSolutionPlaying = false;
 let i = 0;
 let j = 0;
 let metronomeInterval;
-
-let preloadedSounds = [];
 
 let drumMachineController = Array.from({ length: drumSamples }, () =>
   Array(semicrome).fill(false)
@@ -17,7 +16,7 @@ let solution = Array.from({ length: drumSamples }, () =>
   Array(semicrome).fill(false)
 );
 
-drumMachineItems = document.getElementsByClassName("drumMachineItem");
+let drumMachineItems = document.getElementsByClassName("drumMachineItem");
 
 Array.from(drumMachineItems).forEach((item, index) => {
   for (let i = 0; i < semicrome; i++) {
@@ -39,6 +38,8 @@ Array.from(drumMachineItems).forEach((item, index) => {
   }
 });
 
+let preloadedSounds = [];
+
 const audioFiles = [
   "../../Sounds/Drum Samples/BD.wav",
   "../../Sounds/Drum Samples/SN.wav",
@@ -57,14 +58,14 @@ audioFiles.forEach((file, index) => {
   preloadedSounds[index] = audio;
 });
 
-playSound = function (sampleID) {
+let playSound = function (sampleID) {
   if (preloadedSounds[sampleID]) {
     preloadedSounds[sampleID].currentTime = 0;
     preloadedSounds[sampleID].play();
   }
 };
 
-playBeat = function () {
+let playBeat = function () {
   let toTurnOff = i == 0 ? 15 : i - 1;
 
   Array.from(drumMachineItems).forEach((item) => {
@@ -72,10 +73,20 @@ playBeat = function () {
       .getElementsByClassName("semicroma")
       [toTurnOff].classList.toggle("highlighted", false);
   });
-  Array.from(drumMachineItems).forEach((item) => {
-    item
-      .getElementsByClassName("semicroma")
-      [i].classList.toggle("highlighted", true);
+  Array.from(drumMachineItems).forEach((item, index) => {
+    if (
+      drumMachineController[index][i] == solution[index][i] &&
+      drumMachineController[index][i]
+    ) {
+      item
+        .getElementsByClassName("semicroma")
+        [i].classList.toggle("correctGuess", true);
+      item.getElementsByClassName("semicroma")[i].style.pointerEvents = "none";
+    } else {
+      item
+        .getElementsByClassName("semicroma")
+        [i].classList.toggle("highlighted", true);
+    }
   });
 
   drumMachineController
@@ -89,7 +100,7 @@ playBeat = function () {
   i = (i + 1) % semicrome;
 };
 
-playSolution = function () {
+let playSolution = function () {
   let toTurnOff = j == 0 ? 15 : j - 1;
 
   Array.from(drumMachineItems).forEach((item) => {
@@ -165,32 +176,28 @@ startStopButton.addEventListener("click", () => {
   }
 });
 
-// Reset button event listener
 let resetButton = document.getElementById("resetButton");
 resetButton.addEventListener("click", () => {
   resetDrumMachine();
 });
 
-// BPM slider event listener
 let bpmSlider = document.getElementById("bpmSlider");
 let bpmDisplay = document.getElementById("bpmDisplay");
+
 bpmSlider.addEventListener("input", () => {
   let newBpm = bpmSlider.value;
   bpmDisplay.innerHTML = bpmSlider.value;
   if (newBpm !== bpm) {
-    // Only adjust if BPM is changed
     bpm = newBpm;
 
-    // Clear and reset the metronome interval
     if (isPlaying) {
-      clearInterval(metronomeInterval); // Clear the current metronome interval
-      metronomeInterval = setInterval(playBeat, setBpm(bpm)); // Start a new metronome interval with updated BPM
+      clearInterval(metronomeInterval);
+      metronomeInterval = setInterval(playBeat, setBpm(bpm));
     }
 
-    // Clear and reset the solution interval
     if (isSolutionPlaying) {
-      clearInterval(solutionInterval); // Clear the current solution interval
-      solutionInterval = setInterval(playSolution, setBpm(bpm)); // Start a new solution interval with updated BPM
+      clearInterval(solutionInterval);
+      solutionInterval = setInterval(playSolution, setBpm(bpm));
     }
   }
 });
@@ -218,7 +225,6 @@ for (let i = 0; i < grooves.length; i++) {
 }
 
 function checkSolution(guess, correctAnswer) {
-  // Security checks, not necessary considering that we will always compare matrices with the same number of rows and columns but however
   if (guess.length !== correctAnswer.length) {
     return false;
   }
@@ -227,15 +233,12 @@ function checkSolution(guess, correctAnswer) {
       return false;
     }
 
-    // Compare each element in the row
     for (let j = 0; j < guess[i].length; j++) {
       if (guess[i][j] !== correctAnswer[i][j]) {
-        return false; // Element mismatch
+        return false;
       }
     }
   }
-
-  // If no differences were found, the matrices are identical
   return true;
 }
 
@@ -244,11 +247,11 @@ let checkInputButton = document.getElementById("checkInputButton");
 checkInputButton.addEventListener("click", () => {
   console.log(solution);
   console.log(drumMachineController);
-  if (checkSolution(solution, drumMachineController)) console.log("DAJE ROMA");
-  else console.log("ER SAMBUCONE YAYAYYAHOOOOOOOOOOOO");
+  if (checkSolution(solution, drumMachineController)) console.log("GIUSTO");
+  else console.log("SBAGLIATO");
 });
 
-playSolutionButton = document.getElementById("playSolutionButton");
+let playSolutionButton = document.getElementById("playSolutionButton");
 
 let solutionInterval = null;
 
@@ -284,3 +287,5 @@ playSolutionButton.addEventListener("click", () => {
     startSolution();
   }
 });
+
+let score = 0;

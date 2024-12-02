@@ -54,13 +54,29 @@
 #BR .active { background-color: #580AFF; }
 #CR .active { background-color: #BE0AFF; }
 
-.highlighted, .highlightedSolution {
+.highlighted, .highlightedSolution, .correctGuess {
     border: 5px solid white;
 }
 
 .highlightedSolution {
     border-color: red;
 }
+
+.correctGuess {
+    border-width: 2px;
+    border-color: green;
+    background-color: white !important;
+    background-image: url("../../Images/Green_check.png");
+    cursor: default;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.correctGuess:hover {
+    border: 2px solid green;
+}
+
 
 #startStopButton, #resetButton, #checkInputButton, #playSolutionButton{
     padding: 30px;

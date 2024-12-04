@@ -1,4 +1,4 @@
-function createPiano(containerId, numberOfKeys, startMidiNote = 60) {
+function createPiano(containerId, numberOfKeys, startMidiNote = 96) {
     const pianoContainer = document.getElementById(containerId);
     pianoContainer.innerHTML = ""; // Pulisci il contenuto precedente
 
@@ -19,6 +19,7 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 60) {
 
     // Map per associare i tasti della tastiera fisica ai tasti MIDI
     const keyMap = {};
+    let oscillators = {}
 
     for (let i = 0; i < numberOfKeys; i++) {
         const midiNote = startMidiNote + i;
@@ -37,6 +38,13 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 60) {
             key.innerHTML += `<br>${keyboardKey}`; // Mostra il tasto fisico
             keyMap[keyboardKey] = midiNote; // Aggiungi alla mappa
         }
+
+        let oscillator = new Tone.Oscillator({
+            type: "sine", // You can change to 'square', 'sawtooth', or 'triangle'
+            frequency: 440 * Math.pow(2, (midiNote - 69) / 12), // Convert "C2" to its frequency
+            volume: -6 // Adjust volume
+          }).toDestination();
+        oscillators[midiNote] = oscillator;
 
         // Controlla se è un tasto nero
         if (blackKeys.includes(noteInOctave)) {
@@ -58,14 +66,17 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 60) {
         // Listener per click
         key.addEventListener("mousedown", () => {
             key.classList.add("active");
+            oscillators[midiNote].start()
         });
 
         key.addEventListener("mouseup", () => {
             key.classList.remove("active");
+            oscillators[midiNote].stop()
         });
 
         key.addEventListener("mouseleave", () => {
             key.classList.remove("active");
+            oscillators[midiNote].stop()
         });
     }
 
@@ -77,6 +88,7 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 60) {
             const pianoKey = document.querySelector(`.key[data-midi-note="${note}"]`);
             if (pianoKey) {
                 pianoKey.classList.add("active"); // Simula pressione tasto
+                  oscillators[note].start();
             }
         }
     });
@@ -88,10 +100,11 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 60) {
             const pianoKey = document.querySelector(`.key[data-midi-note="${note}"]`);
             if (pianoKey) {
                 pianoKey.classList.remove("active"); // Rimuovi classe
+                oscillators[note].stop();
             }
         }
     });
 }
 
 // Genera una tastiera con 36 tasti a partire dal Do centrale (60)
-createPiano("piano", 36, 60);
+createPiano("piano", 24, 60);

@@ -120,3 +120,22 @@
     display: flex;
     flex-direction: row;
 }
+
+.endGameBG{
+    display: none;
+    top: 0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.8);
+}
+
+.endGamePanel {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+    font-size: 150px;
+}

@@ -247,7 +247,7 @@ let checkInputButton = document.getElementById("checkInputButton");
 checkInputButton.addEventListener("click", () => {
   console.log(solution);
   console.log(drumMachineController);
-  if (checkSolution(solution, drumMachineController)) console.log("GIUSTO");
+  if (checkSolution(solution, drumMachineController)) endGame();
   else console.log("SBAGLIATO");
 });
 
@@ -289,3 +289,12 @@ playSolutionButton.addEventListener("click", () => {
 });
 
 let score = 0;
+
+let endGamePanel = document.getElementById("endGameScreen");
+let endGame = function () {
+  if (isSolutionPlaying) stopSolution();
+  if (isPlaying) stopMetronome();
+  endGamePanel.style.display = "flex";
+  const endGameAudio = new Audio("../../Sounds/roma roma.mp3");
+  endGameAudio.play();
+};

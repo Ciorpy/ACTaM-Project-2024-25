@@ -9,9 +9,9 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 96) {
     const whiteKeyWidthPercentage = 100 / totalWhiteKeys;
     let currentWhiteKeyIndex = 0;
 
-    const keyboardKeys = [
-        "a", "w", "s", "e", "d", "f", "t", "g", "y", "h", "u", "j", // Prima ottava
-        "k", "o", "l", "p", ";", "z", "x", "c", "v", "b", "n", "m"  // Seconda ottava
+    const keyboardCodes = [
+        "KeyQ", "Digit2", "KeyW", "Digit3", "KeyE", "KeyR", "Digit5", "KeyT", "Digit6", "KeyY", "Digit7", "KeyU", // Prima ottava
+        "KeyZ", "KeyS", "KeyX", "KeyD", "KeyC", "KeyV", "KeyG", "KeyB", "KeyH", "KeyN", "KeyJ", "KeyM" // Seconda ottava
     ];
 
     const keyMap = {};
@@ -35,6 +35,22 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 96) {
         }).toDestination();
     }
 
+    // Funzione per ottenere il valore leggibile da un event.code
+    function getReadableKey(code) {
+        if (code.startsWith("Key")) return code.slice(3); // Rimuove "Key" e restituisce la lettera
+        if (code.startsWith("Digit")) return code.slice(5); // Rimuove "Digit" e restituisce il numero
+        return code; // Restituisce il valore originale se non corrisponde
+    }
+
+    // Popola la mappa keyMap associando i codici dei tasti alle note MIDI
+    for (let i = 0; i < numberOfKeys; i++) {
+        const midiNote = startMidiNote + i;
+        const code = keyboardCodes[i];
+        if (code) {
+            keyMap[code] = midiNote;
+        }
+    }
+
     for (let i = 0; i < numberOfKeys; i++) {
         const midiNote = startMidiNote + i;
         const noteInOctave = midiNote % 12;
@@ -42,13 +58,16 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 96) {
         const key = document.createElement("div");
         key.classList.add("key");
         key.dataset.midiNote = midiNote;
-        key.innerHTML = midiNote;
 
-        const keyboardKey = keyboardKeys[i];
-        if (keyboardKey) {
-            key.dataset.keyboardKey = keyboardKey;
-            key.innerHTML += `<br>${keyboardKey}`;
-            keyMap[keyboardKey] = midiNote;
+        const code = keyboardCodes[i];
+        if (code) {
+            key.dataset.keyboardKey = code;
+
+            // Mostra il valore leggibile del tasto fisico solo per la prima nota di ogni ottava
+            if (noteInOctave === 0) {
+                const readableKey = getReadableKey(code);
+                key.innerHTML = `<div>${readableKey}</div>`;
+            }
         }
 
         synths[midiNote] = createSynth();
@@ -79,10 +98,11 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 96) {
         });
     }
 
+    // Gestione degli eventi per i tasti della tastiera fisica
     document.addEventListener("keydown", (event) => {
-        const key = event.key.toLowerCase();
-        if (keyMap[key]) {
-            const note = keyMap[key];
+        const code = event.code; // Usa event.code per il mapping
+        if (keyMap[code]) {
+            const note = keyMap[code];
             const pianoKey = document.querySelector(`.key[data-midi-note="${note}"]`);
             if (pianoKey) {
                 playNote(note, pianoKey);
@@ -91,9 +111,9 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 96) {
     });
 
     document.addEventListener("keyup", (event) => {
-        const key = event.key.toLowerCase();
-        if (keyMap[key]) {
-            const note = keyMap[key];
+        const code = event.code; // Usa event.code per il mapping
+        if (keyMap[code]) {
+            const note = keyMap[code];
             const pianoKey = document.querySelector(`.key[data-midi-note="${note}"]`);
             if (pianoKey) {
                 stopNote(note, pianoKey);
@@ -137,4 +157,3 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 96) {
 
 // Genera una tastiera con 24 tasti a partire dal Do centrale (60)
 createPiano("piano", 24, 60);
-

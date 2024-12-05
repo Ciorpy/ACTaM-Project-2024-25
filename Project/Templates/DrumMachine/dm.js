@@ -154,10 +154,16 @@ function stopMetronome() {
 
 function resetDrumMachine() {
   Array.from(drumMachineItems).forEach((item) => {
-    for (let i = 0; i < semicrome; i++)
+    for (let i = 0; i < semicrome; i++){
       item
         .getElementsByClassName("semicroma")
         [i].classList.toggle("active", false);
+        
+      item
+        .getElementsByClassName("semicroma")
+        [i].classList.toggle("correctGuess", false);
+      item.getElementsByClassName("semicroma")[i].style.pointerEvents = "auto";
+    }
   });
 
   drumMachineController = Array.from({ length: drumSamples }, () =>

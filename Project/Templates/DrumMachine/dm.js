@@ -230,6 +230,30 @@ for (let i = 0; i < grooves.length; i++) {
   });
 }
 
+let easyFillsPanel = document.getElementById("presetsEasy");
+let mediumFillsPanel = document.getElementById("presetsMedium");
+let hardFillsPanel = document.getElementById("presetsHard");
+
+let hardFills = []
+
+let fills = [easyFills, mediumFills, hardFills];
+let fillsPanels = [easyGroovesPanel, mediumGroovesPanel, hardGroovesPanel];
+let fillsTypes = ["Easy", "Medium", "Hard"];
+
+for (let i = 0; i < grooves.length; i++) {
+  fills[i].forEach((item, index) => {
+    let newGroove = document.createElement("div");
+    newGroove.classList.add("groove");
+    newGroove.innerHTML = fillsTypes[i] + " preset N°" + (index + 1);
+
+    newGroove.addEventListener("click", () => {
+      solution = item;
+    });
+
+    groovePanels[i].appendChild(newGroove);
+  });
+}
+
 function checkSolution(guess, correctAnswer) {
   if (guess.length !== correctAnswer.length) {
     return false;

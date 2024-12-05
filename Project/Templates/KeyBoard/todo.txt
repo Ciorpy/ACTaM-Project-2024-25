@@ -1,12 +1,11 @@
 // Visual
-// 1. associare tasti piano a tasti computer
-// 2. memorizzare valori midi in array quando vengono premuti 3 tasti
-// 3. usare funzione identifyChords
-// 4. label sopra la tastiera con nome dell'accordo
+// :) 1. associare tasti piano a tasti computer 
+// :) 2. memorizzare valori midi in array quando vengono premuti 3 tasti
+// 3. usare funzione identifyChords e label sopra la tastiera con nome dell'accordo
 
 
 // Suono
-// 1. associare tasti piano a suoni
+// :) 1. associare tasti piano a suoni
 
 
 //Implementazione gioco

@@ -33,9 +33,23 @@ Array.from(drumMachineItems).forEach((item, index) => {
       console.log(drumMachineController);
     });
     item.appendChild(newElement);
-
-    item.getElementsByClassName("drumMachineItemTitle")[0].innerHTML = item.id;
   }
+  let titleDiv = item.getElementsByClassName("drumMachineItemTitle")[0]
+    
+  let titleLabel = document.createElement("div")
+  titleLabel.classList.add("titleLabel");
+  titleLabel.innerHTML = item.id;
+  
+  titleDiv.appendChild(titleLabel);
+
+  let playButton = document.createElement("div")
+  playButton.classList.add("playSampleButton");
+
+  playButton.addEventListener("click", () => {
+    playSound(index)
+  })
+
+  titleDiv.appendChild(playButton);
 });
 
 let preloadedSounds = [];
@@ -233,8 +247,6 @@ for (let i = 0; i < grooves.length; i++) {
 let easyFillsPanel = document.getElementById("presetsEasy");
 let mediumFillsPanel = document.getElementById("presetsMedium");
 let hardFillsPanel = document.getElementById("presetsHard");
-
-let hardFills = []
 
 let fills = [easyFills, mediumFills, hardFills];
 let fillsPanels = [easyGroovesPanel, mediumGroovesPanel, hardGroovesPanel];

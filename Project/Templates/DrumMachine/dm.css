@@ -7,16 +7,41 @@
     padding: 0;
 }
 
+.drumMachineScreen{
+    display: flex;
+    flex-direction: row;
+    background-color: #8A8A8A;
+    width: 100%;
+    gap: 0px;
+    border-bottom: 5px solid darkgreen;
+}
+
 .drumMachineInput {
-    background-color: grey;
+    background-color: #8A8A8A;
     margin: auto;
+    left: 0px;
+}
+
+.drumMachineLegend{
+    width: 25%;
+    display: flex;
 }
 
 .drumMachineItem {
     display: flex;
     gap: 10px;
     padding: 5px;
-    width: 75%;
+    width: 100%;
+}
+
+.drumMachineImgFrame {
+    margin: auto;
+
+}
+.drumMachineLegend img {
+    width: 100%;
+    border: 3px solid darkgreen;
+    border-radius: 30px;
 }
 
 .drumMachineItemTitle{
@@ -24,8 +49,28 @@
     font-size: 30px;
     font-weight: 700;
     padding: 10px 30px;
-    width: 15%;
+    width: 18%;
     text-align: center;
+    display: flex;
+    flex-direction: row;
+    gap: 30px
+}
+
+.titleLabel{
+    width: 100px;
+}
+
+.playSampleButton {
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("../../Images/Speaker_Icon.svg");
+    border-radius: 20%;
+    cursor: pointer;
+    border: 2px solid darkgreen
 }
 
 .semicroma {
@@ -51,7 +96,7 @@
 #T2 .active { background-color: #DEFF0A; }
 #FT .active { background-color: #A1FF0A; }
 #HH .active { background-color: #0AFF99; }
-#HO .active { background-color: #0AEFFF; }
+#OH .active { background-color: #0AEFFF; }
 #RD .active { background-color: #147DF5; }
 #BR .active { background-color: #580AFF; }
 #CR .active { background-color: #BE0AFF; }
@@ -84,6 +129,7 @@
     gap: 20px;
     display: flex;
     flex-direction: row;
+    background-color: white;
 }
 
 .button {
@@ -92,6 +138,7 @@
     width: 300px;
     text-align: center;
     cursor: pointer;
+    background-color: white;
 }
 
 .bpmInput {

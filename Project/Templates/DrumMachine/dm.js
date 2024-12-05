@@ -302,7 +302,7 @@ let endGame = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
   endGamePanel.style.display = "flex";
-  const endGameAudio = new Audio("../../Sounds/roma roma.mp3");
+  const endGameAudio = new Audio("../../Sounds/maneskin.wav");
   endGameAudio.play();
 };
 

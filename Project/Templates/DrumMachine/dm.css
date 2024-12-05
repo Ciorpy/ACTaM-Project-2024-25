@@ -3,6 +3,8 @@
     font-weight: 400;
     font-style: normal;
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 .drumMachineInput {
@@ -77,13 +79,35 @@
     border: 2px solid green;
 }
 
+.userMenu {
+    padding: 10px;
+    gap: 20px;
+    display: flex;
+    flex-direction: row;
+}
 
-#startStopButton, #resetButton, #checkInputButton, #playSolutionButton{
+.button {
     padding: 30px;
     border: 2px solid red;
     width: 300px;
     text-align: center;
     cursor: pointer;
+}
+
+.bpmInput {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 300px;
+    margin: auto;
+}
+
+.bpmInput input {
+    width: 240px;
+}
+
+.button:hover{
+    background-color: grey;
 }
 
 .presets {

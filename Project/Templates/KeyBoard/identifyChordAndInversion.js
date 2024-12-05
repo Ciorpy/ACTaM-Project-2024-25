@@ -157,20 +157,16 @@ function identifyChords(input) {
 
 
 // Esempio di utilizzo con indici MIDI
-//const midiNotes = [48, 64, 55]; // C (Do), E (Mi), G (Sol)
-//const result = identifyChords(midiNotes); // { chordName: "C_major", inversion: "Posizione fondamentale" }
+
+const midiNotes = [48, 64, 55]; // C (Do), E (Mi), G (Sol)
+const result = identifyChords(midiNotes); // { chordName: "C_major", inversion: "Posizione fondamentale" }
 
 // Esempio di utilizzo con note
-//const noteNames = ["C", "E", "G"];
+//const noteNames = ["B", "E", "G"];
 //const result = identifyChords(noteNames);
 
-//if (result.chords) {
-//    console.log("Accordi riconosciuti:", result.chords.join(", "));
-//} else {
-//    console.log("Nessun accordo trovato");
-//}
-
-// Export delle funzioni utili da utilizzare in altri file
-module.exports = {
-    identifyChords,
-};
+if (result.chords) {
+    console.log("Accordi riconosciuti:", result.chords.join(", "));
+} else {
+    console.log("Nessun accordo trovato");
+}

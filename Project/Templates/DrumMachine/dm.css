@@ -145,7 +145,7 @@
     flex-direction: row;
 }
 
-.endGameBG{
+.wrongGuessBG, .endGameBG{
     display: none;
     top: 0;
     left: 0;
@@ -155,7 +155,7 @@
     background-color: rgba(255,255,255,0.8);
 }
 
-.endGamePanel {
+.wrongGuessPanel, .endGamePanel {
     margin: auto;
     display: flex;
     flex-direction: column;

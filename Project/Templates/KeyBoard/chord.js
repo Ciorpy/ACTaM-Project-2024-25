@@ -75,20 +75,32 @@ function midiToNoteName(midi) {
 //console.log(recognizeChordMIDI([61, 65, 68, 71]));   // Output: "Root: C#, Chord: m7b5"
 
 
-// Funzione di generazione di un accordo random
-function generateRandomChord() {
-  // Lista di note di root possibili (da C, D, E, F, G, A, B, etc., 12 note)
-  const rootNotes = [60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79]; // MIDI per C, D, E, F, G, A, B, C', D', E', F', G'
+// Funzione per generare inversioni di accordi
+function generateInversion(chordNotes) {
+  let firstInversion = [chordNotes[1], chordNotes[2], chordNotes[0] + 12];  // Prima inversione
+  let secondInversion = [chordNotes[2], chordNotes[0] + 12, chordNotes[1] + 12]; // Seconda inversione
 
+  return {
+    rootPosition: chordNotes,          // Posizione fondamentale
+    firstInversion: firstInversion,    // Prima inversione
+    secondInversion: secondInversion   // Seconda inversione
+  };
+}
+
+// Funzione di generazione di un accordo random con inversioni
+function generateRandomChord(startNote = 60) {
   // Lista di tipi di accordi possibili
   const chordTypes = [
     "Maj", "min", "dim", "aug",         // Triadi
     "Maj7", "7", "m7", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5", "mMaj7",  // Accordi con settima
-    "sus2", "sus4", "sus2b7", "sus4b7" // Accordi sospesi
+    "sus2", "sus4" // Accordi sospesi senza la settima
   ];
 
+  // Lista di note di root possibili (da C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
+  const rootNotes = Array.from({length: 12}, (_, i) => i);  // [0, 1, 2, ..., 11] rappresenta un'ottava
+
   // Selezionare una nota root casuale dalla lista
-  const randomRoot = rootNotes[Math.floor(Math.random() * rootNotes.length)];
+  const randomRoot = rootNotes[Math.floor(Math.random() * rootNotes.length)] + startNote; // Sommare la nota di partenza
 
   // Selezionare un tipo di accordo casuale dalla lista
   const randomChordType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
@@ -97,13 +109,34 @@ function generateRandomChord() {
   const chords = generateChordsMIDI(randomRoot);  // Funzione generica che hai già
   const chord = chords[randomChordType];
 
-  // Restituire l'output dell'accordo
+  // Generare inversioni per l'accordo
+  const inversions = generateInversion(chord);
+
+  // Selezionare casualmente una delle inversioni
+  const selectedInversion = [inversions.rootPosition, inversions.firstInversion, inversions.secondInversion][Math.floor(Math.random() * 3)];
+
+  // Aggiornare la root in base all'inversione selezionata
+  let updatedRoot;
+  let inversionType;
+  if (selectedInversion === inversions.firstInversion) {
+    updatedRoot = selectedInversion[2]; // La root della prima inversione è la nota più bassa (E)
+    inversionType = 'First Inversion';
+  } else if (selectedInversion === inversions.secondInversion) {
+    updatedRoot = selectedInversion[1]; // La root della seconda inversione è la nota più bassa (G)
+    inversionType = 'Second Inversion';
+  } else {
+    updatedRoot = randomRoot; // Root fondamentale
+    inversionType = 'Root Position';
+  }
+
+  // Restituire l'output dell'accordo con inversioni, la root aggiornata e l'inversione selezionata
   return {
-    root: randomRoot,
+    root: updatedRoot,
     chordType: randomChordType,
-    notes: chord
+    notes: selectedInversion,
+    inversion: inversionType  // Tipo di inversione
   };
 }
 
 // Esegui un esempio di test
-//console.log("Accordo casuale:", generateRandomChord());
+console.log("Accordo casuale:", generateRandomChord(60));

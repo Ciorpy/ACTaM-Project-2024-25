@@ -66,4 +66,44 @@ function midiToNoteName(midi) {
 }
 
 // Esempi di utilizzo
-console.log(recognizeChordMIDI(["C", "E", "G", "B"]));
+//console.log(recognizeChordMIDI([60, 64, 67]));       // Output: "Root: C, Chord: Maj"
+//console.log(recognizeChordMIDI([65, 63, 67]));       // Output: "Root: C, Chord: min"
+//console.log(recognizeChordMIDI([60, 63, 66]));       // Output: "Root: C, Chord: dim"
+//console.log(recognizeChordMIDI([61, 64, 69]));       // Output: "Root: C, Chord: aug"
+//console.log(recognizeChordMIDI([60, 64, 67, 70]));   // Output: "Root: C, Chord: 7"
+//console.log(recognizeChordMIDI([62, 65, 69, 72]));   // Output: "Root: D, Chord: m7"
+//console.log(recognizeChordMIDI([61, 65, 68, 71]));   // Output: "Root: C#, Chord: m7b5"
+
+
+// Funzione di generazione di un accordo random
+function generateRandomChord() {
+  // Lista di note di root possibili (da C, D, E, F, G, A, B, etc., 12 note)
+  const rootNotes = [60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79]; // MIDI per C, D, E, F, G, A, B, C', D', E', F', G'
+
+  // Lista di tipi di accordi possibili
+  const chordTypes = [
+    "Maj", "min", "dim", "aug",         // Triadi
+    "Maj7", "7", "m7", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5", "mMaj7",  // Accordi con settima
+    "sus2", "sus4", "sus2b7", "sus4b7" // Accordi sospesi
+  ];
+
+  // Selezionare una nota root casuale dalla lista
+  const randomRoot = rootNotes[Math.floor(Math.random() * rootNotes.length)];
+
+  // Selezionare un tipo di accordo casuale dalla lista
+  const randomChordType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
+
+  // Generare l'accordo in base alla root e al tipo di accordo selezionato
+  const chords = generateChordsMIDI(randomRoot);  // Funzione generica che hai già
+  const chord = chords[randomChordType];
+
+  // Restituire l'output dell'accordo
+  return {
+    root: randomRoot,
+    chordType: randomChordType,
+    notes: chord
+  };
+}
+
+// Esegui un esempio di test
+//console.log("Accordo casuale:", generateRandomChord());

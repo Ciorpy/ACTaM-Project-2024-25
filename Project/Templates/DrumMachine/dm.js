@@ -154,10 +154,16 @@ function stopMetronome() {
 
 function resetDrumMachine() {
   Array.from(drumMachineItems).forEach((item) => {
-    for (let i = 0; i < semicrome; i++)
+    for (let i = 0; i < semicrome; i++){
       item
         .getElementsByClassName("semicroma")
         [i].classList.toggle("active", false);
+        
+      item
+        .getElementsByClassName("semicroma")
+        [i].classList.toggle("correctGuess", false);
+      item.getElementsByClassName("semicroma")[i].style.pointerEvents = "auto";
+    }
   });
 
   drumMachineController = Array.from({ length: drumSamples }, () =>
@@ -248,7 +254,7 @@ checkInputButton.addEventListener("click", () => {
   console.log(solution);
   console.log(drumMachineController);
   if (checkSolution(solution, drumMachineController)) endGame();
-  else console.log("SBAGLIATO");
+  else wrongGuess()
 });
 
 let playSolutionButton = document.getElementById("playSolutionButton");
@@ -291,6 +297,7 @@ playSolutionButton.addEventListener("click", () => {
 let score = 0;
 
 let endGamePanel = document.getElementById("endGameScreen");
+
 let endGame = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
@@ -298,3 +305,18 @@ let endGame = function () {
   const endGameAudio = new Audio("../../Sounds/roma roma.mp3");
   endGameAudio.play();
 };
+
+let wrongGuessPanel = document.getElementById("wrongGuessScreen");
+
+let wrongGuess = function () {
+  if (isSolutionPlaying) stopSolution();
+  if (isPlaying) stopMetronome();
+  wrongGuessPanel.style.display = "flex";
+  const wrongGuessAudio = new Audio("../../Sounds/morgan.mp3");
+  wrongGuessAudio.play();
+  
+  setTimeout(() => {
+    resetDrumMachine()
+    wrongGuessPanel.style.display = "none"
+  }, 4000);
+}

@@ -51,12 +51,16 @@
         <div class="drumMachineItemTitle"></div>
       </div>
     </div>
-    <div id="startStopButton">START</div>
-    <div id="resetButton">RESET</div>
-    <input type="range" min="50" max="200" value="150" id="bpmSlider" />
-    <div id="bpmDisplay">150</div>
-
-    <div id="playSolutionButton">PLAY SOLUTION</div>
+    <div class="userMenu">
+      <div class="button" id="startStopButton">START</div>
+      <div class="button" id="resetButton">RESET</div>
+      <div class="bpmInput">
+        <input type="range" mi  n="50" max="200" value="150" id="bpmSlider" />
+        <div id="bpmDisplay">150</div>
+      </div>
+      <div class="button" id="playSolutionButton">PLAY SOLUTION</div>
+      <div class="button" id="checkInputButton">CHECK</div>
+  </div>
 
     <div class="debugArea">
       <div id="presetsEasy" class="presets"></div>
@@ -64,7 +68,12 @@
       <div id="presetsHard" class="presets"></div>
     </div>
 
-    <div id="checkInputButton">CHECK</div>
+    <div class="wrongGuessBG" id="wrongGuessScreen">
+      <div class="wrongGuessPanel">
+        <div class="wrongGuessText">TRY AGAIN!</div>
+        <img src="../../Images/morgan.gif" />
+      </div>
+    </div>
 
     <div class="endGameBG" id="endGameScreen">
       <div class="endGamePanel">

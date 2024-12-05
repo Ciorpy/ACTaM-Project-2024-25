@@ -6,105 +6,135 @@ function createPiano(containerId, numberOfKeys, startMidiNote = 96) {
     const totalWhiteKeys = Array.from({ length: numberOfKeys }, (_, i) => startMidiNote + i)
         .filter(note => !blackKeys.includes(note % 12)).length; // Conta i tasti bianchi
 
-    // Larghezza base per calcolare la posizione dei tasti neri
     const whiteKeyWidthPercentage = 100 / totalWhiteKeys;
+    let currentWhiteKeyIndex = 0;
 
-    let currentWhiteKeyIndex = 0; // Traccia i tasti bianchi
-
-    // Array di tasti della tastiera fisica (modificabile per preferenze personali)
     const keyboardKeys = [
         "a", "w", "s", "e", "d", "f", "t", "g", "y", "h", "u", "j", // Prima ottava
         "k", "o", "l", "p", ";", "z", "x", "c", "v", "b", "n", "m"  // Seconda ottava
     ];
 
-    // Map per associare i tasti della tastiera fisica ai tasti MIDI
     const keyMap = {};
-    let oscillators = {}
+    let synths = {};
+    let pressedNotes = []; // Lista di note correnti
+    let updateTimeout = null; // Timeout per ritardare l'aggiornamento della lista
+    const updateDelay = 30; // Ritardo in millisecondi
+    let currentPressedNotes = []; // Tasti attualmente premuti
+
+    function createSynth() {
+        return new Tone.Synth({
+            oscillator: {
+                type: "amsine",
+            },
+            envelope: {
+                attack: 0.01,
+                decay: 0.3,
+                sustain: 0.2,
+                release: 0.8,
+            },
+        }).toDestination();
+    }
 
     for (let i = 0; i < numberOfKeys; i++) {
         const midiNote = startMidiNote + i;
         const noteInOctave = midiNote % 12;
 
-        // Crea il tasto
         const key = document.createElement("div");
         key.classList.add("key");
-        key.dataset.midiNote = midiNote; // Associa la nota MIDI
-        key.innerHTML = midiNote; // Mostra il numero MIDI
+        key.dataset.midiNote = midiNote;
+        key.innerHTML = midiNote;
 
-        // Assegna un tasto della tastiera fisica al tasto MIDI
         const keyboardKey = keyboardKeys[i];
         if (keyboardKey) {
-            key.dataset.keyboardKey = keyboardKey; // Salva il tasto associato
-            key.innerHTML += `<br>${keyboardKey}`; // Mostra il tasto fisico
-            keyMap[keyboardKey] = midiNote; // Aggiungi alla mappa
+            key.dataset.keyboardKey = keyboardKey;
+            key.innerHTML += `<br>${keyboardKey}`;
+            keyMap[keyboardKey] = midiNote;
         }
 
-        let oscillator = new Tone.Oscillator({
-            type: "sine", // You can change to 'square', 'sawtooth', or 'triangle'
-            frequency: 440 * Math.pow(2, (midiNote - 69) / 12), // Convert "C2" to its frequency
-            volume: -6 // Adjust volume
-          }).toDestination();
-        oscillators[midiNote] = oscillator;
+        synths[midiNote] = createSynth();
 
-        // Controlla se è un tasto nero
         if (blackKeys.includes(noteInOctave)) {
             key.classList.add("black");
-            // Posiziona il tasto nero in relazione al tasto bianco corrente
             key.style.left = `${
                 (currentWhiteKeyIndex - 1) * whiteKeyWidthPercentage +
                 whiteKeyWidthPercentage * 0.7
             }%`;
             key.style.width = `${whiteKeyWidthPercentage * 0.7}%`;
         } else {
-            // Incrementa solo per i tasti bianchi
             currentWhiteKeyIndex++;
         }
 
-        // Aggiungi il tasto al contenitore
         pianoContainer.appendChild(key);
 
-        // Listener per click
         key.addEventListener("mousedown", () => {
-            key.classList.add("active");
-            oscillators[midiNote].start()
+            playNote(midiNote, key);
         });
 
         key.addEventListener("mouseup", () => {
-            key.classList.remove("active");
-            oscillators[midiNote].stop()
+            stopNote(midiNote, key);
         });
 
         key.addEventListener("mouseleave", () => {
-            key.classList.remove("active");
-            oscillators[midiNote].stop()
+            stopNote(midiNote, key);
         });
     }
 
-    // Aggiungi listener per i tasti della tastiera fisica
     document.addEventListener("keydown", (event) => {
-        const key = event.key.toLowerCase(); // Ottieni il tasto premuto
+        const key = event.key.toLowerCase();
         if (keyMap[key]) {
             const note = keyMap[key];
             const pianoKey = document.querySelector(`.key[data-midi-note="${note}"]`);
             if (pianoKey) {
-                pianoKey.classList.add("active"); // Simula pressione tasto
-                  oscillators[note].start();
+                playNote(note, pianoKey);
             }
         }
     });
 
     document.addEventListener("keyup", (event) => {
-        const key = event.key.toLowerCase(); // Ottieni il tasto rilasciato
+        const key = event.key.toLowerCase();
         if (keyMap[key]) {
             const note = keyMap[key];
             const pianoKey = document.querySelector(`.key[data-midi-note="${note}"]`);
             if (pianoKey) {
-                pianoKey.classList.remove("active"); // Rimuovi classe
-                oscillators[note].stop();
+                stopNote(note, pianoKey);
             }
         }
     });
+
+    function playNote(note, keyElement) {
+        // Suona la nota
+        keyElement.classList.add("active");
+        synths[note].triggerAttack(Tone.Frequency(note, "midi"));
+
+        // Aggiungi la nota all'elenco delle note attualmente premute
+        if (!currentPressedNotes.includes(note)) {
+            currentPressedNotes.push(note);
+        }
+
+        // Ritarda l'aggiornamento della lista
+        delayedUpdatePressedNotes();
+    }
+
+    function stopNote(note, keyElement) {
+        // Interrompi la nota
+        keyElement.classList.remove("active");
+        synths[note].triggerRelease();
+
+        // Rimuovi la nota dall'elenco delle note attualmente premute
+        currentPressedNotes = currentPressedNotes.filter(n => n !== note);
+    }
+
+    function delayedUpdatePressedNotes() {
+        if (updateTimeout) clearTimeout(updateTimeout); // Cancella il timeout precedente
+
+        updateTimeout = setTimeout(() => {
+            // Aggiorna la lista `pressedNotes` solo con le note attualmente premute
+            pressedNotes = [...currentPressedNotes];
+            console.log("Pressed notes:", pressedNotes);
+        }, updateDelay);
+    }
 }
 
-// Genera una tastiera con 36 tasti a partire dal Do centrale (60)
+// Genera una tastiera con 24 tasti a partire dal Do centrale (60)
 createPiano("piano", 24, 60);
+

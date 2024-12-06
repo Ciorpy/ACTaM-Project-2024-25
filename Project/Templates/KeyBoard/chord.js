@@ -23,6 +23,23 @@ function generateChordsMIDI(rootMIDI) {
     "7#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10],       // Dominante con quinta aumentata: T-4-8-10
     "m7#5": [rootMIDI, rootMIDI + 3, rootMIDI + 8, rootMIDI + 10],      // Minore con settima e quinta aumentata: T-3-8-10
     "mMaj7": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 11],     // Minore con settima maggiore: T-3-7-11
+
+    // Accordi di nona
+    "9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],   // Dominante con nona maggiore
+    "m9": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],  // Minore con nona maggiore
+    "Maj9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14],// Maggiore con nona maggiore
+    "7b9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 13], // Dominante con nona bemolle
+    "7#9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 15], // Dominante con nona diesis
+
+    // Accordi di undicesima
+    "7(11)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 17], // Dominante con undicesima
+    "m11": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 17], // Minore con undicesima
+    "Maj11": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14, rootMIDI + 17], // Maggiore con undicesima
+
+    // Accordi di tredicesima
+    "13": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 21],    // Dominante con tredicesima
+    "m13": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 21],   // Minore con tredicesima
+    "Maj13": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14, rootMIDI + 21], // Maggiore con tredicesima
   };
 }
 
@@ -65,78 +82,126 @@ function midiToNoteName(midi) {
   return noteNames[midi % notesInOctave];
 }
 
-// Esempi di utilizzo
-//console.log(recognizeChordMIDI([60, 64, 67]));       // Output: "Root: C, Chord: Maj"
-//console.log(recognizeChordMIDI([65, 63, 67]));       // Output: "Root: C, Chord: min"
-//console.log(recognizeChordMIDI([60, 63, 66]));       // Output: "Root: C, Chord: dim"
-//console.log(recognizeChordMIDI([61, 64, 69]));       // Output: "Root: C, Chord: aug"
-//console.log(recognizeChordMIDI([60, 64, 67, 70]));   // Output: "Root: C, Chord: 7"
-//console.log(recognizeChordMIDI([62, 65, 69, 72]));   // Output: "Root: D, Chord: m7"
-//console.log(recognizeChordMIDI([61, 65, 68, 71]));   // Output: "Root: C#, Chord: m7b5"
 
+// Funzione per generare tutte le inversioni di un accordo
+function generateInversions(chordNotes) {
+  const inversions = [];
+  const numNotes = chordNotes.length;
 
-// Funzione per generare inversioni di accordi
-function generateInversion(chordNotes) {
-  let firstInversion = [chordNotes[1], chordNotes[2], chordNotes[0] + 12];  // Prima inversione
-  let secondInversion = [chordNotes[2], chordNotes[0] + 12, chordNotes[1] + 12]; // Seconda inversione
+  for (let i = 0; i < numNotes; i++) {
+    const inversion = chordNotes
+      .slice(i) // Prendi le note dalla posizione corrente fino alla fine
+      .concat(chordNotes.slice(0, i).map(note => note + 12)); // Sposta in alto le note precedenti
+    inversions.push(inversion);
+  }
 
-  return {
-    rootPosition: chordNotes,          // Posizione fondamentale
-    firstInversion: firstInversion,    // Prima inversione
-    secondInversion: secondInversion   // Seconda inversione
-  };
+  return inversions;
 }
 
 // Funzione di generazione di un accordo random con inversioni
-function generateRandomChord(startNote = 60) {
+function generateRandomChord(startNote = 60, difficulty = "easy") {
   // Lista di tipi di accordi possibili
-  const chordTypes = [
-    "Maj", "min", "dim", "aug",         // Triadi
-    "Maj7", "7", "m7", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5", "mMaj7",  // Accordi con settima
-    "sus2", "sus4" // Accordi sospesi senza la settima
-  ];
+  const chordTypesByDifficulty = {
+    easy: ["Maj", "min", "dim", "7", "Maj7", "m7"],
+    medium: ["Maj", "min", "dim", "7", "Maj7", "m7", "Maj7#5", "m7b5", "9", "m9", "sus2", "sus4"],
+    hard: [
+      "Maj", "min", "dim", "7", "Maj7", "m7", "Maj7#5", "m7b5", "9", "m9", "sus2", "sus4",
+      "7b9", "7#9", "7(11)", "m11", "Maj11", "13", "m13", "Maj13"
+    ]
+  };
 
-  // Lista di note di root possibili (da C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-  const rootNotes = Array.from({length: 12}, (_, i) => i);  // [0, 1, 2, ..., 11] rappresenta un'ottava
+  // Ottieni i tipi di accordi per il livello di difficoltà specificato
+  const chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easy"];
 
-  // Selezionare una nota root casuale dalla lista
-  const randomRoot = rootNotes[Math.floor(Math.random() * rootNotes.length)] + startNote; // Sommare la nota di partenza
-
-  // Selezionare un tipo di accordo casuale dalla lista
+  // Seleziona una root e un tipo di accordo casuale
+  const randomRoot = Math.floor(Math.random() * 12) + startNote;
   const randomChordType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
 
-  // Generare l'accordo in base alla root e al tipo di accordo selezionato
-  const chords = generateChordsMIDI(randomRoot);  // Funzione generica che hai già
+  // Genera l'accordo in base al tipo selezionato
+  const chords = generateChordsMIDI(randomRoot);
   const chord = chords[randomChordType];
 
-  // Generare inversioni per l'accordo
-  const inversions = generateInversion(chord);
+  // Genera tutte le inversioni
+  const inversions = generateInversions(chord);
 
-  // Selezionare casualmente una delle inversioni
-  const selectedInversion = [inversions.rootPosition, inversions.firstInversion, inversions.secondInversion][Math.floor(Math.random() * 3)];
+  // Seleziona una delle inversioni casualmente
+  const selectedInversionIndex = Math.floor(Math.random() * inversions.length);
+  const selectedInversion = inversions[selectedInversionIndex];
 
-  // Aggiornare la root in base all'inversione selezionata
-  let updatedRoot;
-  let inversionType;
-  if (selectedInversion === inversions.firstInversion) {
-    updatedRoot = selectedInversion[2]; // La root della prima inversione è la nota più bassa (E)
-    inversionType = 'First Inversion';
-  } else if (selectedInversion === inversions.secondInversion) {
-    updatedRoot = selectedInversion[1]; // La root della seconda inversione è la nota più bassa (G)
-    inversionType = 'Second Inversion';
-  } else {
-    updatedRoot = randomRoot; // Root fondamentale
-    inversionType = 'Root Position';
-  }
+  // Determina la nuova root in base all'inversione
+  const updatedRoot = selectedInversionIndex === 0 ? selectedInversion[0]
+    : selectedInversion[selectedInversion.length - (selectedInversionIndex)];
+  const inversionType = selectedInversionIndex === 0 ? "Root Position"
+    : `${selectedInversionIndex}° Inversion`;
 
-  // Restituire l'output dell'accordo con inversioni, la root aggiornata e l'inversione selezionata
   return {
-    root: updatedRoot,
+    midiRoot: updatedRoot,
+    noteRoot: midiToNoteName(updatedRoot),
     chordType: randomChordType,
-    notes: selectedInversion,
-    inversion: inversionType  // Tipo di inversione
+    inversion: inversionType,
+    midiNotes: selectedInversion,
+    notes: selectedInversion.map(midiToNoteName) // Converte ogni numero MIDI in nome della nota
   };
 }
 
-// Esegui un esempio di test
-console.log("Accordo casuale:", generateRandomChord(60));
+// Esempi di test e utilizzo
+
+// Generatore di accordi
+console.log("Accordo facile:", generateRandomChord(60, "easy"));      // Facile
+console.log("Accordo medio:", generateRandomChord(72, "medium"));     // Medio
+console.log("Accordo difficile:", generateRandomChord(48, "hard"));   // Difficile
+
+// Riconoscimento di accordi
+// Accordi triadici
+console.log(recognizeChordMIDI([60, 64, 67]));       // C Major
+console.log(recognizeChordMIDI([61, 64, 68]));       // C# Minor
+console.log(recognizeChordMIDI([62, 65, 69]));       // D Minor
+console.log(recognizeChordMIDI([63, 66, 69]));       // D# Diminished
+
+// Accordi con settima
+console.log(recognizeChordMIDI([64, 67, 71, 74]));   // E Major 7
+console.log(recognizeChordMIDI([65, 69, 72, 75]));   // F Dominant 7
+console.log(recognizeChordMIDI([66, 70, 73, 76]));   // F# Minor 7
+
+// Accordi con nona
+console.log(recognizeChordMIDI([67, 71, 74, 77, 81])); // G Dominant 9
+console.log(recognizeChordMIDI([68, 71, 75, 78, 82])); // Ab Minor 9
+console.log(recognizeChordMIDI([69, 73, 76, 79, 83])); // A Major 9
+
+// Accordi con undicesima e tredicesima
+console.log(recognizeChordMIDI([70, 74, 77, 80, 84, 88])); // Bb 13
+console.log(recognizeChordMIDI([71, 75, 78, 81, 85, 89])); // B Minor 13
+console.log(recognizeChordMIDI([72, 76, 79, 83, 87]));     // C Maj 11
+
+// Prima inversione
+console.log(recognizeChordMIDI([64, 67, 72]));       // C Major (First inversion: E-G-C)
+
+// Seconda inversione
+console.log(recognizeChordMIDI([67, 72, 76]));       // C Major (Second inversion: G-C-E)
+
+// Inversione di accordi complessi
+console.log(recognizeChordMIDI([70, 77, 84, 91, 98])); // Bb 13 (Random inversion)
+console.log(recognizeChordMIDI([76, 83, 90, 97]));     // E Minor 9 (Random inversion)
+
+// Note fuori scala o incomplete
+console.log(recognizeChordMIDI([60, 63, 66]));       // Non riconosciuto (Incomplete diminished chord)
+console.log(recognizeChordMIDI([61, 64, 68]));       // Non riconosciuto (Random notes)
+
+// Accordature non valide
+console.log(recognizeChordMIDI([60, 62, 66]));       // Non riconosciuto
+console.log(recognizeChordMIDI([63, 66, 70]));       // Non riconosciuto
+
+// Cluster atonali
+console.log(recognizeChordMIDI([60, 61, 62, 63]));   // Non riconosciuto
+console.log(recognizeChordMIDI([64, 65, 66, 67]));   // Non riconosciuto
+
+// Scale cromatiche
+console.log(recognizeChordMIDI([60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71])); // Non riconosciuto
+
+// Distanze ampie (Note sparse)
+console.log(recognizeChordMIDI([48, 55, 60, 67]));    // Non riconosciuto (Sparse notes)
+console.log(recognizeChordMIDI([50, 57, 62, 69]));    // Non riconosciuto (Sparse notes)
+
+// Accordi complessi ma dissonanti
+console.log(recognizeChordMIDI([60, 66, 72, 77]));    // Non riconosciuto
+console.log(recognizeChordMIDI([61, 65, 70, 75]));    // Non riconosciuto

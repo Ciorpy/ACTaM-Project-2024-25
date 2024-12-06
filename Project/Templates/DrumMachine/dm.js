@@ -55,16 +55,16 @@ Array.from(drumMachineItems).forEach((item, index) => {
 let preloadedSounds = [];
 
 const audioFiles = [
-  "../../Sounds/Drum Samples/BD.wav",
-  "../../Sounds/Drum Samples/SN.wav",
-  "../../Sounds/Drum Samples/T1.wav",
-  "../../Sounds/Drum Samples/T2.wav",
-  "../../Sounds/Drum Samples/T3.wav",
-  "../../Sounds/Drum Samples/CHH.wav",
-  "../../Sounds/Drum Samples/OHH.wav",
+  "../../Sounds/New Drum Samples/Kick 22.wav",
+  "../../Sounds/New Drum Samples/Snare Ludwig Acrolite.wav",
+  "../../Sounds/New Drum Samples/Tom 10.wav",
+  "../../Sounds/New Drum Samples/Tom 12.wav",
+  "../../Sounds/New Drum Samples/Floor Tom 16.wav",
+  "../../Sounds/New Drum Samples/Hi Hat Close Sabian HHX 14.wav",
+  "../../Sounds/New Drum Samples/Hi Hat Open Sabian HHX 14.wav",
   "../../Sounds/Drum Samples/RD.wav",
-  "../../Sounds/Drum Samples/RB.wav",
-  "../../Sounds/Drum Samples/CR.wav",
+  "../../Sounds/New Drum Samples/Clap Stack.wav",
+  "../../Sounds/New Drum Samples/Crash K 18.wav",
 ];
 
 audioFiles.forEach((file, index) => {

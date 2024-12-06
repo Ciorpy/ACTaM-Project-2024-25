@@ -13,8 +13,14 @@ function generateChordsMIDI(rootMIDI) {
     "sus2": [rootMIDI, rootMIDI + 2, rootMIDI + 7],     // Sus2: T-2-7
     "sus4": [rootMIDI, rootMIDI + 5, rootMIDI + 7],     // Sus4: T-5-7
 
+    // Sesta
+    "Maj6": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9],      // Maggiore con sesta: T-4-7-9
+    "min6": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 9],      // Minore con sesta: T-3-7-9
+    "dim6": [rootMIDI, rootMIDI + 3, rootMIDI + 6, rootMIDI + 9],      // diminuita con sesta: T-3-6-9
+
     // Settima
     "Maj7": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11],      // Maggiore con settima maggiore: T-4-7-11
+    "mMaj7": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 11],     // Minore con settima maggiore: T-3-7-11
     "7": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10],         // Dominante: T-4-7-10
     "m7": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10],        // Minore con settima minore: T-3-7-10
     "m7b5": [rootMIDI, rootMIDI + 3, rootMIDI + 6, rootMIDI + 10],      // Minore diminuito con settima: T-3-6-10
@@ -22,19 +28,22 @@ function generateChordsMIDI(rootMIDI) {
     "Maj7#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 11],    // Maggiore con settima maggiore e quinta aumentata: T-4-8-11
     "7#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10],       // Dominante con quinta aumentata: T-4-8-10
     "m7#5": [rootMIDI, rootMIDI + 3, rootMIDI + 8, rootMIDI + 10],      // Minore con settima e quinta aumentata: T-3-8-10
-    "mMaj7": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 11],     // Minore con settima maggiore: T-3-7-11
 
     // Accordi di nona
-    "9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],   // Dominante con nona maggiore
-    "m9": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],  // Minore con nona maggiore
-    "Maj9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14],// Maggiore con nona maggiore
-    "7b9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 13], // Dominante con nona bemolle
-    "7#9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 15], // Dominante con nona diesis
+    "9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],    // Dominante con nona maggiore
+    "m9": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],   // Minore con nona maggiore
+    "Maj9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14], // Maggiore con nona maggiore
+    "7b9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 13],  // Dominante con nona bemolle
+    "7#9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 15],  // Dominante con nona diesis
+    "6b9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 13],   // Sesta con nona bemolle
+    "6#9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 15],   // Sesta con nona diesis
+    "6(9)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 14],  // Sesta con nona maggiore
 
     // Accordi di undicesima
-    "7(11)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 17], // Dominante con undicesima
-    "m11": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 17], // Minore con undicesima
+    "7(11)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 17],                // Dominante con undicesima
+    "m11": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 17],   // Minore con undicesima
     "Maj11": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14, rootMIDI + 17], // Maggiore con undicesima
+    "6(11)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 17],                 // Sesta con undicesima
 
     // Accordi di tredicesima
     "13": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 21],    // Dominante con tredicesima
@@ -102,11 +111,25 @@ function generateInversions(chordNotes) {
 function generateRandomChord(startNote = 60, difficulty = "easy") {
   // Lista di tipi di accordi possibili
   const chordTypesByDifficulty = {
-    easy: ["Maj", "min", "dim", "7", "Maj7", "m7"],
-    medium: ["Maj", "min", "dim", "7", "Maj7", "m7", "Maj7#5", "m7b5", "9", "m9", "sus2", "sus4"],
+    easy: [
+      "Maj", "min", "dim", "aug"
+    ],
+    medium: [
+      //"Maj6", "min6", "dim6", "aug", 
+      "Maj7", "mMaj7", "7", "m7", "sus2", "sus4", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5"
+    ],
     hard: [
-      "Maj", "min", "dim", "7", "Maj7", "m7", "Maj7#5", "m7b5", "9", "m9", "sus2", "sus4",
-      "7b9", "7#9", "7(11)", "m11", "Maj11", "13", "m13", "Maj13"
+      //"Maj", "min", "dim", "aug",
+      //"Maj6", "min6", "dim6", 
+      //"Maj7", "mMaj7", "7", "m7", "sus2", "sus4", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5",
+      "9", "m9", "Maj9", "7b9", "7#9", "6b9", "6#9", "6(9)"
+    ],
+    jazz: [
+      //"Maj", "min", "dim",  
+      "Maj6", "min6", "dim6", "aug",
+      "Maj7", "mMaj7", "7", "m7", "sus2", "sus4", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5",
+      "9", "m9", "Maj9", "7b9", "7#9", "6b9", "6#9", "6(9)", 
+      "7(11)", "m11", "Maj11", "6(11)", "13", "m13", "Maj13"
     ]
   };
 
@@ -140,16 +163,17 @@ function generateRandomChord(startNote = 60, difficulty = "easy") {
     chordType: randomChordType,
     inversion: inversionType,
     midiNotes: selectedInversion,
-    notes: selectedInversion.map(midiToNoteName) // Converte ogni numero MIDI in nome della nota
+    notes: selectedInversion.map(midiToNoteName)
   };
 }
 
 // Esempi di test e utilizzo
 
 // Generatore di accordi
-console.log("Accordo facile:", generateRandomChord(60, "easy"));      // Facile
+/*console.log("Accordo facile:", generateRandomChord(60, "easy"));      // Facile
 console.log("Accordo medio:", generateRandomChord(72, "medium"));     // Medio
 console.log("Accordo difficile:", generateRandomChord(48, "hard"));   // Difficile
+console.log("Accordo jazz:", generateRandomChord(36, "jazz"));   // Difficile
 
 // Riconoscimento di accordi
 // Accordi triadici
@@ -204,4 +228,4 @@ console.log(recognizeChordMIDI([50, 57, 62, 69]));    // Non riconosciuto (Spars
 
 // Accordi complessi ma dissonanti
 console.log(recognizeChordMIDI([60, 66, 72, 77]));    // Non riconosciuto
-console.log(recognizeChordMIDI([61, 65, 70, 75]));    // Non riconosciuto
+console.log(recognizeChordMIDI([61, 65, 70, 75]));    // Non riconosciuto*/

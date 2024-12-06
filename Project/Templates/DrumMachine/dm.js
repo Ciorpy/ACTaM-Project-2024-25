@@ -28,6 +28,7 @@ console.log(selectedMinigame)
 
 let selectedPresets = minigamePresets[selectedMinigame][difficultyLevel]
 
+
 function getRandomDrumPatterns(array) {
   // Shuffle the array using Fisher-Yates (Knuth) algorithm
   for (let i = array.length - 1; i > 0; i--) {
@@ -48,9 +49,7 @@ let drumMachineController = Array.from({ length: drumSamples }, () =>
   Array(semicrome).fill(false)
 );
 
-let solution = Array.from({ length: drumSamples }, () =>
-  Array(semicrome).fill(false)
-);
+let solution = selectedPresets[0]
 
 let drumMachineItems = document.getElementsByClassName("drumMachineItem");
 
@@ -385,6 +384,7 @@ let wrongGuess = function () {
   if (isPlaying) stopMetronome();
   wrongGuessPanel.style.display = "flex";
   const wrongGuessAudio = new Audio("../../Sounds/morgan.mp3");
+  wrongGuessAudio.volume = 1;
   wrongGuessAudio.play();
   
   setTimeout(() => {

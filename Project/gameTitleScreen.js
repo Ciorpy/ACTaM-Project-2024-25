@@ -2,11 +2,11 @@
 funnyMSGS = [
   "Da Cremona tutto bene?",
   "Good Morning Sir!",
-  "Frare Jaques Simulator",
+  "Frare Jacques Simulator",
   'it goes: "WOWOWOWOWOWO"',
   "Weird Fishes/Arpeggi",
   "Biliardino??",
-  "Ping Pong??",
+  "MADONNA RAGAZZI LEZZO",
 ];
 
 randomN = Math.floor(Math.random() * 7);
@@ -17,12 +17,17 @@ document.getElementById("funnyMSG").innerHTML = funnyMSGS[randomN];
 document.getElementById("mainMenuSoundtrack").volume = localStorage.getItem("mainVolume") ? localStorage.getItem("mainVolume") : 0.3;
 
 // Menu navigation system
-mainMenu = document.getElementById("mainMenu");
-settingsMenu = document.getElementById("settingsMenu");
-tutorialMenu = document.getElementById("tutorialMenu");
+let mainMenu = document.getElementById("mainMenu");
+let settingsMenu = document.getElementById("settingsMenu");
+let tutorialMenu = document.getElementById("tutorialMenu");
 
-settingsKey = document.getElementById("S_Key");
-tutorialKey = document.getElementById("H2P_Key");
+let singplePlayerKey = document.getElementById("SP_Key");
+let settingsKey = document.getElementById("S_Key");
+let tutorialKey = document.getElementById("H2P_Key");
+
+singplePlayerKey.addEventListener("click", () => {
+  loadGamemodeSelector()
+})
 
 settingsKey.addEventListener("click", () => {
   mainMenu.style.display = "none";
@@ -37,8 +42,8 @@ tutorialKey.addEventListener("click", () => {
 });
 
 // Settings Menu
-languages = document.getElementsByClassName("flag");
-musicNotations = document.getElementsByClassName("musicNotationSelector");
+let languages = document.getElementsByClassName("flag");
+let musicNotations = document.getElementsByClassName("musicNotationSelector");
 
 Array.from(languages).forEach((element, index) => {
   element.addEventListener("click", () =>{
@@ -72,17 +77,91 @@ localStorage.getItem("musicNotation") ?
   musicNotations[0].classList.toggle("activeSettingsItem", true);
 
 // Volume Handler
-volumeSlider = document.getElementById("mainVolumeSlider");
+let volumeSlider = document.getElementById("mainVolumeSlider");
 volumeSlider.value = localStorage.getItem("mainVolume") ? localStorage.getItem("mainVolume") : 0.3;
 
 volumeSlider.addEventListener("input", ()=>{
   localStorage.setItem("mainVolume", volumeSlider.value);
 });
 
-backButtonS = document.getElementById("backS");
+
+
+
+let gamemodeSelectorMenu = document.getElementById("gamemodeSelectorMenu")
+
+let backButtonS = document.getElementById("backS");
+let backButtonGMS = document.getElementById("backGMS");
+
+backButtonGMS.addEventListener("click", () => {
+  mainMenu.style.display = "block";
+  settingsMenu.style.display = "none";
+  tutorialMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "none";
+});
+let loadGamemodeSelector = function () {
+  mainMenu.style.display = "none"
+  gamemodeSelectorMenu.style.display = "block"
+}
 
 backButtonS.addEventListener("click", () => {
   mainMenu.style.display = "block";
   settingsMenu.style.display = "none";
   tutorialMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "none";
 });
+
+let chordsGamemodeButton = document.getElementById("chords_GM")
+let chords2GamemodeButton = document.getElementById("chords2_GM")
+let groovesGamemodeButton = document.getElementById("grooves_GM")
+let fillsGamemodeButton = document.getElementById("fills_GM")
+
+let gamemodeButtons = [chordsGamemodeButton, chords2GamemodeButton, groovesGamemodeButton, fillsGamemodeButton]
+
+let difficultySelectorMenu = document.getElementById("difficultySelectorMenu")
+gamemodeButtons.forEach((item) => {
+  item.addEventListener("click", () =>{
+    localStorage.setItem("Gamemode", item.id)
+    loadDifficultySelectorMenu()
+  })
+})
+
+let backButton2GM = document.getElementById("back2GM")
+
+backButton2GM.addEventListener("click", () => {
+  mainMenu.style.display = "none";
+  settingsMenu.style.display = "none";
+  tutorialMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "block";
+  difficultySelectorMenu.style.display = "none";
+});
+
+let loadDifficultySelectorMenu = function () {
+  gamemodeSelectorMenu.style.display = "none";
+  difficultySelectorMenu.style.display = "block"
+}
+
+
+
+let easyDiffButton = document.getElementById("easyDiff")
+let mediumDiffButton = document.getElementById("mediumDiff")
+let hardDiffButton = document.getElementById("hardDiff")
+
+let difficultyButtons = [easyDiffButton, mediumDiffButton, hardDiffButton]
+
+difficultyButtons.forEach((item) => {
+  item.addEventListener("click", () =>{
+    localStorage.setItem("Difficulty", item.id)
+    loadGamePage()
+  })
+})
+
+let minigamePages = {
+  "chords_GM": "./Templates/KeyBoard/keyboard.html",
+  "chords2_GM": "./Templates/KeyBoard/keyboard.html",
+  "grooves_GM": "./Templates/DrumMachine/drumMachineInput.html",
+  "fills_GM": "./Templates/DrumMachine/drumMachineInput.html",
+}
+
+loadGamePage = function () {
+  window.location.href = minigamePages[localStorage.getItem("Gamemode")];
+}

@@ -13,7 +13,7 @@ class PianoView {
 
     renderKeyboard() {
         const pianoContainer = document.getElementById(this.containerId);
-        pianoContainer.innerHTML = ""; // Pulisce il contenuto precedente
+        pianoContainer.innerHTML = ""; 
 
         const totalWhiteKeys = Array.from({ length: this.numberOfKeys }, (_, i) => this.startMidiNote + i)
             .filter(note => !this.blackKeys.includes(note % 12)).length;

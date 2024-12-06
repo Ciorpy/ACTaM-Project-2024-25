@@ -1,6 +1,6 @@
 const notesInOctave = 12;
 
-// Funzione per generare gli accordi, inclusi sus con settima
+// Funzione per generare gli accordi (database dinamico)
 function generateChordsMIDI(rootMIDI) {
   return {
     // Triadi

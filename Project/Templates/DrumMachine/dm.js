@@ -8,6 +8,9 @@ let i = 0;
 let j = 0;
 let metronomeInterval;
 let levelIndex = 0;
+let maxScore = 100;
+let roundScore = maxScore;
+let totalScore = 0;
 
 let difficultyLevel = localStorage.getItem("Difficulty")
 let selectedMinigame = localStorage.getItem("Gamemode")
@@ -366,8 +369,6 @@ playSolutionButton.addEventListener("click", () => {
   }
 });
 
-let score = 0;
-
 let endGamePanel = document.getElementById("endGameScreen");
 
 let endGame = function () {
@@ -382,10 +383,13 @@ let endGame = function () {
     if(levelIndex < 3){
       endGamePanel.style.display = "none"
       solution = chosenPresets[levelIndex]
+      totalScore += roundScore;
+      roundScore = 100;
     } else {
       console.log("GIOCO FINITO")
+      console.log(score)
     }
-  }, 4000);
+  }, 5000);
 };
 
 let wrongGuessPanel = document.getElementById("wrongGuessScreen");

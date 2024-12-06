@@ -6,8 +6,6 @@ class PianoController {
         this.model = new PianoModel();
         this.view = new PianoView(containerId, numberOfKeys, startMidiNote);
         this.synths = {};
-        this.updateDelay = 0;
-        this.updateTimeout = null;
         this.allKeysReleased = true
 
         this.init();
@@ -55,9 +53,8 @@ class PianoController {
     }
 
     delayedUpdatePressedNotes(newNote) {
-        if (this.updateTimeout) clearTimeout(this.updateTimeout);
 
-        this.updateTimeout = setTimeout(() => {
+
             const updatedNotes = this.model.getPressedNotes();
 
             if (!updatedNotes.includes(newNote)) {
@@ -66,8 +63,6 @@ class PianoController {
 
             this.model.setPressedNotes(updatedNotes);
 
-            console.log("Pressed notes:", this.model.getPressedNotes());
-        }, this.updateDelay);
     }
 
     getPressedNotes() {

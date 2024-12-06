@@ -39,7 +39,7 @@
 
 }
 .drumMachineLegend img {
-    width: 100%;
+    width: 70%;
     border: 3px solid darkgreen;
     border-radius: 30px;
 }
@@ -49,7 +49,7 @@
     font-size: 30px;
     font-weight: 700;
     padding: 10px 30px;
-    width: 18%;
+    width: 300px;
     text-align: center;
     display: flex;
     flex-direction: row;
@@ -188,7 +188,7 @@
 }
 
 .debugArea{
-    display: flex;
+    display: none;
     flex-direction: row;
 }
 

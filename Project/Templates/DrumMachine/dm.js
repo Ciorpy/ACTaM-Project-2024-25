@@ -1,12 +1,13 @@
 let semicrome = 16;
 let drumSamples = 10;
-let defaultBpm = 150;
+let defaultBpm = 100;
 let bpm = defaultBpm;
 let isPlaying = false;
 let isSolutionPlaying = false;
 let i = 0;
 let j = 0;
 let metronomeInterval;
+let levelIndex = 0;
 
 let difficultyLevel = localStorage.getItem("Difficulty")
 let selectedMinigame = localStorage.getItem("Gamemode")
@@ -49,7 +50,7 @@ let drumMachineController = Array.from({ length: drumSamples }, () =>
   Array(semicrome).fill(false)
 );
 
-let solution = selectedPresets[0]
+let solution = selectedPresets[levelIndex]
 
 let drumMachineItems = document.getElementsByClassName("drumMachineItem");
 
@@ -375,6 +376,16 @@ let endGame = function () {
   endGamePanel.style.display = "flex";
   const endGameAudio = new Audio("../../Sounds/maneskin.wav");
   endGameAudio.play();
+  setTimeout(() => {
+    resetDrumMachine()
+    levelIndex = levelIndex + 1;
+    if(levelIndex < 3){
+      endGamePanel.style.display = "none"
+      solution = chosenPresets[levelIndex]
+    } else {
+      console.log("GIOCO FINITO")
+    }
+  }, 4000);
 };
 
 let wrongGuessPanel = document.getElementById("wrongGuessScreen");

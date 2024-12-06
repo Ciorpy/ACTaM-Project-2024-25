@@ -19,11 +19,11 @@ document.getElementById("mainMenuSoundtrack").volume = localStorage.getItem("mai
 // Menu navigation system
 let mainMenu = document.getElementById("mainMenu");
 let settingsMenu = document.getElementById("settingsMenu");
-let tutorialMenu = document.getElementById("tutorialMenu");
+let practiceMenu = document.getElementById("practiceMenu");
 
 let singplePlayerKey = document.getElementById("SP_Key");
 let settingsKey = document.getElementById("S_Key");
-let tutorialKey = document.getElementById("H2P_Key");
+let practiceKey = document.getElementById("H2P_Key");
 
 singplePlayerKey.addEventListener("click", () => {
   loadGamemodeSelector()
@@ -32,13 +32,13 @@ singplePlayerKey.addEventListener("click", () => {
 settingsKey.addEventListener("click", () => {
   mainMenu.style.display = "none";
   settingsMenu.style.display = "block";
-  tutorialMenu.style.display = "none";
+  practiceMenu.style.display = "none";
 });
 
-tutorialKey.addEventListener("click", () => {
+practiceKey.addEventListener("click", () => {
   mainMenu.style.display = "none";
   settingsMenu.style.display = "none";
-  tutorialMenu.style.display = "block";
+  practiceMenu.style.display = "block";
 });
 
 // Settings Menu
@@ -95,7 +95,7 @@ let backButtonGMS = document.getElementById("backGMS");
 backButtonGMS.addEventListener("click", () => {
   mainMenu.style.display = "block";
   settingsMenu.style.display = "none";
-  tutorialMenu.style.display = "none";
+  practiceMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "none";
 });
 let loadGamemodeSelector = function () {
@@ -106,7 +106,7 @@ let loadGamemodeSelector = function () {
 backButtonS.addEventListener("click", () => {
   mainMenu.style.display = "block";
   settingsMenu.style.display = "none";
-  tutorialMenu.style.display = "none";
+  practiceMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "none";
 });
 
@@ -130,10 +130,11 @@ let backButton2GM = document.getElementById("back2GM")
 backButton2GM.addEventListener("click", () => {
   mainMenu.style.display = "none";
   settingsMenu.style.display = "none";
-  tutorialMenu.style.display = "none";
+  practiceMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "block";
   difficultySelectorMenu.style.display = "none";
 });
+
 
 let loadDifficultySelectorMenu = function () {
   gamemodeSelectorMenu.style.display = "none";
@@ -151,6 +152,7 @@ let difficultyButtons = [easyDiffButton, mediumDiffButton, hardDiffButton]
 difficultyButtons.forEach((item) => {
   item.addEventListener("click", () =>{
     localStorage.setItem("Difficulty", item.id)
+    localStorage.setItem("Practice", false)
     loadGamePage()
   })
 })
@@ -165,3 +167,29 @@ let minigamePages = {
 loadGamePage = function () {
   window.location.href = minigamePages[localStorage.getItem("Gamemode")];
 }
+
+let PracticeDmButton = document.getElementById("PracticeDM")
+let PracticeKbButton = document.getElementById("PracticeKB")
+
+let PracticeButtons = [PracticeDmButton, PracticeKbButton]
+
+let practicePages = [
+  "./Templates/DrumMachine/drumMachineInput.html",
+  "./Templates/KeyBoard/keyboard.html",
+]
+
+PracticeButtons.forEach((item, index) => {
+  item.addEventListener("click", () =>{
+    localStorage.setItem("Practice", true)
+    window.location.href = practicePages[index];
+  })
+})
+
+let backButtonP = document.getElementById("backP");
+
+backButtonP.addEventListener("click", () => {
+  mainMenu.style.display = "block";
+  settingsMenu.style.display = "none";
+  practiceMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "none";
+});

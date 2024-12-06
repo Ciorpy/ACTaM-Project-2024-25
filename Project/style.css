@@ -88,8 +88,8 @@ body {
   color: orange
 }
 
-#settingsMenu, #tutorialMenu {
-  border: 2px solid purple;
+#settingsMenu, #practiceMenu {
+  border: 2px solid cornflowerblue;
   padding: 30px;
   border-radius: 20px;
 }

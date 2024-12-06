@@ -4,7 +4,7 @@ class PianoModel {
     }
 
     getPressedNotes() {
-        return [...this.currentPressedNotes]; // Restituisce una copia della lista
+        return [...this.currentPressedNotes]; 
     }
 
     setPressedNotes(notes) {

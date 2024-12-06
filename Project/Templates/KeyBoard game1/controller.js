@@ -6,8 +6,9 @@ class PianoController {
         this.model = new PianoModel();
         this.view = new PianoView(containerId, numberOfKeys, startMidiNote);
         this.synths = {};
-        this.updateDelay = 100;
+        this.updateDelay = 0;
         this.updateTimeout = null;
+        this.allKeysReleased = true
 
         this.init();
     }
@@ -29,27 +30,42 @@ class PianoController {
     }
 
     playNote(note) {
-        this.view.setActiveKey(note, true);
-    
-        this.synths[note].triggerAttack(Tone.Frequency(note, "midi"));
-        this.model.addPressedNote(note);
-    
-        this.delayedUpdatePressedNotes();
-    }
-    
-    stopNote(note) {
-        this.view.setActiveKey(note, false);
-    
-        this.synths[note].triggerRelease();
-        this.model.removePressedNote(note);
-    }
-    
-    
+        if (this.allKeysReleased) {
+            this.model.setPressedNotes([]);
+            this.allKeysReleased = false;
+        }
 
-    delayedUpdatePressedNotes() {
+        this.view.setActiveKey(note, true);
+
+        this.synths[note].triggerAttack(Tone.Frequency(note, "midi"));
+
+        this.delayedUpdatePressedNotes(note);
+    }
+
+    stopNote(note) {
+
+        this.view.setActiveKey(note, false);
+
+        this.synths[note].triggerRelease();
+
+        const activeKeys = document.querySelectorAll(".key.active");
+        if (activeKeys.length === 0) {
+            this.allKeysReleased = true; 
+        }
+    }
+
+    delayedUpdatePressedNotes(newNote) {
         if (this.updateTimeout) clearTimeout(this.updateTimeout);
 
         this.updateTimeout = setTimeout(() => {
+            const updatedNotes = this.model.getPressedNotes();
+
+            if (!updatedNotes.includes(newNote)) {
+                updatedNotes.push(newNote);
+            }
+
+            this.model.setPressedNotes(updatedNotes);
+
             console.log("Pressed notes:", this.model.getPressedNotes());
         }, this.updateDelay);
     }
@@ -58,5 +74,6 @@ class PianoController {
         return this.model.getPressedNotes();
     }
 }
+
 
 export default PianoController;

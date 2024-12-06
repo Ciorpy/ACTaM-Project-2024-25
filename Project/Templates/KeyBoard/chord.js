@@ -108,7 +108,7 @@ function generateInversions(chordNotes) {
 }
 
 // Funzione di generazione di un accordo random con inversioni
-function generateRandomChord(startNote = 60, difficulty = "easy") {
+export function generateRandomChord(startNote = 60, difficulty = "easy") {
   // Lista di tipi di accordi possibili
   const chordTypesByDifficulty = {
     easy: [
@@ -167,65 +167,3 @@ function generateRandomChord(startNote = 60, difficulty = "easy") {
   };
 }
 
-// Esempi di test e utilizzo
-
-// Generatore di accordi
-/*console.log("Accordo facile:", generateRandomChord(60, "easy"));      // Facile
-console.log("Accordo medio:", generateRandomChord(72, "medium"));     // Medio
-console.log("Accordo difficile:", generateRandomChord(48, "hard"));   // Difficile
-console.log("Accordo jazz:", generateRandomChord(36, "jazz"));   // Difficile
-
-// Riconoscimento di accordi
-// Accordi triadici
-console.log(recognizeChordMIDI([60, 64, 67]));       // C Major
-console.log(recognizeChordMIDI([61, 64, 68]));       // C# Minor
-console.log(recognizeChordMIDI([62, 65, 69]));       // D Minor
-console.log(recognizeChordMIDI([63, 66, 69]));       // D# Diminished
-
-// Accordi con settima
-console.log(recognizeChordMIDI([64, 67, 71, 74]));   // E Major 7
-console.log(recognizeChordMIDI([65, 69, 72, 75]));   // F Dominant 7
-console.log(recognizeChordMIDI([66, 70, 73, 76]));   // F# Minor 7
-
-// Accordi con nona
-console.log(recognizeChordMIDI([67, 71, 74, 77, 81])); // G Dominant 9
-console.log(recognizeChordMIDI([68, 71, 75, 78, 82])); // Ab Minor 9
-console.log(recognizeChordMIDI([69, 73, 76, 79, 83])); // A Major 9
-
-// Accordi con undicesima e tredicesima
-console.log(recognizeChordMIDI([70, 74, 77, 80, 84, 88])); // Bb 13
-console.log(recognizeChordMIDI([71, 75, 78, 81, 85, 89])); // B Minor 13
-console.log(recognizeChordMIDI([72, 76, 79, 83, 87]));     // C Maj 11
-
-// Prima inversione
-console.log(recognizeChordMIDI([64, 67, 72]));       // C Major (First inversion: E-G-C)
-
-// Seconda inversione
-console.log(recognizeChordMIDI([67, 72, 76]));       // C Major (Second inversion: G-C-E)
-
-// Inversione di accordi complessi
-console.log(recognizeChordMIDI([70, 77, 84, 91, 98])); // Bb 13 (Random inversion)
-console.log(recognizeChordMIDI([76, 83, 90, 97]));     // E Minor 9 (Random inversion)
-
-// Note fuori scala o incomplete
-console.log(recognizeChordMIDI([60, 63, 66]));       // Non riconosciuto (Incomplete diminished chord)
-console.log(recognizeChordMIDI([61, 64, 68]));       // Non riconosciuto (Random notes)
-
-// Accordature non valide
-console.log(recognizeChordMIDI([60, 62, 66]));       // Non riconosciuto
-console.log(recognizeChordMIDI([63, 66, 70]));       // Non riconosciuto
-
-// Cluster atonali
-console.log(recognizeChordMIDI([60, 61, 62, 63]));   // Non riconosciuto
-console.log(recognizeChordMIDI([64, 65, 66, 67]));   // Non riconosciuto
-
-// Scale cromatiche
-console.log(recognizeChordMIDI([60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71])); // Non riconosciuto
-
-// Distanze ampie (Note sparse)
-console.log(recognizeChordMIDI([48, 55, 60, 67]));    // Non riconosciuto (Sparse notes)
-console.log(recognizeChordMIDI([50, 57, 62, 69]));    // Non riconosciuto (Sparse notes)
-
-// Accordi complessi ma dissonanti
-console.log(recognizeChordMIDI([60, 66, 72, 77]));    // Non riconosciuto
-console.log(recognizeChordMIDI([61, 65, 70, 75]));    // Non riconosciuto*/

@@ -1,7 +1,7 @@
 import PianoController from "./controller.js";
 import { generateRandomChord } from './chord.js';
 
-const piano = new PianoController("piano", 24, 60);
+const piano = new PianoController("piano", 37, 48);
 
 // Livelli di difficoltà
 const levels = ['easy', 'medium', 'hard', 'jazz'];
@@ -32,7 +32,7 @@ function startLevel() {
 
   const currentLevel = levels[currentLevelIndex];
   levelDisplay.textContent = `Livello: ${currentLevel}`;
-  generatedChord = generateRandomChord(60, currentLevel).midiNotes;
+  generatedChord = generateRandomChord(48, currentLevel).midiNotes;
 
   console.log(`Nuovo accordo per il livello ${currentLevel}:`, generatedChord);
   feedbackDisplay.textContent = "Nuovo accordo generato!";

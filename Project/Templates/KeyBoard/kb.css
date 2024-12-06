@@ -13,7 +13,6 @@
     position: relative;
     height: 500px;
     user-select: none;
-    background-color: rgb(9, 33, 65);
     margin-top: 70px;
 }
 
@@ -33,12 +32,17 @@
     height: 100%;
     border: 1px solid black;
     background: white;
+    color: black;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: flex-end;
     font-size: 10px;
     box-sizing: border-box;
+}
+
+.key span {
+    background: transparent; /* Rimuove lo sfondo per i caratteri */
 }
 
 .key.black {
@@ -48,6 +52,10 @@
     background: black;
     color: white;
     z-index: 2;
+}
+
+.key.black span {
+    background: transparent; /* Rimuove lo sfondo per i caratteri */
 }
 
 

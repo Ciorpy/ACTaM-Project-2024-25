@@ -158,8 +158,8 @@ difficultyButtons.forEach((item) => {
 })
 
 let minigamePages = {
-  "chords_GM": "./Templates/KeyBoard/keyboard.html",
-  "chords2_GM": "./Templates/KeyBoard/keyboard.html",
+  "chords_GM": "./Templates/KeyBoard/keyBoardInput.html",
+  "chords2_GM": "./Templates/KeyBoard/keyBoardInput.html",
   "grooves_GM": "./Templates/DrumMachine/drumMachineInput.html",
   "fills_GM": "./Templates/DrumMachine/drumMachineInput.html",
 }
@@ -175,7 +175,7 @@ let PracticeButtons = [PracticeDmButton, PracticeKbButton]
 
 let practicePages = [
   "./Templates/DrumMachine/drumMachineInput.html",
-  "./Templates/KeyBoard/keyboard.html",
+  "./Templates/KeyBoard/keyBoardInput.html",
 ]
 
 PracticeButtons.forEach((item, index) => {

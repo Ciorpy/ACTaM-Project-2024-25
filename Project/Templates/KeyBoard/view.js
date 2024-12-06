@@ -7,12 +7,13 @@ class PianoView {
 
         // Mappatura dei tasti fisici per ogni ottava
         this.keyboardKeys = [
-            // Prima ottava
-            "KeyW", "Digit3", "KeyE", "Digit4", "KeyR", "KeyT", "Digit6", 
-            "KeyY", "Digit7", "KeyU", "Digit8", "KeyI",
-            // Seconda ottava
-            "KeyZ", "KeyS", "KeyX", "KeyD", "KeyC", "KeyV", "KeyG", 
-            "KeyB", "KeyH", "KeyN", "KeyJ", "KeyM"
+            // Prima ottava e mezza
+            "KeyQ", "Digit2", "KeyW", "Digit3", "KeyE", "KeyR", "Digit5", 
+            "KeyT", "Digit6", "KeyY", "Digit7", "KeyU", "KeyI", "Digit9", 
+            "KeyO", "Digit0", "KeyP", "BracketLeft", "Equal", "BracketRight",
+            // Seconda ottava e mezza
+            "KeyA", "KeyZ", "KeyS", "KeyX", "KeyC", "KeyF", "KeyV", "KeyG", 
+            "KeyB", "KeyN", "KeyJ", "KeyM", "KeyK", "Comma", "KeyL", "Period", "Slash"
         ];
 
         this.keyMap = {};
@@ -40,7 +41,7 @@ class PianoView {
                 key.dataset.keyboardKey = keyboardKey;
                 this.keyMap[keyboardKey] = midiNote;
     
-                // Crea un elemento per mostrare il nome del tasto
+                // Mostra il nome del tasto
                 const keyLabel = document.createElement("span");
                 keyLabel.classList.add("key-label");
                 keyLabel.textContent = keyboardKey.replace("Key", "").replace("Digit", "");
@@ -60,7 +61,7 @@ class PianoView {
     
             pianoContainer.appendChild(key);
         }
-    }    
+    } 
 
     setActiveKey(note, isActive) {
         const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);

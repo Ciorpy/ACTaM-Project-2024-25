@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tastiera Pianoforte</title>
     <meta author="filippoLonghi" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="kb.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,7 +26,13 @@
         <div class="button" id="playSolutionButton">PLAY SOLUTION</div>
         <div class="button" id="checkInputButton">CHECK</div>
     </div>
+    <div id="game-info">
+        <h3 id="level">Livello: easy</h3>
+        <h3 id="chord-count">Accordi indovinati: 0</h3>
+        <h3 id="feedback"></h3>
+      </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-    <script src="script.js"></script>
+    <script type="module" src="kb.js"></script>
 </body>
 </html>

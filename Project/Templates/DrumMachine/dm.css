@@ -7,17 +7,33 @@
     padding: 0;
 }
 
+.body{
+    background-color: rgb(9, 33, 65);
+}
+
+.title {
+    font-family: "Slackey", sans-serif;
+    font-weight: 700;
+    width: 100%;
+    height: 120px;
+    line-height: 120px;
+    font-size: 100px;
+    text-align: center;
+    color: cornflowerblue;
+    background-color: rgb(9, 33, 65);
+}
+
 .drumMachineScreen{
     display: flex;
     flex-direction: row;
-    background-color: #8A8A8A;
+    background-color: rgb(9, 33, 65);
     width: 100%;
     gap: 0px;
-    border-bottom: 5px solid darkgreen;
+    border-bottom: 3px solid orange;
 }
 
 .drumMachineInput {
-    background-color: #8A8A8A;
+    background-color: rgb(9, 33, 65);
     margin: auto;
     left: 0px;
 }
@@ -40,7 +56,7 @@
 }
 .drumMachineLegend img {
     width: 70%;
-    border: 3px solid darkgreen;
+    border: 3px solid orange;
     border-radius: 30px;
 }
 
@@ -70,20 +86,20 @@
     background-image: url("../../Images/Speaker_Icon.svg");
     border-radius: 20%;
     cursor: pointer;
-    border: 2px solid darkgreen
+    border: 2px solid orange
 }
 
 .semicroma {
     height: 45px;
     width: 45px;
     border-radius: 5px;
-    border: 2px solid black;
+    border: 2px solid grey;
     cursor: pointer;
     margin: auto;
 }
 
 .semicroma:hover {
-    border: 5px solid darkgreen;
+    border: 5px solid orange;
 }
 
 .newQuarto {
@@ -129,16 +145,17 @@
     gap: 20px;
     display: flex;
     flex-direction: row;
-    background-color: white;
+    background-color: rgb(9, 33, 65);
 }
 
 .button {
     padding: 30px;
-    border: 2px solid red;
+    border: 2px solid orange;
     width: 300px;
     text-align: center;
     cursor: pointer;
-    background-color: white;
+    background-color: rgb(9, 33, 65);
+    color: orange;
 }
 
 .bpmInput {
@@ -147,6 +164,8 @@
     gap: 10px;
     width: 300px;
     margin: auto;
+    color: orange;
+
 }
 
 .bpmInput input {
@@ -154,7 +173,7 @@
 }
 
 .button:hover{
-    background-color: grey;
+    background-color: rgb(23, 67, 67);
 }
 
 .presets {

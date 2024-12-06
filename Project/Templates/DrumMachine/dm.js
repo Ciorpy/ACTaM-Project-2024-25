@@ -1,20 +1,56 @@
 let semicrome = 16;
 let drumSamples = 10;
-let defaultBpm = 150;
+let defaultBpm = 100;
 let bpm = defaultBpm;
 let isPlaying = false;
 let isSolutionPlaying = false;
 let i = 0;
 let j = 0;
 let metronomeInterval;
+let levelIndex = 0;
+
+let difficultyLevel = localStorage.getItem("Difficulty")
+let selectedMinigame = localStorage.getItem("Gamemode")
+
+let minigamePresets = {
+  "grooves_GM": {
+    "easyDiff": easyGrooves,
+    "mediumDiff": mediumGrooves,
+    "hardDiff": hardGrooves,
+  },
+  "fills_GM": {
+    "easyDiff": easyFills,
+    "mediumDiff": mediumFills,
+    "hardDiff": hardFills,
+  }
+}
+console.log(difficultyLevel)
+console.log(selectedMinigame)
+
+let selectedPresets = minigamePresets[selectedMinigame][difficultyLevel]
+
+
+function getRandomDrumPatterns(array) {
+  // Shuffle the array using Fisher-Yates (Knuth) algorithm
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+
+  // Return the first 3 elements of the shuffled array
+  return array.slice(0, 3);
+}
+
+let chosenPresets = getRandomDrumPatterns(selectedPresets);
+console.log(chosenPresets)
+
+console.log(selectedPresets)
 
 let drumMachineController = Array.from({ length: drumSamples }, () =>
   Array(semicrome).fill(false)
 );
 
-let solution = Array.from({ length: drumSamples }, () =>
-  Array(semicrome).fill(false)
-);
+let solution = selectedPresets[levelIndex]
 
 let drumMachineItems = document.getElementsByClassName("drumMachineItem");
 
@@ -340,6 +376,16 @@ let endGame = function () {
   endGamePanel.style.display = "flex";
   const endGameAudio = new Audio("../../Sounds/maneskin.wav");
   endGameAudio.play();
+  setTimeout(() => {
+    resetDrumMachine()
+    levelIndex = levelIndex + 1;
+    if(levelIndex < 3){
+      endGamePanel.style.display = "none"
+      solution = chosenPresets[levelIndex]
+    } else {
+      console.log("GIOCO FINITO")
+    }
+  }, 4000);
 };
 
 let wrongGuessPanel = document.getElementById("wrongGuessScreen");
@@ -349,6 +395,7 @@ let wrongGuess = function () {
   if (isPlaying) stopMetronome();
   wrongGuessPanel.style.display = "flex";
   const wrongGuessAudio = new Audio("../../Sounds/morgan.mp3");
+  wrongGuessAudio.volume = 1;
   wrongGuessAudio.play();
   
   setTimeout(() => {

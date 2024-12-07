@@ -111,7 +111,7 @@ backButtonS.addEventListener("click", () => {
 });
 
 let chordsGamemodeButton = document.getElementById("chords_GM")
-//let harmonyGamemodeButton = document.getElementById("harmony_GM")
+let harmonyGamemodeButton = document.getElementById("harmony_GM")
 let groovesGamemodeButton = document.getElementById("grooves_GM")
 let fillsGamemodeButton = document.getElementById("fills_GM")
 

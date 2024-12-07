@@ -2,11 +2,11 @@ import PianoModel from "./model.js";
 import PianoView from "./view.js";
 
 class PianoController {
-    constructor(containerId, numberOfKeys, startMidiNote = 96) {
+    constructor(containerId, numberOfKeys, startMidiNote) {
         this.model = new PianoModel();
         this.view = new PianoView(containerId, numberOfKeys, startMidiNote);
         this.synths = {};
-        this.allKeysReleased = true
+        this.allKeysReleased = true;
 
         this.init();
     }
@@ -22,7 +22,7 @@ class PianoController {
             const midiNote = this.view.startMidiNote + i;
             this.synths[midiNote] = new Tone.Synth({
                 oscillator: { type: "amsine" },
-                envelope: { attack: 0.01, decay: 0.3, sustain: 0.2, release: 0.8 }
+                envelope: { attack: 0.01, decay: 0.3, sustain: 0.2, release: 0.8 },
             }).toDestination();
         }
     }
@@ -34,41 +34,37 @@ class PianoController {
         }
 
         this.view.setActiveKey(note, true);
-
         this.synths[note].triggerAttack(Tone.Frequency(note, "midi"));
-
         this.delayedUpdatePressedNotes(note);
     }
 
     stopNote(note) {
-
         this.view.setActiveKey(note, false);
-
         this.synths[note].triggerRelease();
 
         const activeKeys = document.querySelectorAll(".key.active");
         if (activeKeys.length === 0) {
-            this.allKeysReleased = true; 
+            this.allKeysReleased = true;
         }
     }
 
     delayedUpdatePressedNotes(newNote) {
-
-
-            const updatedNotes = this.model.getPressedNotes();
-
-            if (!updatedNotes.includes(newNote)) {
-                updatedNotes.push(newNote);
-            }
-
-            this.model.setPressedNotes(updatedNotes);
-
+        const updatedNotes = this.model.getPressedNotes();
+        if (!updatedNotes.includes(newNote)) {
+            updatedNotes.push(newNote);
+        }
+        this.model.setPressedNotes(updatedNotes);
     }
 
     getPressedNotes() {
         return this.model.getPressedNotes();
     }
-}
 
+    playChord(chord) {
+        chord.forEach(note => {
+            this.synths[note].triggerAttackRelease(Tone.Frequency(note, "midi"), "1n");
+        });
+    }
+}
 
 export default PianoController;

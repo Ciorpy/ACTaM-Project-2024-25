@@ -1,5 +1,5 @@
 class PianoView {
-    constructor(containerId, numberOfKeys, startMidiNote = 96) {
+    constructor(containerId, numberOfKeys, startMidiNote) {
         this.containerId = containerId;
         this.numberOfKeys = numberOfKeys;
         this.startMidiNote = startMidiNote;

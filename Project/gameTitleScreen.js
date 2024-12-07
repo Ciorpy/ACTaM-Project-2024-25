@@ -111,11 +111,11 @@ backButtonS.addEventListener("click", () => {
 });
 
 let chordsGamemodeButton = document.getElementById("chords_GM")
-let chords2GamemodeButton = document.getElementById("chords2_GM")
+//let harmonyGamemodeButton = document.getElementById("harmony_GM")
 let groovesGamemodeButton = document.getElementById("grooves_GM")
 let fillsGamemodeButton = document.getElementById("fills_GM")
 
-let gamemodeButtons = [chordsGamemodeButton, chords2GamemodeButton, groovesGamemodeButton, fillsGamemodeButton]
+let gamemodeButtons = [chordsGamemodeButton, harmonyGamemodeButton, groovesGamemodeButton, fillsGamemodeButton]
 
 let difficultySelectorMenu = document.getElementById("difficultySelectorMenu")
 gamemodeButtons.forEach((item) => {
@@ -159,7 +159,7 @@ difficultyButtons.forEach((item) => {
 
 let minigamePages = {
   "chords_GM": "./Templates/KeyBoard/keyBoardInput.html",
-  "chords2_GM": "./Templates/KeyBoard/keyBoardInput.html",
+  "harmony_GM": "./Templates/KeyBoard/keyBoardInput.html",
   "grooves_GM": "./Templates/DrumMachine/drumMachineInput.html",
   "fills_GM": "./Templates/DrumMachine/drumMachineInput.html",
 }

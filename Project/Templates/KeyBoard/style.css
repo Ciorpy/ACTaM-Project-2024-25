@@ -87,3 +87,13 @@
 .button:hover{
     background-color: rgb(23, 67, 67);
 }
+
+.key.correct {
+    background: green !important;
+    color: white;
+}
+
+.key.incorrect {
+    background: red !important;
+    color: white;
+}

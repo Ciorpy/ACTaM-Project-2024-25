@@ -98,6 +98,21 @@ class PianoView {
             }
         });
     }
+
+    setKeyColor(note, color) {
+        const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);
+        if (keyElement) {
+            keyElement.style.backgroundColor = color; // Imposta il colore specificato
+        }
+    }
+    
+    resetKeyColor(note) {
+        const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);
+        if (keyElement) {
+            keyElement.style.backgroundColor = ""; // Ripristina il colore originale
+        }
+    }
+    
 }
 
 export default PianoView;

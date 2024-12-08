@@ -20,10 +20,11 @@ document.getElementById("mainMenuSoundtrack").volume = localStorage.getItem("mai
 let mainMenu = document.getElementById("mainMenu");
 let settingsMenu = document.getElementById("settingsMenu");
 let practiceMenu = document.getElementById("practiceMenu");
-
+let creditsMenu = document.getElementById("creditsMenu");
 let singplePlayerKey = document.getElementById("SP_Key");
 let settingsKey = document.getElementById("S_Key");
 let practiceKey = document.getElementById("H2P_Key");
+let creditsKey = document.getElementById("C_Key");
 
 singplePlayerKey.addEventListener("click", () => {
   loadGamemodeSelector()
@@ -33,12 +34,21 @@ settingsKey.addEventListener("click", () => {
   mainMenu.style.display = "none";
   settingsMenu.style.display = "block";
   practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
 });
 
 practiceKey.addEventListener("click", () => {
   mainMenu.style.display = "none";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "block";
+  creditsMenu.style.display = "none";
+});
+
+creditsKey.addEventListener("click", () => {
+  mainMenu.style.display = "none";
+  settingsMenu.style.display = "none";
+  practiceMenu.style.display = "none";
+  creditsMenu.style.display = "block";
 });
 
 // Volume Handler
@@ -61,6 +71,7 @@ backButtonGMS.addEventListener("click", () => {
   mainMenu.style.display = "block";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "none";
 });
 let loadGamemodeSelector = function () {
@@ -72,6 +83,7 @@ backButtonS.addEventListener("click", () => {
   mainMenu.style.display = "block";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "none";
 });
 
@@ -96,6 +108,7 @@ backButton2GM.addEventListener("click", () => {
   mainMenu.style.display = "none";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "block";
   difficultySelectorMenu.style.display = "none";
 });
@@ -155,6 +168,17 @@ let backButtonP = document.getElementById("backP");
 backButtonP.addEventListener("click", () => {
   mainMenu.style.display = "block";
   settingsMenu.style.display = "none";
+  practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "none";
+});
+
+let backButtonC = document.getElementById("backC");
+
+backButtonC.addEventListener("click", () => {
+  mainMenu.style.display = "block";
+  settingsMenu.style.display = "none";
+  creditsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "none";
 });

@@ -20,8 +20,8 @@ toggleGuidedModeButton.addEventListener("click", () => {
 
 
 // Livelli di difficoltà
-const levels = ['easy', 'medium', 'hard', 'jazz'];
-let selectedLevel = 'easy'; // Livello selezionato dall'utente
+const levels = ['easyDiff', 'mediumDiff', 'hardDiff'];
+let selectedLevel = localStorage.getItem("Difficulty"); // Livello selezionato dall'utente
 let chordCount = 0;
 let wrongAttempts = 0; // Contatore errori
 let generatedChordData = {}; // Dettagli dell'accordo generato
@@ -33,22 +33,14 @@ const levelDisplay = document.getElementById("level");
 const chordCountDisplay = document.getElementById("chord-count");
 const feedbackDisplay = document.getElementById("feedback");
 const playSolutionButton = document.getElementById("playSolutionButton");
-const levelSelector = document.getElementById("levelSelector");
 const hintMessage = document.getElementById("hint-message");
 
 // Assegna il livello iniziale
 updateLevelDisplay();
 generateNewChord();
 
-// Ascolta il cambio di livello da parte dell'utente
-levelSelector.addEventListener("change", () => {
-    selectedLevel = levelSelector.value;
-    chordCount = 0; // Reset del contatore accordi
-    wrongAttempts = 0; // Reset degli errori
-    hintMessage.textContent = "Prova a indovinare l'accordo!";
-    updateLevelDisplay();
-    generateNewChord();
-});
+hintMessage.textContent = "Prova a indovinare l'accordo!";
+
 
 // Ascolta le note suonate dal giocatore
 document.addEventListener("keydown", () => {

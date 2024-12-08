@@ -108,17 +108,17 @@ function generateInversions(chordNotes) {
 }
 
 // Funzione di generazione di un accordo random con inversioni
-export function generateRandomChord(startNote = 60, difficulty = "easy") {
+export function generateRandomChord(startNote = 60, difficulty = "easyDiff") {
   // Lista di tipi di accordi possibili
   const chordTypesByDifficulty = {
-    easy: [
+    easyDiff: [
       "Maj", "min", "dim", "aug"
     ],
-    medium: [
+    mediumDiff: [
       //"Maj6", "min6", "dim6", "aug", 
       "Maj7", "mMaj7", "7", "m7", "sus2", "sus4", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5"
     ],
-    hard: [
+    hardDiff: [
       //"Maj", "min", "dim", "aug",
       //"Maj6", "min6", "dim6", 
       //"Maj7", "mMaj7", "7", "m7", "sus2", "sus4", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5",
@@ -134,7 +134,7 @@ export function generateRandomChord(startNote = 60, difficulty = "easy") {
   };
 
   // Ottieni i tipi di accordi per il livello di difficoltà specificato
-  const chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easy"];
+  const chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
 
   // Seleziona una root e un tipo di accordo casuale
   const randomRoot = Math.floor(Math.random() * 12) + startNote;

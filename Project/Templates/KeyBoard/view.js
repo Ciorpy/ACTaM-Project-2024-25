@@ -77,28 +77,31 @@ class PianoView {
 
     bindNoteEvents(playCallback, stopCallback) {
         const keys = document.querySelectorAll(".key");
-
+        const activeKeys = new Set(); // Set per i tasti attivi
+    
         keys.forEach(key => {
             key.addEventListener("mousedown", () => playCallback(parseInt(key.dataset.midiNote)));
             key.addEventListener("mouseup", () => stopCallback(parseInt(key.dataset.midiNote)));
             key.addEventListener("mouseleave", () => stopCallback(parseInt(key.dataset.midiNote)));
         });
-
+    
         document.addEventListener("keydown", (event) => {
-            const key = event.code; // Usa la proprietà `code` per identificare i tasti fisici
-            if (this.keyMap[key]) {
+            const key = event.code;
+            if (this.keyMap[key] && !activeKeys.has(key)) { // Esegui solo se il tasto non è già attivo
+                activeKeys.add(key); // Aggiungi il tasto attivo
                 playCallback(this.keyMap[key]);
             }
         });
-
+    
         document.addEventListener("keyup", (event) => {
-            const key = event.code; // Usa la proprietà `code` per identificare i tasti fisici
+            const key = event.code;
             if (this.keyMap[key]) {
+                activeKeys.delete(key); // Rimuovi il tasto dai tasti attivi
                 stopCallback(this.keyMap[key]);
             }
         });
     }
-
+    
     setKeyColor(note, color) {
         const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);
         if (keyElement) {

@@ -32,11 +32,14 @@ class PianoController {
             this.model.setPressedNotes([]);
             this.allKeysReleased = false;
         }
-
-        this.view.setActiveKey(note, true);
-        this.synths[note].triggerAttack(Tone.Frequency(note, "midi"));
-        this.delayedUpdatePressedNotes(note);
+    
+        if (!this.model.getPressedNotes().includes(note)) { // Controlla che la nota non sia già attiva
+            this.view.setActiveKey(note, true);
+            this.synths[note].triggerAttack(Tone.Frequency(note, "midi"));
+            this.delayedUpdatePressedNotes(note);
+        }
     }
+    
 
     stopNote(note) {
         this.view.setActiveKey(note, false);

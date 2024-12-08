@@ -98,6 +98,7 @@ body {
   display: flex;
   flex-direction: column;
   padding-bottom: 40px;
+  color: cornflowerblue;
 }
 
 .settingsItemTitle{
@@ -115,40 +116,8 @@ body {
   margin: auto;
 }
 
-.flag, .musicNotationSelector{
-  width: 150px;
-  height: 75px;
-  border: 4px solid purple(0,0,0,0);    
-  cursor: pointer;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.flag:hover, .musicNotationSelector:hover {
-  border: 4px solid lightgreen;
-}
-
-#enLang{
-  background-image: url("./Images/Flag_of_United_Kingdom.svg");
-}
-#itLang{
-  background-image: url("./Images/Flag_of_Italy.svg");
-}
-#esLang{
-  background-image: url("./Images/Flag_of_Spain.svg");
-}
-#frLang{
-  background-image: url("./Images/Flag_of_France.svg");
-}
-
-.musicNotationSelector {
-  border: 4px solid black;
-  line-height: 37.5px;
-}
-
 .activeSettingsItem {
-  border: 4px solid purple;
+  border: 4px solid cornflowerblue;
 }
 
 .backButton{

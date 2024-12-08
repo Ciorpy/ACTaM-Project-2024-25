@@ -187,7 +187,7 @@ let startStopButton = document.getElementById("startStopButton");
 function startMetronome() {
   console.log("start");
   metronomeInterval = setInterval(playBeat, setBpm(bpm)); // Start the interval with the current BPM
-  startStopButton.innerHTML = "STOP";
+  startStopButton.innerHTML = "STOP YOUR GUESS";
   isPlaying = true;
 }
 
@@ -201,7 +201,7 @@ function stopMetronome() {
         .getElementsByClassName("semicroma")
         [i].classList.toggle("highlighted", false);
   });
-  startStopButton.innerHTML = "START";
+  startStopButton.innerHTML = "PLAY YOUR GUESS";
   isPlaying = false;
 }
 

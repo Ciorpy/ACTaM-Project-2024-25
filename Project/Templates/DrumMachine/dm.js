@@ -416,6 +416,9 @@ playSolutionButton.addEventListener("click", () => {
   }
 });
 
+let finalScreen = document.getElementById("fScreen")
+let finalScore = document.getElementById("finalScreenPanel")
+
 let endGamePanel = document.getElementById("endGameScreen");
 
 let endGame = function () {
@@ -436,8 +439,9 @@ let endGame = function () {
       timer = maxTimer;
       timerInterval = setInterval(roundTimer, 1000);
     } else {
-      console.log("GIOCO FINITO")
-      console.log(score)
+      finalScreen.style.display= "block"
+
+    
     }
   }, 5000);
 };

@@ -85,7 +85,10 @@ body {
   font-family: "Audiowide", serif;
   font-weight: 400;
   font-style: normal;
-  color: orange
+  color: orange;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
 }
 
 #settingsMenu, #practiceMenu {
@@ -131,6 +134,17 @@ body {
   font-style: normal;
   color: cornflowerblue;
   margin: auto;
+}
+
+.credits{
+  padding-top: 20px;
+  font-family: "Audiowide", serif;
+  font-size: 50px;
+  font-weight: 900;
+  font-style: normal;
+  color: cornflowerblue;
+  display: flex;
+  flex-direction: column;
 }
 
 #easyDiff{

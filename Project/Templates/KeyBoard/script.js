@@ -67,42 +67,35 @@ function generateNewChord() {
     }, playbackDelay);
 }
 
-// Funzione per controllare l'accordo
 function checkChord() {
-  const pressedNotes = piano.getPressedNotes();
-  console.log("Premute:", pressedNotes);
-  console.log("Da indovinare:", generatedChord.sort());
+    const pressedNotes = piano.getPressedNotes();
+    console.log("Premute:", pressedNotes);
+    console.log("Da indovinare:", generatedChord.sort());
 
-  if (guidedMode) {
-      // Colora i tasti in base alla loro correttezza
-      pressedNotes.forEach(note => {
-          if (generatedChord.includes(note)) {
-              piano.view.setKeyColor(note, "green"); // Nota corretta
-          } else {
-              piano.view.setKeyColor(note, "red"); // Nota errata
-          }
-      });
+    if (guidedMode) {
+        // Colora i tasti premuti in base alla loro correttezza
+        pressedNotes.forEach(note => {
+            if (generatedChord.includes(note)) {
+                piano.view.setKeyColor(note, "green"); // Nota corretta
+            } else {
+                piano.view.setKeyColor(note, "red"); // Nota errata
+            }
+        });
+    }
 
-      // Ripristina i colori originali dopo un breve ritardo
-      setTimeout(() => {
-          pressedNotes.forEach(note => {
-              piano.view.resetKeyColor(note);
-          });
-      }, 300);
-  }
-
-  if (pressedNotes.length >= 3 && !arraysEqual(generatedChord, pressedNotes)) {
-      wrongAttempts++;
-      feedbackDisplay.textContent = "Accordo non corretto. Riprova!";
-      updateHints();
-  } else if (arraysEqual(generatedChord, pressedNotes)) {
-      wrongAttempts = 0; // Reset degli errori se l'accordo è corretto
-      chordCount++;
-      feedbackDisplay.textContent = "Accordo corretto!";
-      chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
-      hintMessage.textContent = "Prova a indovinare l'accordo!";
-      generateNewChord();
-  }
+    // Verifica l'accordo e aggiorna i feedback
+    if (pressedNotes.length >= 3 && !arraysEqual(generatedChord, pressedNotes)) {
+        wrongAttempts++;
+        feedbackDisplay.textContent = "Accordo non corretto. Riprova!";
+        updateHints();
+    } else if (arraysEqual(generatedChord, pressedNotes)) {
+        wrongAttempts = 0; // Reset degli errori
+        chordCount++;
+        feedbackDisplay.textContent = "Accordo corretto!";
+        chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
+        hintMessage.textContent = "Prova a indovinare l'accordo!";
+        generateNewChord();
+    }
 }
 
 

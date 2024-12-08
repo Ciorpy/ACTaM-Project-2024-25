@@ -102,10 +102,13 @@ class PianoView {
         });
     }
     
-    setKeyColor(note, color) {
+    setKeyColor(note, color, keepActive = false) {
         const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);
         if (keyElement) {
-            keyElement.style.backgroundColor = color; // Imposta il colore specificato
+            keyElement.style.backgroundColor = color;
+            if (keepActive) {
+                keyElement.dataset.color = color; // Memorizza il colore per il reset futuro
+            }
         }
     }
     
@@ -115,6 +118,7 @@ class PianoView {
             keyElement.style.backgroundColor = ""; // Ripristina il colore originale
         }
     }
+    
     
 }
 

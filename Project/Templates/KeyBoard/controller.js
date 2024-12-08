@@ -43,13 +43,15 @@ class PianoController {
 
     stopNote(note) {
         this.view.setActiveKey(note, false);
+        this.view.resetKeyColor(note); // Resetta sempre il colore del tasto al rilascio
         this.synths[note].triggerRelease();
-
+    
         const activeKeys = document.querySelectorAll(".key.active");
         if (activeKeys.length === 0) {
             this.allKeysReleased = true;
         }
     }
+    
 
     delayedUpdatePressedNotes(newNote) {
         const updatedNotes = this.model.getPressedNotes();

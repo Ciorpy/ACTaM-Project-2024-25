@@ -8,12 +8,19 @@ let i = 0;
 let j = 0;
 let metronomeInterval;
 let levelIndex = 0;
-let maxScore = 100;
+let maxScore = 125;
 let roundScore = maxScore;
 let totalScore = 0;
+let maxTimer = 60;
+let timer = 0;
+let timerInterval;
+
 
 let difficultyLevel = localStorage.getItem("Difficulty")
 let selectedMinigame = localStorage.getItem("Gamemode")
+let practiceModeFlag = localStorage.getItem("Practice")
+
+console.log(practiceModeFlag)
 
 let minigamePresets = {
   "grooves_GM": {
@@ -30,8 +37,9 @@ let minigamePresets = {
 console.log(difficultyLevel)
 console.log(selectedMinigame)
 
-let selectedPresets = minigamePresets[selectedMinigame][difficultyLevel]
-
+let selectedPresets;
+let solution;
+let chosenPresets;
 
 function getRandomDrumPatterns(array) {
   // Shuffle the array using Fisher-Yates (Knuth) algorithm
@@ -44,16 +52,43 @@ function getRandomDrumPatterns(array) {
   return array.slice(0, 3);
 }
 
-let chosenPresets = getRandomDrumPatterns(selectedPresets);
-console.log(chosenPresets)
+let roundTimer = function () {
+  if(timer <= 0){
+    clearInterval(timerInterval)
+    levelIndex = levelIndex + 1;
+    if(levelIndex < 3){
+      roundScore = 100;
+      solution = chosenPresets[levelIndex]
+      timer = maxTimer;
+      timerInterval = setInterval(roundTimer, 1000)
+      resetDrumMachine()
+    } else {      
+      window.location.href = "../../gameTitleScreen.html";
+    }
+  }
+  if(timer % 15 == 0){
+    roundScore -= 25;
+    console.log("Punteggio rimanente: " + roundScore)
+  }
+  timer -= 1;
+  console.log("Tempo rimanente: " + timer + " s")
+}
 
-console.log(selectedPresets)
+if(practiceModeFlag == "false"){
+  selectedPresets = minigamePresets[selectedMinigame][difficultyLevel]
+  solution = selectedPresets[levelIndex]
+  chosenPresets = getRandomDrumPatterns(selectedPresets);
+  timer = maxTimer;
+  timerInterval = setInterval(roundTimer, 1000);
+} else {
+  selectedPresets = null
+  solution = null
+  chosenPresets = null;
+}
 
 let drumMachineController = Array.from({ length: drumSamples }, () =>
   Array(semicrome).fill(false)
 );
-
-let solution = selectedPresets[levelIndex]
 
 let drumMachineItems = document.getElementsByClassName("drumMachineItem");
 
@@ -127,7 +162,7 @@ let playBeat = function () {
       [toTurnOff].classList.toggle("highlighted", false);
   });
   Array.from(drumMachineItems).forEach((item, index) => {
-    if (
+    if (practiceModeFlag == "false" &&
       drumMachineController[index][i] == solution[index][i] &&
       drumMachineController[index][i]
     ) {
@@ -184,10 +219,14 @@ function setBpm(n) {
 
 let startStopButton = document.getElementById("startStopButton");
 
+if(practiceModeFlag == "true")[
+  startStopButton.innerHTML = "PLAY"
+]
+
 function startMetronome() {
   console.log("start");
   metronomeInterval = setInterval(playBeat, setBpm(bpm)); // Start the interval with the current BPM
-  startStopButton.innerHTML = "STOP YOUR GUESS";
+  startStopButton.innerHTML = practiceModeFlag ? "STOP" : "STOP YOUR GUESS";
   isPlaying = true;
 }
 
@@ -201,7 +240,7 @@ function stopMetronome() {
         .getElementsByClassName("semicroma")
         [i].classList.toggle("highlighted", false);
   });
-  startStopButton.innerHTML = "PLAY YOUR GUESS";
+  startStopButton.innerHTML = practiceModeFlag ? "PLAY" : "PLAY YOUR GUESS";
   isPlaying = false;
 }
 
@@ -291,17 +330,17 @@ let fills = [easyFills, mediumFills, hardFills];
 let fillsPanels = [easyGroovesPanel, mediumGroovesPanel, hardGroovesPanel];
 let fillsTypes = ["Easy", "Medium", "Hard"];
 
-for (let i = 0; i < grooves.length; i++) {
+for (let i = 0; i < fills.length; i++) {
   fills[i].forEach((item, index) => {
-    let newGroove = document.createElement("div");
-    newGroove.classList.add("groove");
-    newGroove.innerHTML = fillsTypes[i] + " preset N°" + (index + 1);
+    let newFill = document.createElement("div");
+    newFill.classList.add("groove");
+    newFill.innerHTML = fillsTypes[i] + " preset N°" + (index + 1);
 
-    newGroove.addEventListener("click", () => {
+    newFill.addEventListener("click", () => {
       solution = item;
     });
 
-    groovePanels[i].appendChild(newGroove);
+    groovePanels[i].appendChild(newFill);
   });
 }
 
@@ -325,6 +364,10 @@ function checkSolution(guess, correctAnswer) {
 
 let checkInputButton = document.getElementById("checkInputButton");
 
+if(practiceModeFlag == "true"){
+  checkInputButton.style.display = "none"
+}
+
 checkInputButton.addEventListener("click", () => {
   console.log(solution);
   console.log(drumMachineController);
@@ -333,6 +376,10 @@ checkInputButton.addEventListener("click", () => {
 });
 
 let playSolutionButton = document.getElementById("playSolutionButton");
+
+if(practiceModeFlag == "true"){
+  playSolutionButton.style.display = "none"
+}
 
 let solutionInterval = null;
 
@@ -369,6 +416,9 @@ playSolutionButton.addEventListener("click", () => {
   }
 });
 
+let finalScreen = document.getElementById("fScreen")
+let finalScore = document.getElementById("finalScreenPanel")
+
 let endGamePanel = document.getElementById("endGameScreen");
 
 let endGame = function () {
@@ -384,10 +434,14 @@ let endGame = function () {
       endGamePanel.style.display = "none"
       solution = chosenPresets[levelIndex]
       totalScore += roundScore;
-      roundScore = 100;
+      roundScore = maxScore;
+      clearInterval(timerInterval)
+      timer = maxTimer;
+      timerInterval = setInterval(roundTimer, 1000);
     } else {
-      console.log("GIOCO FINITO")
-      console.log(score)
+      finalScreen.style.display= "block"
+
+    
     }
   }, 5000);
 };

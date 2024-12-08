@@ -161,3 +161,7 @@ body {
   border-color: red;
   color: red;
 }
+
+.finalScreen{
+  display: none;
+}

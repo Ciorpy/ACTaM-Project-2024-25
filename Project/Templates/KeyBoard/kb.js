@@ -1,5 +1,5 @@
 import PianoController from "./controller.js";
-import { generateRandomChord } from './chord.js';
+import { generateRandomChord } from "./chord.js";
 
 const piano = new PianoController("piano", 37, 48);
 
@@ -18,7 +18,7 @@ toggleGuidedModeButton.addEventListener("click", () => {
 });
 
 // Livelli di difficoltà
-const levels = ['easyDiff', 'mediumDiff', 'hardDiff'];
+const levels = ["easyDiff", "mediumDiff", "hardDiff"];
 let selectedLevel = localStorage.getItem("Difficulty"); // Livello selezionato dall'utente
 let chordCount = 0;
 let wrongAttempts = 0; // Contatore errori
@@ -32,8 +32,8 @@ const levelDisplay = document.getElementById("level");
 //const feedbackDisplay = document.getElementById("feedback");
 const playSolutionButton = document.getElementById("playSolutionButton");
 let hintButton = document.getElementById("hintButton");
-const hintMessage = document.getElementById("hintMessage");
-hintMessage.textContent = `Let's try`
+const text = document.getElementById("text");
+text.textContent = "Let's try";
 
 // Assegna il livello iniziale
 updateLevelDisplay();
@@ -93,12 +93,14 @@ function checkChord() {
         wrongAttempts++;
         //feedbackDisplay.textContent = "Accordo non corretto. Riprova!";
     } else if (arraysEqual(generatedChord, pressedNotes)) {
+        generateNewChord();
         wrongAttempts = 0; // Reset degli errori
         chordCount++;
         //feedbackDisplay.textContent = "Accordo corretto!";
         //chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
-        //hintMessage.textContent = "Prova a indovinare l'accordo!";
-        generateNewChord();
+        text.textContent = "Right Chord, here you another one."
+        text.textContent = "Let's try";
+        
     }
 
 }
@@ -109,15 +111,15 @@ let flagHints = [true, true, true]
 function updateHints() {
         if (wrongAttempts >= 5 && flagHints[0]) {
             flagHints[0] = false
-            hintMessage.textContent = `${generatedChordData.noteRoot}`;
+            text.textContent = `Root ${generatedChordData.noteRoot}`;
         }
         if (wrongAttempts >= 10 && flagHints[1]) {
             flagHints[1] = false
-            hintMessage.textContent += `${generatedChordData.chordType}`;
+            text.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
         }
         if (wrongAttempts >= 12 && flagHints[2]) {
             flagHints[2] = false
-            hintMessage.textContent += ` in ${generatedChordData.inversion}`;
+            text.textContent += `\nin ${generatedChordData.inversion}`;
         }
 }
 

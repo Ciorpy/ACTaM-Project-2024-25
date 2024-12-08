@@ -41,13 +41,14 @@
 }
 
 .text {
-    font-family: "Slackey", sans-serif;
+    font-family: "Audiowide", serif;
     font-weight: 700;
-    height: 40px;
-    line-height: 40px;
     font-size: 30px;
+    font-style: normal;
     text-align: center;
-    color: cornflowerblue; 
+    color: cornflowerblue;
+    display: flex;
+    flex-direction: column;  
 }
 
 .key {

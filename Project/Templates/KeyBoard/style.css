@@ -14,6 +14,8 @@
     height: 500px;
     user-select: none;
     margin-top: 70px;
+    padding-bottom: 50px;
+    border-bottom: 3px solid orange;
 }
 
 .title {
@@ -25,6 +27,27 @@
     font-size: 100px;
     text-align: center;
     color: cornflowerblue;
+}
+
+.subtitle {
+    font-family: "Slackey", sans-serif;
+    font-weight: 700;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 30px;
+    text-align: center;
+    color: cornflowerblue;
+}
+
+.text {
+    font-family: "Slackey", sans-serif;
+    font-weight: 700;
+    height: 40px;
+    line-height: 40px;
+    font-size: 30px;
+    text-align: center;
+    color: cornflowerblue; 
 }
 
 .key {
@@ -58,7 +81,6 @@
     background: transparent; /* Rimuove lo sfondo per i caratteri */
 }
 
-
 .key.active {
     background: lightblue;
 }
@@ -67,7 +89,7 @@
 }
 
 .userMenu {
-    gap: 1200px;
+    justify-content: space-around; 
     display: flex;
     flex-direction: row;
     background-color: rgb(9, 33, 65);
@@ -77,7 +99,7 @@
 .button {
     padding: 30px;
     border: 2px solid orange;
-    width: 300px;
+    width: 350px;
     text-align: center;
     cursor: pointer;
     background-color: rgb(9, 33, 65);

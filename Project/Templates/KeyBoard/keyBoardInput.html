@@ -21,25 +21,14 @@
 </head>
 <body>
     <div class="title">Keyboard</div>
-    <div id="piano" class="piano"></div>
+    <div class="subtitle" id="level"></div>
+    <div class="piano" id="piano"></div>
     <div class="userMenu">
-        <div class="button" id="playSolutionButton">PLAY SOLUTION</div>
+      <div class="button" id="playSolutionButton">PLAY SOLUTION</div>
+      <div class="button" id="hintButton">HINT</div>
+      <div class="text" id="hintMessage"></div>
+      <div class="button" id="toggleGuidedMode">ASSISTANT MODE OFF</div>
     </div>
-    <div id="game-info">
-        <h3 id="level">Livello: easy</h3>
-        <h3 id="chord-count">Accordi indovinati: 0</h3>
-        <h3 id="feedback"></h3>
-      </div>
-      <div id="hint-section">
-        <h3 id="hint-title">Suggerimenti:</h3>
-        <p id="hint-message">Prova a indovinare l'accordo!</p>
-    </div>
-    <div class="userMenu">
-      <button id="toggleGuidedMode" class="button">Abilita Modalità Guidata</button>
-  </div>
-  
-
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <script type="module" src="script.js"></script>
 </body>

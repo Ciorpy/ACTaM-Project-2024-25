@@ -41,41 +41,6 @@ practiceKey.addEventListener("click", () => {
   practiceMenu.style.display = "block";
 });
 
-// Settings Menu
-let languages = document.getElementsByClassName("flag");
-let musicNotations = document.getElementsByClassName("musicNotationSelector");
-
-Array.from(languages).forEach((element, index) => {
-  element.addEventListener("click", () =>{
-    Array.from(languages).forEach(elementToDeactivate => {
-      elementToDeactivate.classList.toggle("activeSettingsItem", false)
-    })
-    element.classList.toggle("activeSettingsItem", true);
-    localStorage.setItem("language", index);
-  })
-})
-
-Array.from(musicNotations).forEach((element, index) => {
-  element.addEventListener("click", () =>{
-    Array.from(musicNotations).forEach(elementToDeactivate => {
-      elementToDeactivate.classList.toggle("activeSettingsItem", false)
-    })
-    element.classList.toggle("activeSettingsItem", true);
-    localStorage.setItem("musicNotation", index);
-  })
-})
-
-
-localStorage.getItem("language") ?
-  languages[localStorage.getItem("language")].classList.toggle("activeSettingsItem", true)
-  :
-  languages[0].classList.toggle("activeSettingsItem", true);
-
-localStorage.getItem("musicNotation") ?
-  musicNotations[localStorage.getItem("musicNotation")].classList.toggle("activeSettingsItem", true)
-  :
-  musicNotations[0].classList.toggle("activeSettingsItem", true);
-
 // Volume Handler
 let volumeSlider = document.getElementById("mainVolumeSlider");
 volumeSlider.value = localStorage.getItem("mainVolume") ? localStorage.getItem("mainVolume") : 0.3;

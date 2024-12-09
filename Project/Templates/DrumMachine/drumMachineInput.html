@@ -72,7 +72,7 @@
       <div class="button" id="playSolutionButton">PLAY SOLUTION</div>
       <div class="button" id="startStopButton">PLAY YOUR GUESS</div>
       <div class="bpmInput">
-        <input type="range" mi  n="50" max="200" value="100" id="bpmSlider" />
+        <input type="range" min="50" max="200" value="100" id="bpmSlider" />
         <div id="bpmDisplay">100</div>
       </div>
       <div class="button" id="resetButton">RESET</div>
@@ -85,47 +85,20 @@
       <div id="presetsHard" class="presets"></div>
     </div>
 
-    <div class="wrongGuessBG" id="wrongGuessScreen">
-      <div class="wrongGuessPanel">
-        <div class="wrongGuessTextArea">
-          <div class="wrongGuessText">
-            WRONG ANSWER
-          </div>
-          <div class="wrongGuessText">
-            TRY AGAIN!
-          </div>
-        </div>
+    <div class="overlayBG" id="overlayDiv">
+      <div class="overlayTitle" id="overlayTitle">SAMPLE TEXT</div>
+      <div class="overlayTitle" id="overlaySubtitle">SAMPLE DESCRIPTION, COOL!</div>
+      <div class="overlayTitle" id="scoreLabel">YOUR TOTAL SCORE IS: </div>
+      <div id="overlayImg"></div>
+      <div class="overlayMenu" id="scoreDivisionLabel">
+        <div class="levelScore" id="level1"></div>
+        <div class="levelScore" id="level2"></div>
+        <div class="levelScore" id="level3"></div>
       </div>
-    </div>
-    
-    <div class="timeOverBG" id="timeOverScreen">
-      <div class="timeOverScreen">
-        <div class="timeOverText">TIME OVER!</div>
-        <img src="../../Images/morgan.gif" />
+      <div class="overlayMenu">
+        <div class="button" id="showSolution">SHOW SOLUTION</div>
+        <div class="button" id="goNextRound">NEXT LEVEL</div>
       </div>
-    </div>
-
-    <div class="endGameBG" id="endGameScreen">
-      <div class="endGamePanel">
-        <div class="endGameText">CORRECT!</div>
-        <img src="../../Images/maneskin.gif" />
-      </div>
-    </div>
-
-    <div class="finalScreenBG" id="finalScreen">
-      <div class="finalScreenPanel">
-        <div class="finalScreenText">GAME OVER!</div>
-        <div class="finalScreenText" id="scoreLabel">YOUR TOTAL SCORE IS: </div>
-        <div class="scoreDivisionLabel">
-          <div class="levelScore" id="level1"></div>
-          <div class="levelScore" id="level2"></div>
-          <div class="levelScore" id="level3"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="timer" id="timer">
-      120
     </div>
 
     <!--SCRIPTS-->

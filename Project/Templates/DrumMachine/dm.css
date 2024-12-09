@@ -142,11 +142,14 @@
     border: 2px solid green;
 }
 
-.userMenu {
+.userMenu, .overlayMenu {
     padding: 10px;
-    gap: 20px;
+    justify-content: space-around;
     display: flex;
     flex-direction: row;
+}
+
+.userMenu {
     background-color: rgb(9, 33, 65);
 }
 
@@ -213,7 +216,7 @@
     flex-direction: row;
 }
 
-.timeOverBG, .wrongGuessBG, .endGameBG{
+.overlayBG{
     display: none;
     top: 0;
     left: 0;
@@ -224,7 +227,7 @@
     flex-direction: column;
 }
 
-.wrongGuessTextArea{
+.overlayTitle{
     margin: auto;
     display: flex;
     flex-direction: column;

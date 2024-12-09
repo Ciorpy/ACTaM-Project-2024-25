@@ -105,10 +105,10 @@ let roundTimer = function () {
       roundScore = 100;
       solution = chosenPresets[levelIndex]
       timer = maxTimer;
-      timerInterval = setInterval(roundTimer, 1000)
       resetDrumMachine()
+      timeOver("timeOver")
     } else {      
-      window.location.href = "../../gameTitleScreen.html";
+      timeOver("gameOver")
     }
   }
   if(timer % scoreSubTimer == 0){
@@ -149,7 +149,7 @@ Array.from(drumMachineItems).forEach((item, index) => {
     newElement.addEventListener("click", () => {
       newElement.classList.toggle("active");                              // Toggles class active for proper visualization
       drumMachineController[index][i] = !drumMachineController[index][i]; // Updates logic
-      //console.log(drumMachineController);                                 // Debug
+      console.log(drumMachineController[index][i]);                                 // Debug
     });
     item.appendChild(newElement);  // Appends new element to the parent div
   }
@@ -258,7 +258,7 @@ if(practiceModeFlag == "true"){
 function startMetronome() {
   console.log("start");
   metronomeInterval = setInterval(playBeat, setBpm(bpm)); // Start the interval with the current BPM
-  startStopButton.innerHTML = practiceModeFlag ? "STOP" : "STOP YOUR GUESS";
+  startStopButton.innerHTML = practiceModeFlag == "true" ? "STOP" : "STOP YOUR GUESS";
   isPlaying = true;
 }
 
@@ -272,7 +272,7 @@ function stopMetronome() {
         .getElementsByClassName("semicroma")
         [i].classList.toggle("highlighted", false);
   });
-  startStopButton.innerHTML = practiceModeFlag ? "PLAY" : "PLAY YOUR GUESS";
+  startStopButton.innerHTML = practiceModeFlag == "true" ? "PLAY" : "PLAY YOUR GUESS";
   isPlaying = false;
 }
 
@@ -377,6 +377,8 @@ for (let i = 0; i < fills.length; i++) {
 }
 
 function checkSolution(guess, correctAnswer) {
+  console.log(guess)
+  console.log(correctAnswer)
   if (guess.length !== correctAnswer.length) {
     return false;
   }
@@ -393,19 +395,6 @@ function checkSolution(guess, correctAnswer) {
   }
   return true;
 }
-
-let checkInputButton = document.getElementById("checkInputButton");
-
-if(practiceModeFlag == "true"){
-  checkInputButton.style.display = "none"
-}
-
-checkInputButton.addEventListener("click", () => {
-  console.log(solution);
-  console.log(drumMachineController);
-  if (checkSolution(solution, drumMachineController)) endGame();
-  else wrongGuess()
-});
 
 let playSolutionButton = document.getElementById("playSolutionButton");
 
@@ -450,52 +439,132 @@ let currentScore = document.getElementById("currentScore")
 let finalScreen = document.getElementById("fScreen")
 let finalScore = document.getElementById("finalScreenPanel")
 
-let endGamePanel = document.getElementById("endGameScreen");
 
-let endGame = function () {
-  currentScore.innerHTML = totalScore;
+// OVERLAY PANEL HANDLING -----------------------------------------------------------------------------------------------------------------------------
+let overlayPanel = document.getElementById("overlayDiv")
+let overlayTitle = document.getElementById("overlayTitle")
+let overlaySubtitle = document.getElementById("overlaySubtitle")
+let scoreLabel = document.getElementById("scoreLabel")
+let overlayImg = document.getElementById("overlayImg")
+
+let showSolutionButton = document.getElementById("showSolution")
+let goNextRoundButton = document.getElementById("goNextRound")
+let scoreDivisionLabel = document.getElementById("scoreDivisionLabel")
+
+showSolutionButton.addEventListener("click", () => {
+  console.log("SHOWS SOLUTION")
+})
+
+goNextRoundButton.addEventListener("click", () => {
+  if(levelIndex < 3){
+    timerInterval = setInterval(roundTimer, 1000);
+    handleOverlayDisplay("hide")
+  } else {
+    window.location.href = "../../gameTitleScreen.html";
+  }
+  
+})
+
+let handleOverlayDisplay = function (overlayType) {
+  // Default settings
+  overlayPanel.style.display = "flex";
+  scoreLabel.style.display = "none"
+  overlayImg.innerHTML = "";
+  scoreDivisionLabel.style.display = "none"
+  showSolutionButton.style.display = "none"
+  goNextRoundButton.style.display = "none"
+  
+  switch(overlayType){
+    case "wrongGuess":
+      overlayTitle.innerHTML = "WRONG GUESS"
+      overlaySubtitle.innerHTML = "DON'T WORRY, KEEP TRYING!"
+      break;
+    case "goodGuess":
+      overlayTitle.innerHTML = "GOOD GUESS"
+      overlaySubtitle.innerHTML = "YOU ARE A BOSS!"
+      goNextRoundButton.style.display = "block"
+      break;
+    case "timeOver":
+      overlayTitle.innerHTML = "TIME OVER"
+      overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!"
+      showSolutionButton.style.display = "block"
+      goNextRoundButton.style.display = "block"
+      break;
+    case "gameOver":
+      overlayTitle.innerHTML = "GAME OVER"
+      overlaySubtitle.innerHTML = "LET'S SEE HOW YOU PERFORMED!"
+      scoreLabel.style.display = "flex"
+      goNextRoundButton.innerHTML ="MAIN MENU"
+      goNextRoundButton.style.display = "block"
+      break;
+    case "hide":
+      overlayPanel.style.display = "none"
+      break;
+    default:
+      console.log("Error: overlayType '" + overlayType + "' does not exist.")
+  }
+}
+
+
+let goodGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
-  endGamePanel.style.display = "flex";
   const endGameAudio = new Audio("../../Sounds/maneskin.wav");
   endGameAudio.play();
-  setTimeout(() => {
-    resetDrumMachine()
-    levelIndex = levelIndex + 1;
-    if(levelIndex < 3){
-      endGamePanel.style.display = "none"
-      solution = chosenPresets[levelIndex]
-      totalScore += roundScore;
-      roundScore = maxScore;
-      currentScore.innerHTML = totalScore;
-      clearInterval(timerInterval)
-      timer = maxTimer;
-      timerInterval = setInterval(roundTimer, 1000);
-    } else {
-      finalScreen.style.display= "block"
-    }
-  }, 5000);
+
+  levelIndex = levelIndex + 1;
+  totalScore += roundScore;
+  currentScore.innerHTML = "CURRENT SCORE: "+ totalScore;
+
+  clearInterval(timerInterval)
+  if(levelIndex < 3){
+    handleOverlayDisplay("goodGuess")
+    solution = chosenPresets[levelIndex]
+    roundScore = maxScore;
+    timer = maxTimer;
+  } else {
+    handleOverlayDisplay("gameOver")
+  }
 };
 
-let wrongGuessPanel = document.getElementById("wrongGuessScreen");
 
 let wrongGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
-  wrongGuessPanel.style.display = "flex";
+  handleOverlayDisplay("wrongGuess")
   
   setTimeout(() => {
-    resetDrumMachine()
-    wrongGuessPanel.style.display = "none"
+    handleOverlayDisplay("hide")
   }, 2000);
 }
 
 
-let timeOverPanel = document.getElementById("timeOverScreen");
-
-let timeOver = function () {
+let timeOver = function (overlayType) {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
-  timeOverPanel.style.display = "flex";
+  clearInterval(timerInterval)
+  handleOverlayDisplay(overlayType)
   resetDrumMachine()
 }
+
+let checkInputButton = document.getElementById("checkInputButton");
+
+if(practiceModeFlag == "true"){
+  checkInputButton.style.display = "none"
+}
+
+checkInputButton.addEventListener("click", () => {
+  console.log(drumMachineController);
+  console.log(solution);
+  if (checkSolution(drumMachineController, solution)) goodGuess();
+  else wrongGuess()
+  resetDrumMachine()
+});
+
+backButtonC.addEventListener("click", () => {
+  mainMenu.style.display = "block";
+  settingsMenu.style.display = "none";
+  creditsMenu.style.display = "none";
+  practiceMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "none";
+});

@@ -470,24 +470,29 @@ let endGame = function () {
       timerInterval = setInterval(roundTimer, 1000);
     } else {
       finalScreen.style.display= "block"
-
-    
     }
   }, 5000);
 };
 
-let wrongGuessPanel = document.getElementById("wrongGuessScreen");
+let wrongGuessPanel = document.getElementById("timeOverScreen");
 
 let wrongGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
   wrongGuessPanel.style.display = "flex";
-  const wrongGuessAudio = new Audio("../../Sounds/morgan.mp3");
-  wrongGuessAudio.volume = 1;
-  wrongGuessAudio.play();
   
   setTimeout(() => {
     resetDrumMachine()
-    wrongGuessPanel.style.display = "none"
-  }, 4000);
+    timeOverPanel.style.display = "none"
+  }, 2000);
+}
+
+
+let timeOverPanel = document.getElementById("timeOverScreen");
+
+let timeOver = function () {
+  if (isSolutionPlaying) stopSolution();
+  if (isPlaying) stopMetronome();
+  timeOverPanel.style.display = "flex";
+  resetDrumMachine()
 }

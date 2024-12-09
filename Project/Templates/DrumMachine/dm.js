@@ -76,8 +76,13 @@ let userLegend = {
   hardDiff: "HARD",
 };
 
-gamemodeDisplay.innerHTML = "GAMEMODE: " + userLegend[selectedMinigame];
-difficultyDisplay.innerHTML = "DIFFICULTY: " + userLegend[difficultyLevel];
+if (practiceModeFlag == "false") {
+  gamemodeDisplay.innerHTML = "GAMEMODE: " + userLegend[selectedMinigame];
+  difficultyDisplay.innerHTML = "DIFFICULTY: " + userLegend[difficultyLevel];
+} else {
+  gamemodeDisplay.style.display = "none";
+  difficultyDisplay.style.display = "none";
+}
 
 // Dictionary of dictionaries used to access the correct array based on specified gamemode and difficulty level
 let minigamePresets = {

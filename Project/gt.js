@@ -13,9 +13,6 @@ randomN = Math.floor(Math.random() * 7);
 
 document.getElementById("funnyMSG").innerHTML = funnyMSGS[randomN];
 
-// Sets main menu volume to either stored or default value
-document.getElementById("mainMenuSoundtrack").volume = localStorage.getItem("mainVolume") ? localStorage.getItem("mainVolume") : 0.3;
-
 // Menu navigation system
 let mainMenu = document.getElementById("mainMenu");
 let settingsMenu = document.getElementById("settingsMenu");

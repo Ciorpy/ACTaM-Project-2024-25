@@ -112,25 +112,30 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff") {
   // Lista di tipi di accordi possibili
   const chordTypesByDifficulty = {
     easyDiff: [
-      "Maj", "min", "dim", "aug"
+      "Maj", "min", 
+      //"dim", "aug"
     ],
     mediumDiff: [
-      //"Maj6", "min6", "dim6", "aug", 
-      "Maj7", "mMaj7", "7", "m7", "sus2", "sus4", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5"
+      "Maj6", "min6", "dim", "aug", 
+      //"Maj7", "mMaj7", "7", "m7", 
+      //"sus2", "sus4", 
+      //"m7b5", "dim7", "Maj7#5", "7#5", "m7#5"
     ],
     hardDiff: [
       //"Maj", "min", "dim", "aug",
       //"Maj6", "min6", "dim6", 
-      //"Maj7", "mMaj7", "7", "m7", "sus2", "sus4", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5",
-      "9", "m9", "Maj9", "7b9", "7#9", "6b9", "6#9", "6(9)"
+      "Maj7", "mMaj7", "7", "m7", 
+      //"sus2", "sus4", 
+      "m7b5", "dim7", "Maj7#5", "7#5", "m7#5",
+      //"9", "m9", "Maj9", "7b9", "7#9", "6b9", "6#9", "6(9)"
     ],
-    jazz: [
+    //jazz: [
       //"Maj", "min", "dim",  
-      "Maj6", "min6", "dim6", "aug",
-      "Maj7", "mMaj7", "7", "m7", "sus2", "sus4", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5",
-      "9", "m9", "Maj9", "7b9", "7#9", "6b9", "6#9", "6(9)", 
-      "7(11)", "m11", "Maj11", "6(11)", "13", "m13", "Maj13"
-    ]
+      //"Maj6", "min6", "dim6", "aug",
+      //"Maj7", "mMaj7", "7", "m7", "sus2", "sus4", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5",
+      //"9", "m9", "Maj9", "7b9", "7#9", "6b9", "6#9", "6(9)", 
+      //"7(11)", "m11", "Maj11", "6(11)", "13", "m13", "Maj13"
+    //]
   };
 
   // Ottieni i tipi di accordi per il livello di difficoltà specificato

@@ -1,7 +1,11 @@
 import PianoController from "./controller.js";
 import { generateRandomChord } from "./chord.js";
 
-const piano = new PianoController("piano", 37, 48);
+let firstNote = 48;
+let keysNumber = 25;
+let lastNote = firstNote + keysNumber;
+
+let piano = new PianoController("piano", keysNumber, firstNote);
 
 
 const pointsToDeduct = 25; // Punti da togliere
@@ -128,8 +132,11 @@ function updateLevelDisplay() {
 
 // Funzione per generare un nuovo accordo
 function generateNewChord() {
-    generatedChordData = generateRandomChord(48, selectedLevel);
-    generatedChord = generatedChordData.midiNotes;
+    do {
+        generatedChordData = generateRandomChord(firstNote, selectedLevel);
+        generatedChord = generatedChordData.midiNotes;    
+    }while (generatedChord[generatedChord.length - 1] - lastNote < 0)
+
     console.log(`Nuovo accordo per il livello ${selectedLevel}:`, generatedChord);
     text.textContent = "Let's try";
 

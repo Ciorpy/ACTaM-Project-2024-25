@@ -148,8 +148,9 @@ let handleOverlayDisplay = function (overlayType) {
       break;
     case "gameOver":
       overlayTitle.innerHTML = "GAME OVER"
-      overlaySubtitle.innerHTML = "LET'S SEE HOW YOU PERFORMED!"
+      overlaySubtitle.style.display = "none"
       scoreLabel.style.display = "flex"
+      scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore
       goNextRoundButton.innerHTML ="MAIN MENU"
       goNextRoundButton.style.display = "block"
       break;

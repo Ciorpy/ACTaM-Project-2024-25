@@ -444,7 +444,6 @@ let finalScore = document.getElementById("finalScreenPanel")
 let overlayPanel = document.getElementById("overlayDiv")
 let overlayTitle = document.getElementById("overlayTitle")
 let overlaySubtitle = document.getElementById("overlaySubtitle")
-let scoreLabel = document.getElementById("scoreLabel")
 let overlayImg = document.getElementById("overlayImg")
 
 let showSolutionButton = document.getElementById("showSolution")
@@ -468,7 +467,6 @@ goNextRoundButton.addEventListener("click", () => {
 let handleOverlayDisplay = function (overlayType) {
   // Default settings
   overlayPanel.style.display = "flex";
-  scoreLabel.style.display = "none"
   overlayImg.innerHTML = "";
   scoreDivisionLabel.style.display = "none"
   showSolutionButton.style.display = "none"
@@ -491,9 +489,8 @@ let handleOverlayDisplay = function (overlayType) {
       goNextRoundButton.style.display = "block"
       break;
     case "gameOver":
-      overlayTitle.innerHTML = "GAME OVER"
-      overlaySubtitle.innerHTML = "LET'S SEE HOW YOU PERFORMED!"
-      scoreLabel.style.display = "flex"
+      overlayTitle.innerHTML = "GAME OVER!"
+      overlaySubtitle.innerHTML = "YOUR TOTAL SCORE IS: " + totalScore
       goNextRoundButton.innerHTML ="MAIN MENU"
       goNextRoundButton.style.display = "block"
       break;

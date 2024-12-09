@@ -52,6 +52,8 @@ function getRandomDrumPatterns(array) {
   return array.slice(0, 3);
 }
 
+let timerDisplay = document.getElementById("timer")
+
 let roundTimer = function () {
   if(timer <= 0){
     clearInterval(timerInterval)
@@ -71,7 +73,7 @@ let roundTimer = function () {
     console.log("Punteggio rimanente: " + roundScore)
   }
   timer -= 1;
-  console.log("Tempo rimanente: " + timer + " s")
+  timerDisplay.innerHTML = timer + "s";
 }
 
 if(practiceModeFlag == "false"){

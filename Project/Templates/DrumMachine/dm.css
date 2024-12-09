@@ -229,3 +229,10 @@
     text-align: center;
     font-size: 150px;
 }
+
+.timer {
+    margin: auto;
+    text-align: center;
+    font-size: 30px;
+    color: orange;
+}

@@ -54,6 +54,12 @@
         </div>
       </div>
       <div class="drumMachineLegend">
+        <div class="timer">
+          REMAINING TIME
+          <div class="timer" id="timer">
+            120 s
+          </div>
+        </div>
         <div class="drumMachineImgFrame">
           <img src="../../Images/Drum Shape.png">
         </div>
@@ -65,9 +71,6 @@
       <div class="bpmInput">
         <input type="range" mi  n="50" max="200" value="100" id="bpmSlider" />
         <div id="bpmDisplay">100</div>
-      </div>
-      <div class="timer" id="timer">
-        120 s
       </div>
       <div class="button" id="resetButton">RESET</div>
       <div class="button" id="checkInputButton">CHECK</div>
@@ -97,6 +100,11 @@
       <div class="finalScreenPanel">
         <div class="finalScreenText">GAME OVER!</div>
         <div class="finalScreenText" id="scoreLabel">YOUR TOTAL SCORE IS: </div>
+        <div class="scoreDivisionLabel">
+          <div class="levelScore" id="level1"></div>
+          <div class="levelScore" id="level2"></div>
+          <div class="levelScore" id="level3"></div>
+        </div>
       </div>
     </div>
 

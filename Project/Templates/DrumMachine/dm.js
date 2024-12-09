@@ -80,6 +80,87 @@ let minigamePresets = {
   }
 }
 
+let playSolutionButton = document.getElementById("playSolutionButton");
+// OVERLAY PANEL HANDLING -----------------------------------------------------------------------------------------------------------------------------
+let overlayPanel = document.getElementById("overlayDiv")
+let overlayTitle = document.getElementById("overlayTitle")
+let overlaySubtitle = document.getElementById("overlaySubtitle")
+let scoreLabel = document.getElementById("scoreLabel")
+let overlayImg = document.getElementById("overlayImg")
+
+let startGameButton = document.getElementById("startGame")
+let showSolutionButton = document.getElementById("showSolution")
+let goNextRoundButton = document.getElementById("goNextRound")
+let scoreDivisionLabel = document.getElementById("scoreDivisionLabel")
+
+startGameButton.addEventListener("click", () => {
+  timerInterval = setInterval(roundTimer, 1000);
+  handleOverlayDisplay("hide")
+  solutionInterval = setInterval(playSolution, setBpm(bpm));
+  playSolutionButton.innerHTML = "STOP SOLUTION";
+  isSolutionPlaying = true;
+})
+
+showSolutionButton.addEventListener("click", () => {
+  console.log("SHOWS SOLUTION")
+})
+
+goNextRoundButton.addEventListener("click", () => {
+  if(levelIndex < 3){
+    timerInterval = setInterval(roundTimer, 1000);
+    handleOverlayDisplay("hide")
+  } else {
+    window.location.href = "../../gameTitleScreen.html";
+  }
+  
+})
+
+let handleOverlayDisplay = function (overlayType) {
+  // Default settings
+  overlayPanel.style.display = "flex";
+  scoreLabel.style.display = "none"
+  overlayImg.innerHTML = "";
+  scoreDivisionLabel.style.display = "none"
+  startGameButton.style.display = "none"
+  showSolutionButton.style.display = "none"
+  goNextRoundButton.style.display = "none"
+  
+  switch(overlayType){
+    case "startGame":
+      overlayTitle.innerHTML = "PRESS START WHEN READY"
+      overlaySubtitle.innerHTML = "THEN CLICK ON 'PLAY SOLUTION'"
+      startGameButton.style.display = "block"
+      break;
+    case "wrongGuess":
+      overlayTitle.innerHTML = "WRONG GUESS"
+      overlaySubtitle.innerHTML = "DON'T WORRY, KEEP TRYING!"
+      break;
+    case "goodGuess":
+      overlayTitle.innerHTML = "GOOD GUESS"
+      overlaySubtitle.innerHTML = "YOU ARE A BOSS!"
+      goNextRoundButton.style.display = "block"
+      break;
+    case "timeOver":
+      overlayTitle.innerHTML = "TIME OVER"
+      overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!"
+      showSolutionButton.style.display = "block"
+      goNextRoundButton.style.display = "block"
+      break;
+    case "gameOver":
+      overlayTitle.innerHTML = "GAME OVER"
+      overlaySubtitle.innerHTML = "LET'S SEE HOW YOU PERFORMED!"
+      scoreLabel.style.display = "flex"
+      goNextRoundButton.innerHTML ="MAIN MENU"
+      goNextRoundButton.style.display = "block"
+      break;
+    case "hide":
+      overlayPanel.style.display = "none"
+      break;
+    default:
+      console.log("Error: overlayType '" + overlayType + "' does not exist.")
+  }
+}
+
 let selectedPresets;
 let solution;
 let chosenPresets;
@@ -123,7 +204,7 @@ if(practiceModeFlag == "false"){
   selectedPresets = minigamePresets[selectedMinigame][difficultyLevel]
   solution = selectedPresets[levelIndex]
   chosenPresets = getRandomDrumPatterns(selectedPresets);
-  timerInterval = setInterval(roundTimer, 1000);
+  handleOverlayDisplay("startGame")
 } else {
   selectedPresets = null
   solution = null
@@ -396,7 +477,6 @@ function checkSolution(guess, correctAnswer) {
   return true;
 }
 
-let playSolutionButton = document.getElementById("playSolutionButton");
 
 if(practiceModeFlag == "true"){
   playSolutionButton.style.display = "none"
@@ -439,73 +519,6 @@ let currentScore = document.getElementById("currentScore")
 let finalScreen = document.getElementById("fScreen")
 let finalScore = document.getElementById("finalScreenPanel")
 
-
-// OVERLAY PANEL HANDLING -----------------------------------------------------------------------------------------------------------------------------
-let overlayPanel = document.getElementById("overlayDiv")
-let overlayTitle = document.getElementById("overlayTitle")
-let overlaySubtitle = document.getElementById("overlaySubtitle")
-let scoreLabel = document.getElementById("scoreLabel")
-let overlayImg = document.getElementById("overlayImg")
-
-let showSolutionButton = document.getElementById("showSolution")
-let goNextRoundButton = document.getElementById("goNextRound")
-let scoreDivisionLabel = document.getElementById("scoreDivisionLabel")
-
-showSolutionButton.addEventListener("click", () => {
-  console.log("SHOWS SOLUTION")
-})
-
-goNextRoundButton.addEventListener("click", () => {
-  if(levelIndex < 3){
-    timerInterval = setInterval(roundTimer, 1000);
-    handleOverlayDisplay("hide")
-  } else {
-    window.location.href = "../../gameTitleScreen.html";
-  }
-  
-})
-
-let handleOverlayDisplay = function (overlayType) {
-  // Default settings
-  overlayPanel.style.display = "flex";
-  scoreLabel.style.display = "none"
-  overlayImg.innerHTML = "";
-  scoreDivisionLabel.style.display = "none"
-  showSolutionButton.style.display = "none"
-  goNextRoundButton.style.display = "none"
-  
-  switch(overlayType){
-    case "wrongGuess":
-      overlayTitle.innerHTML = "WRONG GUESS"
-      overlaySubtitle.innerHTML = "DON'T WORRY, KEEP TRYING!"
-      break;
-    case "goodGuess":
-      overlayTitle.innerHTML = "GOOD GUESS"
-      overlaySubtitle.innerHTML = "YOU ARE A BOSS!"
-      goNextRoundButton.style.display = "block"
-      break;
-    case "timeOver":
-      overlayTitle.innerHTML = "TIME OVER"
-      overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!"
-      showSolutionButton.style.display = "block"
-      goNextRoundButton.style.display = "block"
-      break;
-    case "gameOver":
-      overlayTitle.innerHTML = "GAME OVER"
-      overlaySubtitle.innerHTML = "LET'S SEE HOW YOU PERFORMED!"
-      scoreLabel.style.display = "flex"
-      goNextRoundButton.innerHTML ="MAIN MENU"
-      goNextRoundButton.style.display = "block"
-      break;
-    case "hide":
-      overlayPanel.style.display = "none"
-      break;
-    default:
-      console.log("Error: overlayType '" + overlayType + "' does not exist.")
-  }
-}
-
-
 let goodGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
@@ -527,7 +540,6 @@ let goodGuess = function () {
   }
 };
 
-
 let wrongGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
@@ -537,7 +549,6 @@ let wrongGuess = function () {
     handleOverlayDisplay("hide")
   }, 2000);
 }
-
 
 let timeOver = function (overlayType) {
   if (isSolutionPlaying) stopSolution();

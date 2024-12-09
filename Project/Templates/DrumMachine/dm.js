@@ -446,12 +446,14 @@ playSolutionButton.addEventListener("click", () => {
   }
 });
 
+let currentScore = document.getElementById("currentScore")
 let finalScreen = document.getElementById("fScreen")
 let finalScore = document.getElementById("finalScreenPanel")
 
 let endGamePanel = document.getElementById("endGameScreen");
 
 let endGame = function () {
+  currentScore.innerHTML = totalScore;
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
   endGamePanel.style.display = "flex";
@@ -465,13 +467,12 @@ let endGame = function () {
       solution = chosenPresets[levelIndex]
       totalScore += roundScore;
       roundScore = maxScore;
+      currentScore.innerHTML = totalScore;
       clearInterval(timerInterval)
       timer = maxTimer;
       timerInterval = setInterval(roundTimer, 1000);
     } else {
       finalScreen.style.display= "block"
-
-    
     }
   }, 5000);
 };
@@ -482,12 +483,19 @@ let wrongGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
   wrongGuessPanel.style.display = "flex";
-  const wrongGuessAudio = new Audio("../../Sounds/morgan.mp3");
-  wrongGuessAudio.volume = 1;
-  wrongGuessAudio.play();
   
   setTimeout(() => {
     resetDrumMachine()
     wrongGuessPanel.style.display = "none"
-  }, 4000);
+  }, 2000);
+}
+
+
+let timeOverPanel = document.getElementById("timeOverScreen");
+
+let timeOver = function () {
+  if (isSolutionPlaying) stopSolution();
+  if (isPlaying) stopMetronome();
+  timeOverPanel.style.display = "flex";
+  resetDrumMachine()
 }

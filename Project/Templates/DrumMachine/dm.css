@@ -142,15 +142,21 @@
     border: 2px solid green;
 }
 
-.userMenu, .overlayMenu {
+.userMenu, .overlayMenu, .subTitle {
     padding: 10px;
-    justify-content: space-around;
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
 }
 
-.userMenu {
+.userMenu, .subTitle {
+    gap: 40px;
     background-color: rgb(9, 33, 65);
+}
+
+.subTitle{
+    font-size: 25px;
+    color: orange;
 }
 
 .button {
@@ -174,7 +180,7 @@
 }
 
 .bpmInput input {
-    width: 240px;
+    width: 200px;
 }
 
 .button:hover{

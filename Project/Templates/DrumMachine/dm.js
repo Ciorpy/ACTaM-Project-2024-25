@@ -61,9 +61,23 @@ let timer = maxTimer; // Sets starting timer value to default value
 let scoreSubTimer = 30;
 
 // Preload of stored values from main menu
-let difficultyLevel = localStorage.getItem("Difficulty"); // Gets from localStorage the selected Difficulty Level
 let selectedMinigame = localStorage.getItem("Gamemode"); // Gets from localStorage the selected Minigame (Grooves / Fills)
+let difficultyLevel = localStorage.getItem("Difficulty"); // Gets from localStorage the selected Difficulty Level
 let practiceModeFlag = localStorage.getItem("Practice"); // Gets from localStorage the selected mode (Game / Practice)
+
+let gamemodeDisplay = document.getElementById("gamemodeDisplay");
+let difficultyDisplay = document.getElementById("difficultyDisplay");
+
+let userLegend = {
+  grooves_GM: "GROOVES",
+  fills_GM: "FILLS",
+  easyDiff: "EASY",
+  mediumDiff: "MEDIUM",
+  hardDiff: "HARD",
+};
+
+gamemodeDisplay.innerHTML = "GAMEMODE: " + userLegend[selectedMinigame];
+difficultyDisplay.innerHTML = "DIFFICULTY: " + userLegend[difficultyLevel];
 
 // Dictionary of dictionaries used to access the correct array based on specified gamemode and difficulty level
 let minigamePresets = {
@@ -405,7 +419,7 @@ let bpmDisplay = document.getElementById("bpmDisplay");
 
 bpmSlider.addEventListener("input", () => {
   let newBpm = bpmSlider.value;
-  bpmDisplay.innerHTML = bpmSlider.value;
+  bpmDisplay.innerHTML = "BPM: " + bpmSlider.value;
   if (newBpm !== bpm) {
     bpm = newBpm;
 
@@ -533,12 +547,4 @@ checkInputButton.addEventListener("click", () => {
   if (checkSolution(drumMachineController, solution)) goodGuess();
   else wrongGuess();
   resetDrumMachine();
-});
-
-backButtonC.addEventListener("click", () => {
-  mainMenu.style.display = "block";
-  settingsMenu.style.display = "none";
-  creditsMenu.style.display = "none";
-  practiceMenu.style.display = "none";
-  gamemodeSelectorMenu.style.display = "none";
 });

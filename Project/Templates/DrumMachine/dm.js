@@ -474,7 +474,7 @@ let endGame = function () {
   }, 5000);
 };
 
-let wrongGuessPanel = document.getElementById("timeOverScreen");
+let wrongGuessPanel = document.getElementById("wrongGuessScreen");
 
 let wrongGuess = function () {
   if (isSolutionPlaying) stopSolution();

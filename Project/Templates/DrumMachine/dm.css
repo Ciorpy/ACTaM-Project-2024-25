@@ -213,7 +213,7 @@
     flex-direction: row;
 }
 
-.wrongGuessBG, .endGameBG{
+.timeOverBG, .wrongGuessBG, .endGameBG{
     display: none;
     top: 0;
     left: 0;
@@ -224,7 +224,16 @@
     flex-direction: column;
 }
 
-.timeOverScreen, .endGamePanel {
+.wrongGuessTextArea{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+    font-size: 150px;
+}
+
+.timeOverScreen, .wrongGuessPanel, .endGamePanel {
     margin: auto;
     display: flex;
     flex-direction: column;

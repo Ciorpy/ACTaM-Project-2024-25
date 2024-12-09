@@ -483,7 +483,7 @@ let wrongGuess = function () {
   
   setTimeout(() => {
     resetDrumMachine()
-    timeOverPanel.style.display = "none"
+    wrongGuessPanel.style.display = "none"
   }, 2000);
 }
 

@@ -4,6 +4,29 @@ import { generateRandomChord } from "./chord.js";
 const piano = new PianoController("piano", 37, 48);
 
 
+const pointsToDeduct = 25; // Punti da togliere
+const deductionInterval = 30; // Intervallo in secondi per la detrazione
+
+let totalScore = 0; // Punteggio totale accumulato
+let currentScore = 100; // Punteggio iniziale per il turno corrente
+let timeLeft = 120; // Tempo massimo in secondi
+let timerInterval; // Variabile per il timer
+
+const scoreDisplay = document.createElement("div");
+const timerDisplay = document.createElement("div");
+
+scoreDisplay.className = "score";
+timerDisplay.className = "timer";
+
+document.body.appendChild(scoreDisplay);
+document.body.appendChild(timerDisplay);
+
+updateScoreDisplay();
+updateTimerDisplay();
+
+
+
+
 // Modalità guidata
 let guidedMode = false; // Modalità guidata disabilitata di default
 
@@ -33,7 +56,6 @@ const levelDisplay = document.getElementById("level");
 const playSolutionButton = document.getElementById("playSolutionButton");
 let hintButton = document.getElementById("hintButton");
 const text = document.getElementById("text");
-text.textContent = "Let's try";
 
 // Assegna il livello iniziale
 updateLevelDisplay();
@@ -47,6 +69,58 @@ document.addEventListener("keydown", () => {
     checkChord();
 });
 
+// Funzione per aggiornare il display del punteggio totale
+function updateScoreDisplay() {
+    scoreDisplay.textContent = `Total Score: ${totalScore}`;
+}
+
+// Funzione per aggiornare il display del timer
+function updateTimerDisplay() {
+    timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+}
+
+
+// Funzione per avviare il timer
+function startTimer() {
+    clearInterval(timerInterval); // Resetta il timer precedente
+    timeLeft = 120;
+    currentScore = 100; // Reset del punteggio corrente
+    updateTimerDisplay();
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+
+        // Riduci il punteggio corrente ogni "deductionInterval" secondi
+        if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
+            currentScore = Math.max(0, currentScore - pointsToDeduct);
+            console.log(`Current Score updated: ${currentScore}`); // Stampa il punteggio corrente in console
+        }
+
+        // Gestisci lo scadere del tempo
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            text.textContent = `Time's up! The solution is: ${generatedChordData.noteRoot}${generatedChordData.chordType}`;
+            createNextChordButton();
+        }
+    }, 1000);
+}
+
+// Funzione per creare il pulsante per passare al turno successivo
+function createNextChordButton() {
+    const nextChordButton = document.createElement("div");
+    nextChordButton.className = "button";
+    nextChordButton.textContent = "Next Chord";
+    document.body.appendChild(nextChordButton);
+
+    nextChordButton.addEventListener("click", () => {
+        document.body.removeChild(nextChordButton);
+        generateNewChord();
+        startTimer();
+    });
+}
+
+
 // Aggiorna il display del livello
 function updateLevelDisplay() {
     levelDisplay.textContent = `${selectedLevel}`;
@@ -55,17 +129,18 @@ function updateLevelDisplay() {
 // Funzione per generare un nuovo accordo
 function generateNewChord() {
     generatedChordData = generateRandomChord(48, selectedLevel);
-    generatedChord = generatedChordData.midiNotes; // Aggiorna la lista delle note MIDI
-
+    generatedChord = generatedChordData.midiNotes;
     console.log(`Nuovo accordo per il livello ${selectedLevel}:`, generatedChord);
-    //feedbackDisplay.textContent = "Nuovo accordo generato!";
+    text.textContent = "Let's try";
 
-    // Riproduci il nuovo accordo dopo il delay configurabile
     setTimeout(() => {
         piano.playChord(generatedChord);
-        //feedbackDisplay.textContent = "Riproduzione accordo successivo!";
     }, playbackDelay);
+
+    startTimer(); // Avvia il timer
 }
+
+
 
 hintButton.addEventListener("click", () => {
     updateHints();
@@ -93,13 +168,15 @@ function checkChord() {
         wrongAttempts++;
         //feedbackDisplay.textContent = "Accordo non corretto. Riprova!";
     } else if (arraysEqual(generatedChord, pressedNotes)) {
+        clearInterval(timerInterval); // Ferma il time
+        totalScore += currentScore; // Aggiungi il punteggio corrente al totale
+        updateScoreDisplay(); // Aggiorna il display del punteggio
         generateNewChord();
         wrongAttempts = 0; // Reset degli errori
         chordCount++;
         //feedbackDisplay.textContent = "Accordo corretto!";
         //chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
         text.textContent = "Right Chord, here you another one."
-        text.textContent = "Let's try";
         
     }
 

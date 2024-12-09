@@ -120,3 +120,10 @@
     background: red !important;
     color: white;
 }
+
+.score, .timer {
+    font-family: "Audiowide", sans-serif;
+    font-size: 1.5em;
+    margin: 10px;
+    text-align: center;
+}

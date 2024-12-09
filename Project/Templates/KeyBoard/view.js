@@ -8,12 +8,9 @@ class PianoView {
         // Mappatura dei tasti fisici per ogni ottava
         this.keyboardKeys = [
             // Prima ottava e mezza
-            "KeyQ", "Digit2", "KeyW", "Digit3", "KeyE", "KeyR", "Digit5", 
-            "KeyT", "Digit6", "KeyY", "Digit7", "KeyU", "KeyI", "Digit9", 
-            "KeyO", "Digit0", "KeyP", "BracketLeft", "Equal", "BracketRight",
+            "KeyW", "Digit3", "KeyE", "Digit4", "KeyR", "KeyT", "Digit6", "KeyY", "Digit7", "KeyU", "Digit8", "KeyI",
             // Seconda ottava e mezza
-            "KeyA", "KeyZ", "KeyS", "KeyX", "KeyC", "KeyF", "KeyV", "KeyG", 
-            "KeyB", "KeyN", "KeyJ", "KeyM", "KeyK", "Comma", "KeyL", "Period", "Slash"
+            "KeyZ", "KeyS", "KeyX", "KeyD", "KeyC", "KeyV", "KeyG", "KeyB", "KeyH", "KeyN", "KeyJ", "KeyM"
         ];
 
         this.keyMap = {};

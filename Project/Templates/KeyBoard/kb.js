@@ -7,14 +7,15 @@ let lastNote = firstNote + keysNumber;
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 
-
 const pointsToDeduct = 25; // Punti da togliere
 const deductionInterval = 30; // Intervallo in secondi per la detrazione
+const hintInterval = 40; // Intervallo in secondi per mostrare un nuovo hint
 
 let totalScore = 0; // Punteggio totale accumulato
 let currentScore = 100; // Punteggio iniziale per il turno corrente
 let timeLeft = 120; // Tempo massimo in secondi
 let timerInterval; // Variabile per il timer
+let isRoundActive = false; // Flag per indicare se un round è attivo
 
 const scoreDisplay = document.createElement("div");
 const timerDisplay = document.createElement("div");
@@ -63,15 +64,20 @@ const text = document.getElementById("text");
 
 // Assegna il livello iniziale
 updateLevelDisplay();
-generateNewChord();
 
-//hintMessage.textContent = "Prova a indovinare l'accordo!";
+// Variabili per la gestione degli hint
+let hintTimer = 0; // Tempo trascorso per mostrare gli hint
+let flagHints = [true, true, true]; // Stato degli hint
+
 
 
 // Ascolta le note suonate dal giocatore
 document.addEventListener("keydown", () => {
     checkChord();
-});
+}); //?
+
+
+
 
 // Funzione per aggiornare il display del punteggio totale
 function updateScoreDisplay() {
@@ -89,54 +95,75 @@ function startTimer() {
     clearInterval(timerInterval); // Resetta il timer precedente
     timeLeft = 120;
     currentScore = 100; // Reset del punteggio corrente
+    hintTimer = 0; // Reset del timer degli hint
+    flagHints = [true, true, true]; // Reset degli hint
     updateTimerDisplay();
 
     timerInterval = setInterval(() => {
         timeLeft--;
+        hintTimer++;
         updateTimerDisplay();
 
         // Riduci il punteggio corrente ogni "deductionInterval" secondi
         if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
             currentScore = Math.max(0, currentScore - pointsToDeduct);
             console.log(`Current Score updated: ${currentScore}`); // Stampa il punteggio corrente in console
-        }
+        } 
+
+        // Mostra hint in base al tempo trascorso
+        if (hintTimer >= hintInterval && flagHints[0]) {
+            flagHints[0] = false;
+            text.textContent = `Hint 1: Root ${generatedChordData.noteRoot}`;
+        } else if (hintTimer >= hintInterval * 2 && flagHints[1]) {
+            flagHints[1] = false;
+            text.textContent = `Hint 2: ${generatedChordData.noteRoot}${generatedChordData.chordType}`;
+        } else if (hintTimer >= hintInterval * 3 && flagHints[2]) {
+            flagHints[2] = false;
+            text.textContent += `\nHint 3: Inversion ${generatedChordData.inversion}`;
+        } 
 
         // Gestisci lo scadere del tempo
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
+            isRoundActive = false; // Termina il round
             text.textContent = `Time's up! The solution is: ${generatedChordData.noteRoot}${generatedChordData.chordType}`;
-            createNextChordButton();
         }
     }, 1000);
 }
 
-// Funzione per creare il pulsante per passare al turno successivo
-function createNextChordButton() {
-    const nextChordButton = document.createElement("div");
-    nextChordButton.className = "button";
-    nextChordButton.textContent = "Next Chord";
-    document.body.appendChild(nextChordButton);
-
-    nextChordButton.addEventListener("click", () => {
-        document.body.removeChild(nextChordButton);
-        generateNewChord();
-        startTimer();
-    });
+// Funzione per iniziare un nuovo round
+function startRound() {
+    isRoundActive = true;
+    text.textContent = "Let's try!";
+    generateNewChord();
+    startTimer();
 }
+
+// Pulsante Next Chord
+const nextChordButton = document.createElement("div");
+nextChordButton.className = "button";
+nextChordButton.textContent = "Next Chord";
+document.body.appendChild(nextChordButton);
+
+nextChordButton.addEventListener("click", () => {
+    if (!isRoundActive) {
+        startRound(); // Avvia un nuovo round
+    }
+});
+
 
 
 // Aggiorna il display del livello
 function updateLevelDisplay() {
     levelDisplay.textContent = `${selectedLevel}`;
-}
+} //?
+
+
 
 // Funzione per generare un nuovo accordo
 function generateNewChord() {
-    do {
-        generatedChordData = generateRandomChord(firstNote, selectedLevel);
-        generatedChord = generatedChordData.midiNotes;    
-    }while (generatedChord[generatedChord.length - 1] - lastNote < 0)
-
+    generatedChordData = generateRandomChord(48, selectedLevel);
+    generatedChord = generatedChordData.midiNotes;
     console.log(`Nuovo accordo per il livello ${selectedLevel}:`, generatedChord);
     text.textContent = "Let's try";
 
@@ -144,7 +171,6 @@ function generateNewChord() {
         piano.playChord(generatedChord);
     }, playbackDelay);
 
-    startTimer(); // Avvia il timer
 }
 
 
@@ -152,6 +178,8 @@ function generateNewChord() {
 hintButton.addEventListener("click", () => {
     updateHints();
 })
+
+
 
 // Funzione per controllare l'accordo
 function checkChord() {
@@ -178,7 +206,7 @@ function checkChord() {
         clearInterval(timerInterval); // Ferma il time
         totalScore += currentScore; // Aggiungi il punteggio corrente al totale
         updateScoreDisplay(); // Aggiorna il display del punteggio
-        generateNewChord();
+        isRoundActive = false; // Termina il round
         wrongAttempts = 0; // Reset degli errori
         chordCount++;
         //feedbackDisplay.textContent = "Accordo corretto!";
@@ -187,25 +215,8 @@ function checkChord() {
         
     }
 
-}
+} //?
 
-let flagHints = [true, true, true]
-
-// Mostra suggerimenti basati sul numero di errori
-function updateHints() {
-        if (wrongAttempts >= 5 && flagHints[0]) {
-            flagHints[0] = false
-            text.textContent = `Root ${generatedChordData.noteRoot}`;
-        }
-        if (wrongAttempts >= 10 && flagHints[1]) {
-            flagHints[1] = false
-            text.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
-        }
-        if (wrongAttempts >= 12 && flagHints[2]) {
-            flagHints[2] = false
-            text.textContent += `\nin ${generatedChordData.inversion}`;
-        }
-}
 
 // Riproduce l'accordo generato quando si preme il pulsante "PLAY SOLUTION"
 playSolutionButton.addEventListener("click", () => {

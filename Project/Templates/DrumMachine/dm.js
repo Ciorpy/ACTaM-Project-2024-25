@@ -446,12 +446,14 @@ playSolutionButton.addEventListener("click", () => {
   }
 });
 
+let currentScore = document.getElementById("currentScore")
 let finalScreen = document.getElementById("fScreen")
 let finalScore = document.getElementById("finalScreenPanel")
 
 let endGamePanel = document.getElementById("endGameScreen");
 
 let endGame = function () {
+  currentScore.innerHTML = totalScore;
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
   endGamePanel.style.display = "flex";
@@ -465,6 +467,7 @@ let endGame = function () {
       solution = chosenPresets[levelIndex]
       totalScore += roundScore;
       roundScore = maxScore;
+      currentScore.innerHTML = totalScore;
       clearInterval(timerInterval)
       timer = maxTimer;
       timerInterval = setInterval(roundTimer, 1000);

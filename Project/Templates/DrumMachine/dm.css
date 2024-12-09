@@ -248,3 +248,10 @@
     font-size: 30px;
     color: orange;
 }
+
+.currentScore {
+    margin: auto;
+    text-align: center;
+    font-size: 30px;
+    color: orange;
+}

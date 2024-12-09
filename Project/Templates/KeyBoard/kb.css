@@ -1,21 +1,45 @@
 *{
-    font-family: "Audiowide", serif;
-    font-weight: 400;
-    font-style: normal;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: "Audiowide", serif;
+    font-weight: 400;
+    font-style: normal;
     background-color: rgb(9, 33, 65);
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; /* Migliora la spaziatura */
+    align-items: flex-start; /* Allinea verticalmente */
+    position: relative;
+    background-color: rgb(9, 33, 65);
+    height: 600px;
+    user-select: none;
+    padding: 40px 100px; /* Padding più uniforme */
+    border-bottom: 3px solid orange;
+    gap: 20px; /* Spaziatura tra contenitore e info */
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 15px;
+    padding-left: 20px;
+    color: cornflowerblue;
 }
 
 .piano {
     display: flex;
+    flex-direction: row;
     position: relative;
-    height: 500px;
+    height: 400px;
     user-select: none;
-    margin-top: 70px;
-    padding-bottom: 50px;
-    border-bottom: 3px solid orange;
+    width: calc(100% - 450px);;
+    justify-content: center;
 }
 
 .title {
@@ -38,21 +62,22 @@
     font-size: 30px;
     text-align: center;
     color: cornflowerblue;
+    margin-bottom: 20px;
 }
 
 .text {
+    padding: 20px;
     font-family: "Audiowide", serif;
     font-weight: 700;
-    font-size: 30px;
-    font-style: normal;
+    font-size: 28px;
     text-align: center;
     color: cornflowerblue;
-    display: flex;
-    flex-direction: column;  
+    width: 420px;
 }
 
 .key {
     flex: 1; 
+    margin: 0.5px;
     height: 100%;
     border: 1px solid black;
     background: white;
@@ -66,7 +91,7 @@
 }
 
 .key span {
-    background: transparent; /* Rimuove lo sfondo per i caratteri */
+    background: transparent;
 }
 
 .key.black {
@@ -79,7 +104,7 @@
 }
 
 .key.black span {
-    background: transparent; /* Rimuove lo sfondo per i caratteri */
+    background: transparent;
 }
 
 .key.active {
@@ -89,18 +114,26 @@
     background: darkblue;
 }
 
-.userMenu {
-    justify-content: space-around; 
+.userMenu, .overlayMenu {
+    padding: 10px 50px;
     display: flex;
+    justify-content: space-between;
     flex-direction: row;
+    background-color: rgba(0,0,0,0);
+    gap: 20px;
+}
+
+.userMenu {
     background-color: rgb(9, 33, 65);
-    margin: 100px;
 }
 
 .button {
-    padding: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 30px;
+    padding-bottom: 30px;
     border: 2px solid orange;
-    width: 350px;
+    width: 300px;
     text-align: center;
     cursor: pointer;
     background-color: rgb(9, 33, 65);
@@ -126,4 +159,30 @@
     font-size: 1.5em;
     margin: 10px;
     text-align: center;
+}
+
+
+
+/* TO CHECK */
+
+.overlayBG{
+    display: flex;
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    flex-direction: column;
+}
+
+.overlayTitle{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+    font-size: 150px;
+    background-color: rgba(0,0,0,0);
 }

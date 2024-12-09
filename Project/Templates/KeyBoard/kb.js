@@ -3,13 +3,12 @@ import { generateRandomChord } from "./chord.js";
 
 let firstNote = 48;
 let keysNumber = 25;
-let lastNote = firstNote + keysNumber;
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 
 const pointsToDeduct = 25; // Punti da togliere
 const deductionInterval = 30; // Intervallo in secondi per la detrazione
-const hintInterval = 40; // Intervallo in secondi per mostrare un nuovo hint
+const hintInterval = 30; // Intervallo in secondi per mostrare un nuovo hint
 
 let totalScore = 0; // Punteggio totale accumulato
 let currentScore = 100; // Punteggio iniziale per il turno corrente
@@ -17,20 +16,15 @@ let timeLeft = 120; // Tempo massimo in secondi
 let timerInterval; // Variabile per il timer
 let isRoundActive = false; // Flag per indicare se un round è attivo
 
-const scoreDisplay = document.createElement("div");
-const timerDisplay = document.createElement("div");
+const scoreDisplay = document.getElementById("scoreDisplay");
+const timerDisplay = document.getElementById("timerDisplay");
+
 
 scoreDisplay.className = "score";
 timerDisplay.className = "timer";
 
-document.body.appendChild(scoreDisplay);
-document.body.appendChild(timerDisplay);
-
 updateScoreDisplay();
 updateTimerDisplay();
-
-
-
 
 // Modalità guidata
 let guidedMode = false; // Modalità guidata disabilitata di default
@@ -42,42 +36,37 @@ const toggleGuidedModeButton = document.getElementById("toggleGuidedMode");
 toggleGuidedModeButton.addEventListener("click", () => {
     guidedMode = !guidedMode;
     toggleGuidedModeButton.textContent = !guidedMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
-    //feedbackDisplay.textContent = guidedMode ? "Modalità guidata attivata!" : "Modalità guidata disattivata.";
 });
 
-// Livelli di difficoltà
-const levels = ["easyDiff", "mediumDiff", "hardDiff"];
+// Utente
 let selectedLevel = localStorage.getItem("Difficulty"); // Livello selezionato dall'utente
-let chordCount = 0;
-let wrongAttempts = 0; // Contatore errori
+let selectedMinigame = localStorage.getItem("Gamemode")  // Gets from localStorage the selected Minigame (Chords / Harmony)
+let practiceModeFlag = localStorage.getItem("Practice")  // Gets from localStorage the selected mode (Game / Practice)
+
+// Accordi
 let generatedChordData = {}; // Dettagli dell'accordo generato
 let generatedChord = []; // Lista delle note MIDI dell'accordo generato
-const playbackDelay = 1500; // Delay in millisecondi prima di riprodurre il nuovo accordo
+
+const playbackDelay = 50; // Delay in millisecondi prima di riprodurre il nuovo accordo
 
 // Elementi della pagina
 const levelDisplay = document.getElementById("level");
-//const chordCountDisplay = document.getElementById("chordCount");
-//const feedbackDisplay = document.getElementById("feedback");
 const playSolutionButton = document.getElementById("playSolutionButton");
 let hintButton = document.getElementById("hintButton");
-const text = document.getElementById("text");
+const hintDisplay = document.getElementById("hintDisplay");
 
 // Assegna il livello iniziale
 updateLevelDisplay();
 
 // Variabili per la gestione degli hint
 let hintTimer = 0; // Tempo trascorso per mostrare gli hint
-let flagHints = [true, true, true]; // Stato degli hint
-
-
+let flagHintsButton = [true, true, true]; // Stato degli hint
+let flagHintsAuto = [true, true, true]; // Stato degli hint
 
 // Ascolta le note suonate dal giocatore
 document.addEventListener("keydown", () => {
     checkChord();
-}); //?
-
-
-
+}); 
 
 // Funzione per aggiornare il display del punteggio totale
 function updateScoreDisplay() {
@@ -89,6 +78,21 @@ function updateTimerDisplay() {
     timerDisplay.textContent = `Time Left: ${timeLeft}s`;
 }
 
+hintButton.addEventListener("click", () => {
+    // Mostra hint in base al tempo trascorso
+    if (hintTimer >= hintInterval && flagHintsButton[0]) {
+        flagHintsButton[0] = false;
+        hintDisplay.textContent = `Root ${generatedChordData.noteRoot}`;
+    }
+    if (hintTimer >= hintInterval * 2 && flagHintsButton[1]) {
+        flagHintsButton[1] = false;
+        hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
+    } 
+    if (hintTimer >= hintInterval * 3 && flagHintsButton[2]) {
+        flagHintsButton[2] = false;
+        hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}\nin ${generatedChordData.inversion}`;
+    } 
+});
 
 // Funzione per avviare il timer
 function startTimer() {
@@ -96,8 +100,11 @@ function startTimer() {
     timeLeft = 120;
     currentScore = 100; // Reset del punteggio corrente
     hintTimer = 0; // Reset del timer degli hint
-    flagHints = [true, true, true]; // Reset degli hint
+    flagHintsButton = [true, true, true]; // Reset degli hint
+    flagHintsAuto = [true, true, true]; // Reset degli hint
     updateTimerDisplay();
+
+    hintDisplay.textContent = "Play it!";
 
     timerInterval = setInterval(() => {
         timeLeft--;
@@ -108,78 +115,55 @@ function startTimer() {
         if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
             currentScore = Math.max(0, currentScore - pointsToDeduct);
             console.log(`Current Score updated: ${currentScore}`); // Stampa il punteggio corrente in console
-        } 
+        }
 
-        // Mostra hint in base al tempo trascorso
-        if (hintTimer >= hintInterval && flagHints[0]) {
-            flagHints[0] = false;
-            text.textContent = `Hint 1: Root ${generatedChordData.noteRoot}`;
-        } else if (hintTimer >= hintInterval * 2 && flagHints[1]) {
-            flagHints[1] = false;
-            text.textContent = `Hint 2: ${generatedChordData.noteRoot}${generatedChordData.chordType}`;
-        } else if (hintTimer >= hintInterval * 3 && flagHints[2]) {
-            flagHints[2] = false;
-            text.textContent += `\nHint 3: Inversion ${generatedChordData.inversion}`;
+        if (hintTimer >= hintInterval && flagHintsAuto[0]) {
+            flagHintsAuto[0] = false;
+            hintDisplay.textContent = "1st hint available";
+        }
+        if (hintTimer >= hintInterval * 2 && flagHintsAuto[1]) {
+            flagHintsAuto[1] = false;
+            hintDisplay.textContent = "2nd hint available";
+        } 
+        if (hintTimer >= hintInterval * 3 && flagHintsAuto[2]) {
+            flagHintsAuto[2] = false;
+            hintDisplay.textContent = "3rd hint available";
         } 
 
         // Gestisci lo scadere del tempo
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             isRoundActive = false; // Termina il round
-            text.textContent = `Time's up! The solution is: ${generatedChordData.noteRoot}${generatedChordData.chordType}`;
+            timerDisplay.textContent = `Time's up!`;
+            hintDisplay.textContent = `It was ${generatedChordData.noteRoot}${generatedChordData.chordType}\nin ${generatedChordData.inversion}`;
         }
-    }, 1000);
+    }, 1000); 
 }
 
 // Funzione per iniziare un nuovo round
 function startRound() {
     isRoundActive = true;
-    text.textContent = "Let's try!";
     generateNewChord();
     startTimer();
 }
 
-// Pulsante Next Chord
-const nextChordButton = document.createElement("div");
-nextChordButton.className = "button";
-nextChordButton.textContent = "Next Chord";
-document.body.appendChild(nextChordButton);
-
-nextChordButton.addEventListener("click", () => {
-    if (!isRoundActive) {
-        startRound(); // Avvia un nuovo round
-    }
-});
-
-
-
 // Aggiorna il display del livello
 function updateLevelDisplay() {
-    levelDisplay.textContent = `${selectedLevel}`;
-} //?
-
+    levelDisplay.textContent = `Chords difficulty - ${selectedLevel}`;
+}
 
 
 // Funzione per generare un nuovo accordo
 function generateNewChord() {
-    generatedChordData = generateRandomChord(48, selectedLevel);
+    generatedChordData = generateRandomChord(firstNote, selectedLevel);
     generatedChord = generatedChordData.midiNotes;
     console.log(`Nuovo accordo per il livello ${selectedLevel}:`, generatedChord);
-    text.textContent = "Let's try";
 
     setTimeout(() => {
         piano.playChord(generatedChord);
     }, playbackDelay);
 
 }
-
-
-
-hintButton.addEventListener("click", () => {
-    updateHints();
-})
-
-
 
 // Funzione per controllare l'accordo
 function checkChord() {
@@ -197,42 +181,73 @@ function checkChord() {
           }
       });
     }
-
-    // Verifica l'accordo e aggiorna i feedback
-    if (pressedNotes.length >= 3 && !arraysEqual(generatedChord, pressedNotes)) {
-        wrongAttempts++;
-        //feedbackDisplay.textContent = "Accordo non corretto. Riprova!";
-    } else if (arraysEqual(generatedChord, pressedNotes)) {
-        clearInterval(timerInterval); // Ferma il time
-        totalScore += currentScore; // Aggiungi il punteggio corrente al totale
-        updateScoreDisplay(); // Aggiorna il display del punteggio
-        isRoundActive = false; // Termina il round
-        wrongAttempts = 0; // Reset degli errori
-        chordCount++;
-        //feedbackDisplay.textContent = "Accordo corretto!";
-        //chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
-        text.textContent = "Right Chord, here you another one."
-        
-    }
-
-} //?
-
+}
 
 // Riproduce l'accordo generato quando si preme il pulsante "PLAY SOLUTION"
 playSolutionButton.addEventListener("click", () => {
     if (generatedChord.length > 0) {
         piano.playChord(generatedChord);
-        //feedbackDisplay.textContent = "Soluzione riprodotta!";
         console.log("Accordo riprodotto:", generatedChord);
     } else {
-        //feedbackDisplay.textContent = "Nessun accordo generato!";
         console.log("Nessun accordo da riprodurre");
     }
 });
 
 // Funzione ausiliaria per confrontare due array
-function arraysEqual(arr1, arr2) {
-    const sortedArr1 = [...arr1].sort();
-    const sortedArr2 = [...arr2].sort();
-    return JSON.stringify(sortedArr1) === JSON.stringify(sortedArr2);
+
+
+// OVERLAY PANEL HANDLING -----------------------------------------------------------------------------------------------------------------------------
+let overlayPanel = document.getElementById("overlayDiv")
+let scoreLabel = document.getElementById("scoreLabel")
+
+let startGameButton = document.getElementById("startGame")
+let goNextRoundButton = document.getElementById("goNextRound")
+let scoreDivisionLabel = document.getElementById("scoreDivisionLabel")
+
+startGameButton.addEventListener("click", () => {
+  handleOverlayDisplay("hide")
+  if (!isRoundActive) {
+      startRound(); // Avvia un nuovo round
+  }
+})
+
+goNextRoundButton.addEventListener("click", () => {
+    if (roundIndex < maxRounds - 1) { // Controlla se ci sono ancora round disponibili
+      roundIndex++; // Incrementa il round
+      startRound();
+      handleOverlayDisplay("hide");
+      // Qui puoi inserire la logica per inizializzare il round successivo
+      console.log(`Round ${levelIndex + 1} iniziato`);
+    } else {
+      handleOverlayDisplay("gameOver"); // Termina il gioco
+      console.log("Game Over. Ritorno al menu principale.");
+    }
+  });
+
+
+let handleOverlayDisplay = function (overlayType) {
+  // Default settings
+  overlayPanel.style.display = "flex";
+  scoreLabel.style.display = "none";
+  scoreDivisionLabel.style.display = "none";
+  startGameButton.style.display = "none";
+  goNextRoundButton.style.display = "none";
+  
+  switch(overlayType){
+    case "startGame":
+      startGameButton.style.display = "block"
+      break;
+    case "timeOver":
+      goNextRoundButton.style.display = "block"
+      break;
+    case "gameOver":
+      scoreLabel.style.display = "flex"
+      goNextRoundButton.style.display = "block"
+      break;
+    case "hide":
+      overlayPanel.style.display = "none"
+      break;
+    default:
+      console.log("Error: overlayType '" + overlayType + "' does not exist.")
+  }
 }

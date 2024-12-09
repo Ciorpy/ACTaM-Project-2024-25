@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tastiera Pianoforte</title>
@@ -18,18 +18,39 @@
       href="https://fonts.googleapis.com/css2?family=Slackey&display=swap"
       rel="stylesheet"
     />
-</head>
-<body>
+  </head>
+  <body>
     <div class="title">Keyboard</div>
     <div class="subtitle" id="level"></div>
-    <div class="piano" id="piano"></div>
+    <div class="container" id="pianoContainer">
+      <div class="piano" id="piano"></div>
+      <div class="info">
+        <div class="text" id="scoreDisplay">REMAINING TIME: 120s</div>
+        <div class="text" id="timerDisplay">Total Score: 0</div>
+        <div class="text" id="hintDisplay"></div>
+      </div>
+    </div> 
     <div class="userMenu">
       <div class="button" id="playSolutionButton">PLAY SOLUTION</div>
       <div class="button" id="hintButton">HINT</div>
-      <div class="text" id="text"></div>
       <div class="button" id="toggleGuidedMode">ASSISTANT MODE OFF</div>
+    </div>
+    <div class="overlayBG" id="overlayDiv">
+      <div class="overlayTitle" id="overlayTitle">CLICK START GAME WHEN READY</div>
+      <div class="overlayTitle" id="overlaySubtitle"></div>
+      <div class="overlayTitle" id="scoreLabel"></div>
+      <div id="overlayImg"></div>
+      <div class="overlayMenu" id="scoreDivisionLabel">
+        <div class="levelScore" id="level1"></div>
+        <div class="levelScore" id="level2"></div>
+        <div class="levelScore" id="level3"></div>
+      </div>
+      <div class="overlayMenu">
+        <div class="button" id="startGame">START GAME</div>
+        <div class="button" id="goNextRound">NEXT LEVEL</div>
+      </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <script type="module" src="kb.js"></script>
-</body>
+  </body>
 </html>

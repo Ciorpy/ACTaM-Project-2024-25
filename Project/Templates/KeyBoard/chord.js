@@ -160,7 +160,7 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff") {
   const updatedRoot = selectedInversionIndex === 0 ? selectedInversion[0]
     : selectedInversion[selectedInversion.length - (selectedInversionIndex)];
   const inversionType = selectedInversionIndex === 0 ? "Root Position"
-    : `${selectedInversionIndex}° Inversion`;
+    : `${selectedInversionIndex}` + "° Inversion";
 
   return {
     midiRoot: updatedRoot,

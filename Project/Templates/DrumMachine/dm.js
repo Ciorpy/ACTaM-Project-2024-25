@@ -1,41 +1,84 @@
-let semicrome = 16;
-let drumSamples = 10;
-let defaultBpm = 100;
-let bpm = defaultBpm;
-let isPlaying = false;
-let isSolutionPlaying = false;
-let i = 0;
-let j = 0;
-let metronomeInterval;
-let levelIndex = 0;
-let maxScore = 125;
-let roundScore = maxScore;
-let totalScore = 0;
-let maxTimer = 60;
-let timer = 0;
-let timerInterval;
+// VARIABLES ------------------------------------------------------------------------------------------------------------------------------------------
 
+// Volume
+let defaultVolume = 0.5;                                    // Default value for volume
+let loadedVolume = localStorage.getItem("mainVolume");      // Try to loads the stored value from the local storage
+let volume = loadedVolume ? loadedVolume : defaultVolume;   // If the loaded volume exists then assigns it to the volume variable, otherwise use default
 
-let difficultyLevel = localStorage.getItem("Difficulty")
-let selectedMinigame = localStorage.getItem("Gamemode")
-let practiceModeFlag = localStorage.getItem("Practice")
+// Drum machine dims
+let semicrome = 16;                // Number of semicromes to fill
+let drumSamples = 10;              // Number of drum samples that are showed to the user
 
-console.log(practiceModeFlag)
+// Logic control data structure for storing user inputs
+let drumMachineController = Array.from({ length: drumSamples }, () =>
+  Array(semicrome).fill(false)
+);
 
+// Audio samples for DM
+let preloadedSounds = [];          // Array that will store the audio obj generates via function
+const audioFiles = [               // Function that stores the paths associated to the various samples
+  "../../Sounds/New Drum Samples/Kick 22.wav",                    // Kick
+  "../../Sounds/New Drum Samples/Snare Ludwig Acrolite.wav",      // Snare
+  "../../Sounds/New Drum Samples/Tom 10.wav",                     // Tom 1
+  "../../Sounds/New Drum Samples/Tom 12.wav",                     // Tom 2
+  "../../Sounds/New Drum Samples/Floor Tom 16.wav",               // Floor Tom
+  "../../Sounds/New Drum Samples/Hi Hat Close Sabian HHX 14.wav", // Closed Hi Hat
+  "../../Sounds/New Drum Samples/Hi Hat Open Sabian HHX 14.wav",  // Opened Hi Hat
+  "../../Sounds/Drum Samples/RD.wav",                             // Ride
+  "../../Sounds/New Drum Samples/Clap Stack.wav",                 // Bell's Ride
+  "../../Sounds/New Drum Samples/Crash K 18.wav",                 // Crash
+];
+
+// BPM values
+let defaultBpm = 100;              // Default value of the BPM slider
+let bpm = defaultBpm;              // Sets actual BPM to default value
+
+// Control Booleans
+let isPlaying = false;             // Control boolean used to determine if the user is playing his guess
+let isSolutionPlaying = false;     // Control boolean used to determine if the user is playing the solution pattern
+
+// Indexes
+let guessIndex = 0;                // Index used to have track of the actual semicrome that is being played in the guess
+let solutionIndex = 0;             // Index used to have track of the actual semicrome that is being played in the solution
+
+// Intervals
+let metronomeInterval;             // Variable that stores the interval of the metronome
+let timerInterval;                 // Variable that stores the interval of the timer
+let solutionInterval = null;       // Variable that stores the interval of the solution
+
+// Level succession
+let levelIndex = 0;                // Stores the index associated to the actual level
+
+// Score
+let maxScore = 125;                // Max score that the user can get (the actual Maximum score is 100, we add 125 to avoid a problem in the logic)
+let roundScore = maxScore;         // Sets actual score to maxScore
+let totalScore = 0;                // Stores the total score achieved by the user
+
+// Timer
+let maxTimer = 120;                // Stores how much time is given to the player to complete each level 
+let timer = maxTimer;              // Sets starting timer value to default value
+let scoreSubTimer = 30;
+
+// Preload of stored values from main menu
+let difficultyLevel = localStorage.getItem("Difficulty") // Gets from localStorage the selected Difficulty Level
+let selectedMinigame = localStorage.getItem("Gamemode")  // Gets from localStorage the selected Minigame (Grooves / Fills)
+let practiceModeFlag = localStorage.getItem("Practice")  // Gets from localStorage the selected mode (Game / Practice)
+
+// Dictionary of dictionaries used to access the correct array based on specified gamemode and difficulty level
 let minigamePresets = {
+  // Grooves Gamemode
   "grooves_GM": {
-    "easyDiff": easyGrooves,
-    "mediumDiff": mediumGrooves,
-    "hardDiff": hardGrooves,
+    "easyDiff": easyGrooves,     // Easy Diff
+    "mediumDiff": mediumGrooves, // Medium Diff
+    "hardDiff": hardGrooves,     // Hard Diff
   },
+  // Fills Gamemode
   "fills_GM": {
-    "easyDiff": easyFills,
-    "mediumDiff": mediumFills,
-    "hardDiff": hardFills,
+    "easyDiff": easyFills,       // Easy Diff
+    "mediumDiff": mediumFills,   // Medium Diff
+    "hardDiff": hardFills,       // Hard Diff
   }
 }
-console.log(difficultyLevel)
-console.log(selectedMinigame)
 
 let selectedPresets;
 let solution;
@@ -52,6 +95,8 @@ function getRandomDrumPatterns(array) {
   return array.slice(0, 3);
 }
 
+let timerDisplay = document.getElementById("timer")
+
 let roundTimer = function () {
   if(timer <= 0){
     clearInterval(timerInterval)
@@ -66,19 +111,18 @@ let roundTimer = function () {
       window.location.href = "../../gameTitleScreen.html";
     }
   }
-  if(timer % 15 == 0){
+  if(timer % scoreSubTimer == 0){
     roundScore -= 25;
     console.log("Punteggio rimanente: " + roundScore)
   }
   timer -= 1;
-  console.log("Tempo rimanente: " + timer + " s")
+  timerDisplay.innerHTML = timer + "s";
 }
 
 if(practiceModeFlag == "false"){
   selectedPresets = minigamePresets[selectedMinigame][difficultyLevel]
   solution = selectedPresets[levelIndex]
   chosenPresets = getRandomDrumPatterns(selectedPresets);
-  timer = maxTimer;
   timerInterval = setInterval(roundTimer, 1000);
 } else {
   selectedPresets = null
@@ -86,28 +130,31 @@ if(practiceModeFlag == "false"){
   chosenPresets = null;
 }
 
-let drumMachineController = Array.from({ length: drumSamples }, () =>
-  Array(semicrome).fill(false)
-);
+// DYNAMIC HTML LAYOUT GENERATION ---------------------------------------------------------------------------------------------------------------------
+let drumMachineItems = document.getElementsByClassName("drumMachineItem"); // Gets HTML elements that will contain the DM (one for each sample)
 
-let drumMachineItems = document.getElementsByClassName("drumMachineItem");
-
+// Iterates over samples
 Array.from(drumMachineItems).forEach((item, index) => {
+  // Iterates over semicromes
   for (let i = 0; i < semicrome; i++) {
-    let newElement = document.createElement("div");
-    newElement.classList.add("semicroma");
+    let newElement = document.createElement("div");  // Create new div element
+    newElement.classList.add("semicroma");           // Adds class to new element
 
+    // If the semicroma is the first of the quarto, adds a class that allows a proper visualization
     if ((i + 1) % 4 == 1) {
       newElement.classList.add("newQuarto");
     }
 
+    // Adds event listener based on click over the new element
     newElement.addEventListener("click", () => {
-      newElement.classList.toggle("active");
-      drumMachineController[index][i] = !drumMachineController[index][i];
-      console.log(drumMachineController);
+      newElement.classList.toggle("active");                              // Toggles class active for proper visualization
+      drumMachineController[index][i] = !drumMachineController[index][i]; // Updates logic
+      //console.log(drumMachineController);                                 // Debug
     });
-    item.appendChild(newElement);
+    item.appendChild(newElement);  // Appends new element to the parent div
   }
+
+  // 
   let titleDiv = item.getElementsByClassName("drumMachineItemTitle")[0]
     
   let titleLabel = document.createElement("div")
@@ -126,21 +173,6 @@ Array.from(drumMachineItems).forEach((item, index) => {
   titleDiv.appendChild(playButton);
 });
 
-let preloadedSounds = [];
-
-const audioFiles = [
-  "../../Sounds/New Drum Samples/Kick 22.wav",
-  "../../Sounds/New Drum Samples/Snare Ludwig Acrolite.wav",
-  "../../Sounds/New Drum Samples/Tom 10.wav",
-  "../../Sounds/New Drum Samples/Tom 12.wav",
-  "../../Sounds/New Drum Samples/Floor Tom 16.wav",
-  "../../Sounds/New Drum Samples/Hi Hat Close Sabian HHX 14.wav",
-  "../../Sounds/New Drum Samples/Hi Hat Open Sabian HHX 14.wav",
-  "../../Sounds/Drum Samples/RD.wav",
-  "../../Sounds/New Drum Samples/Clap Stack.wav",
-  "../../Sounds/New Drum Samples/Crash K 18.wav",
-];
-
 audioFiles.forEach((file, index) => {
   const audio = new Audio(file);
   preloadedSounds[index] = audio;
@@ -154,7 +186,7 @@ let playSound = function (sampleID) {
 };
 
 let playBeat = function () {
-  let toTurnOff = i == 0 ? 15 : i - 1;
+  let toTurnOff = guessIndex == 0 ? 15 : guessIndex - 1;
 
   Array.from(drumMachineItems).forEach((item) => {
     item
@@ -163,33 +195,33 @@ let playBeat = function () {
   });
   Array.from(drumMachineItems).forEach((item, index) => {
     if (practiceModeFlag == "false" &&
-      drumMachineController[index][i] == solution[index][i] &&
-      drumMachineController[index][i]
+      drumMachineController[index][guessIndex] == solution[index][guessIndex] &&
+      drumMachineController[index][guessIndex]
     ) {
       item
         .getElementsByClassName("semicroma")
-        [i].classList.toggle("correctGuess", true);
-      item.getElementsByClassName("semicroma")[i].style.pointerEvents = "none";
+        [guessIndex].classList.toggle("correctGuess", true);
+      item.getElementsByClassName("semicroma")[guessIndex].style.pointerEvents = "none";
     } else {
       item
         .getElementsByClassName("semicroma")
-        [i].classList.toggle("highlighted", true);
+        [guessIndex].classList.toggle("highlighted", true);
     }
   });
 
   drumMachineController
-    .map((row) => row[i])
+    .map((row) => row[guessIndex])
     .forEach((item, sampleID) => {
       if (item) {
         playSound(sampleID);
       }
     });
 
-  i = (i + 1) % semicrome;
+  guessIndex = (guessIndex + 1) % semicrome;
 };
 
 let playSolution = function () {
-  let toTurnOff = j == 0 ? 15 : j - 1;
+  let toTurnOff = solutionIndex == 0 ? 15 : solutionIndex - 1;
 
   Array.from(drumMachineItems).forEach((item) => {
     item
@@ -199,17 +231,17 @@ let playSolution = function () {
   Array.from(drumMachineItems).forEach((item) => {
     item
       .getElementsByClassName("semicroma")
-      [j].classList.toggle("highlightedSolution", true);
+      [solutionIndex].classList.toggle("highlightedSolution", true);
   });
 
   solution
-    .map((row) => row[j])
+    .map((row) => row[solutionIndex])
     .forEach((item, sampleID) => {
       if (item) {
         playSound(sampleID);
       }
     });
-  j = (j + 1) % semicrome;
+  solutionIndex = (solutionIndex + 1) % semicrome;
 };
 
 function setBpm(n) {
@@ -219,9 +251,9 @@ function setBpm(n) {
 
 let startStopButton = document.getElementById("startStopButton");
 
-if(practiceModeFlag == "true")[
+if(practiceModeFlag == "true"){
   startStopButton.innerHTML = "PLAY"
-]
+}
 
 function startMetronome() {
   console.log("start");
@@ -263,7 +295,7 @@ function resetDrumMachine() {
   );
 }
 startStopButton.addEventListener("click", () => {
-  i = 0;
+  guessIndex = 0;
   if (isPlaying) {
     stopMetronome();
   } else {
@@ -381,8 +413,6 @@ if(practiceModeFlag == "true"){
   playSolutionButton.style.display = "none"
 }
 
-let solutionInterval = null;
-
 function startSolution() {
   if (isPlaying) {
     stopMetronome();
@@ -405,7 +435,7 @@ function stopSolution() {
         [i].classList.toggle("highlightedSolution", false);
   });
 
-  j = 0;
+  solutionIndex = 0;
 }
 
 playSolutionButton.addEventListener("click", () => {

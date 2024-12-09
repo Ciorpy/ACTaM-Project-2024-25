@@ -54,6 +54,12 @@
         </div>
       </div>
       <div class="drumMachineLegend">
+        <div class="timer">
+          REMAINING TIME
+          <div class="timer" id="timer">
+            120 s
+          </div>
+        </div>
         <div class="drumMachineImgFrame">
           <img src="../../Images/Drum Shape.png">
         </div>
@@ -78,6 +84,15 @@
 
     <div class="wrongGuessBG" id="wrongGuessScreen">
       <div class="wrongGuessPanel">
+        <div class="wrongGuessText">
+          WRONG ANSWER
+          TRY AGAIN!
+        </div>
+      </div>
+    </div>
+    
+    <div class="wrongGuessBG" id="wrongGuessScreen">
+      <div class="timeOverScren">
         <div class="wrongGuessText">TRY AGAIN!</div>
         <img src="../../Images/morgan.gif" />
       </div>
@@ -93,8 +108,17 @@
     <div class="finalScreenBG" id="finalScreen">
       <div class="finalScreenPanel">
         <div class="finalScreenText">GAME OVER!</div>
-        <div class="finalScreenText">YOUR TOTAL SCORE IS: </div>
+        <div class="finalScreenText" id="scoreLabel">YOUR TOTAL SCORE IS: </div>
+        <div class="scoreDivisionLabel">
+          <div class="levelScore" id="level1"></div>
+          <div class="levelScore" id="level2"></div>
+          <div class="levelScore" id="level3"></div>
+        </div>
       </div>
+    </div>
+
+    <div class="timer" id="timer">
+      120
     </div>
 
     <!--SCRIPTS-->

@@ -7,9 +7,11 @@ let lastNote = firstNote + keysNumber;
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 
+let previousPressedNotes = []; // Variabile globale per memorizzare lo stato precedente delle note premute
+
 const pointsToDeduct = 25; // Punti da togliere
 const deductionInterval = 30; // Intervallo in secondi per la detrazione
-const hintInterval = 40; // Intervallo in secondi per mostrare un nuovo hint
+const hintInterval = 30; // Intervallo in secondi per mostrare un nuovo hint
 
 let totalScore = 0; // Punteggio totale accumulato
 let currentScore = 100; // Punteggio iniziale per il turno corrente
@@ -71,10 +73,15 @@ let flagHints = [true, true, true]; // Stato degli hint
 
 
 
-// Ascolta le note suonate dal giocatore
-document.addEventListener("keydown", () => {
-    checkChord();
-}); //?
+
+document.addEventListener("keydown", (event) => {
+    const note = piano.view.keyMap[event.code]; // Controlla se il tasto è mappato a una nota MIDI
+    if (note !== undefined) {
+        checkChord(); // Chiama la funzione solo se il tasto è valido
+    } else {
+        console.log(`Tasto non valido premuto: ${event.code}`); // Debug per tasti non validi
+    }
+});
 
 
 
@@ -183,19 +190,36 @@ hintButton.addEventListener("click", () => {
 
 // Funzione per controllare l'accordo
 function checkChord() {
-  const pressedNotes = piano.getPressedNotes();
-  console.log("Premute:", pressedNotes);
-  console.log("Da indovinare:", generatedChord.sort());
+    const pressedNotes = piano.getPressedNotes();
+        // Controlla se le note premute sono diverse da quelle dell'ultima chiamata
+    if (arraysEqual(pressedNotes, previousPressedNotes)) {
+        return; // Esci se lo stato non è cambiato
+    }
 
-  if (guidedMode) {
-      // Colora i tasti in base alla loro correttezza
-      pressedNotes.forEach(note => {
-          if (generatedChord.includes(note)) {
-              piano.view.setKeyColor(note, "green"); // Nota corretta
-          } else {
-              piano.view.setKeyColor(note, "red"); // Nota errata
-          }
-      });
+    // Aggiorna lo stato precedente con le note attuali
+    previousPressedNotes = [...pressedNotes];
+    console.log("Premute:", pressedNotes);
+    console.log("Da indovinare:", generatedChord.sort());
+
+    if (guidedMode) {
+        // Memorizza le note attualmente premute
+        const currentColorNotes = new Set(pressedNotes);
+
+        // Colora i tasti attualmente premuti
+        pressedNotes.forEach(note => {
+            if (generatedChord.includes(note)) {
+                piano.view.setKeyColor(note, "green");
+            } else {
+                piano.view.setKeyColor(note, "red");
+            }
+        });
+
+        // Resetta i colori per i tasti che non sono più premuti
+        for (let i = firstNote; i <= lastNote; i++) {
+            if (!currentColorNotes.has(i)) {
+                piano.view.resetKeyColor(i);
+            }
+        }
     }
 
     // Verifica l'accordo e aggiorna i feedback
@@ -203,7 +227,7 @@ function checkChord() {
         wrongAttempts++;
         //feedbackDisplay.textContent = "Accordo non corretto. Riprova!";
     } else if (arraysEqual(generatedChord, pressedNotes)) {
-        clearInterval(timerInterval); // Ferma il time
+        clearInterval(timerInterval); // Ferma il timer
         totalScore += currentScore; // Aggiungi il punteggio corrente al totale
         updateScoreDisplay(); // Aggiorna il display del punteggio
         isRoundActive = false; // Termina il round
@@ -212,10 +236,9 @@ function checkChord() {
         //feedbackDisplay.textContent = "Accordo corretto!";
         //chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
         text.textContent = "Right Chord, here you another one."
-        
     }
+}
 
-} //?
 
 
 // Riproduce l'accordo generato quando si preme il pulsante "PLAY SOLUTION"

@@ -113,8 +113,10 @@ class PianoView {
         const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);
         if (keyElement) {
             keyElement.style.backgroundColor = ""; // Ripristina il colore originale
+            delete keyElement.dataset.color; // Rimuove eventuali dati associati
         }
     }
+    
     
     
 }

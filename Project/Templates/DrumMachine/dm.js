@@ -122,16 +122,18 @@ startGameButton.addEventListener("click", () => {
 });
 
 showSolutionButton.addEventListener("click", () => {
-  console.log("SHOWS SOLUTION");
+  showSolution()
 });
 
 goNextRoundButton.addEventListener("click", () => {
   if (levelIndex < 3) {
     timerInterval = setInterval(roundTimer, 1000);
     handleOverlayDisplay("hide");
+    solution = chosenPresets[levelIndex];
     solutionInterval = setInterval(playSolution, setBpm(bpm));
     playSolutionButton.innerHTML = "STOP SOLUTION";
     isSolutionPlaying = true;
+    resetDrumMachine();
   } else {
     window.location.href = "../../gameTitleScreen.html";
   }
@@ -207,9 +209,8 @@ let roundTimer = function () {
     levelIndex = levelIndex + 1;
     if (levelIndex < 3) {
       roundScore = 100;
-      solution = chosenPresets[levelIndex];
+      buildSolution()
       timer = maxTimer;
-      resetDrumMachine();
       timeOver("timeOver");
     } else {
       timeOver("gameOver");
@@ -537,7 +538,6 @@ let timeOver = function (overlayType) {
   if (isPlaying) stopMetronome();
   clearInterval(timerInterval);
   handleOverlayDisplay(overlayType);
-  resetDrumMachine();
 };
 
 let checkInputButton = document.getElementById("checkInputButton");
@@ -553,3 +553,35 @@ checkInputButton.addEventListener("click", () => {
   else wrongGuess();
   resetDrumMachine();
 });
+
+let solutionDiv = document.getElementById("overlaySolution")
+
+let showSolution = function () {
+  handleOverlayDisplay("hide")
+  solutionDiv.style.display = "flex"
+  solutionInterval = setInterval(playSolution, setBpm(bpm))
+}
+
+let hideSolutionButton = document.getElementById("hideSolution")
+
+hideSolutionButton.addEventListener("click", () => {
+  hideSolution()
+})
+
+let hideSolution = function () {
+  handleOverlayDisplay("timeOver")
+  solutionDiv.style.display = "none"
+  clearInterval(solutionInterval)
+}
+
+let buildSolution = function () {
+  drumMachineController = solution
+
+  Array.from(drumMachineItems).forEach((item, index) => {
+    for(i = 0; i < semicrome; i++){
+      item
+        .getElementsByClassName("semicroma")
+        [i].classList.toggle("active", drumMachineController[index][i]);
+    }
+  });
+}

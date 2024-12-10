@@ -155,8 +155,10 @@
 }
 
 .subTitle{
+    margin-right: 50px;
     font-size: 25px;
-    color: orange;
+    text-align: center;
+    color: cornflowerblue;
 }
 
 .button {

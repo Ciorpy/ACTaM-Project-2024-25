@@ -1,6 +1,48 @@
 import PianoModel from "./model.js";
 import PianoView from "./view.js";
 
+// Inizializza il Sampler con i campioni di piano
+const pianoSampler = new Tone.Sampler({
+    urls: {
+        "A0": "A0.mp3",
+        "C1": "C1.mp3",
+        "D#1": "Ds1.mp3",
+        "F#1": "Fs1.mp3",
+        "A1": "A1.mp3",
+        "C2": "C2.mp3",
+        "D#2": "Ds2.mp3",
+        "F#2": "Fs2.mp3",
+        "A2": "A2.mp3",
+        "C3": "C3.mp3",
+        "D#3": "Ds3.mp3",
+        "F#3": "Fs3.mp3",
+        "A3": "A3.mp3",
+        "C4": "C4.mp3",
+        "D#4": "Ds4.mp3",
+        "F#4": "Fs4.mp3",
+        "A4": "A4.mp3",
+        "C5": "C5.mp3",
+        "D#5": "Ds5.mp3",
+        "F#5": "Fs5.mp3",
+        "A5": "A5.mp3",
+        "C6": "C6.mp3",
+        "D#6": "Ds6.mp3",
+        "F#6": "Fs6.mp3",
+        "A6": "A6.mp3",
+        "C7": "C7.mp3",
+        "D#7": "Ds7.mp3",
+        "F#7": "Fs7.mp3",
+        "A7": "A7.mp3",
+        "C8": "C8.mp3"
+    },
+    baseUrl: "https://tonejs.github.io/audio/salamander/" // URL dei sample di pianoforte
+}).toDestination();
+
+// Aggiungi un listener per sapere quando i sample sono pronti
+pianoSampler.onload = () => {
+    console.log("Sampler is ready!");
+};
+
 class PianoController {
     constructor(containerId, numberOfKeys, startMidiNote) {
         this.model = new PianoModel();
@@ -38,7 +80,7 @@ class PianoController {
         // Aggiungi il controllo esplicito
         if (!pressedNotes.includes(note)) {
             this.view.setActiveKey(note, true);
-            this.synths[note].triggerAttack(Tone.Frequency(note, "midi"));
+            pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "1n");
             pressedNotes.push(note); // Aggiungi la nota alla lista dei tasti premuti
             this.model.setPressedNotes(pressedNotes); // Sincronizza il modello
         }
@@ -61,9 +103,6 @@ class PianoController {
             this.allKeysReleased = true;
         }
     }
-    
-    
-    
 
     delayedUpdatePressedNotes(newNote) {
         const updatedNotes = this.model.getPressedNotes();
@@ -79,9 +118,10 @@ class PianoController {
 
     playChord(chord) {
         chord.forEach(note => {
-            this.synths[note].triggerAttackRelease(Tone.Frequency(note, "midi"), "1n");
+            pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "1n");
         });
     }
+
 }
 
 export default PianoController;

@@ -6,7 +6,6 @@ import { generateRandomChord } from "./chord.js";
 const firstNote = 48;
 const keysNumber = 25;
 const lastNote = firstNote + keysNumber;
-const pointsToDeduct = 25;
 const deductionInterval = 30; 
 const hintInterval = 30;
 
@@ -15,6 +14,7 @@ let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
 let totalScore = 0;
 let currentScore = 100;
+let pointsToDeduct = 25;
 let timeLeft;
 let timerInterval;
 let isRoundActive = false;
@@ -29,6 +29,7 @@ let generatedChord = [];
 let hintTimer = 0;
 let flagHints; 
 let isShowingHint;
+let isAssistanONDisabled;
 let isInputDisabled = false; // Variabile di controllo per abilitare/disabilitare gli input
 
 let userLegend = {
@@ -46,6 +47,7 @@ const overlayPanel = document.getElementById("overlayDiv");
 const scoreLabel = document.getElementById("scoreLabel");
 const overlayTitle = document.getElementById("overlayTitle");
 const startGameButton = document.getElementById("startGame");
+const showSolutionButton = document.getElementById("showSolution");
 const goNextRoundButton = document.getElementById("goNextRound");
 const scoreDivisionLabel = document.getElementById("scoreDivisionLabel");
 const toggleGuidedModeButton = document.getElementById("toggleGuidedMode");
@@ -54,6 +56,8 @@ const modeDisplay = document.getElementById("mode");
 const playSolutionButton = document.getElementById("playSolutionButton");
 const hintButton = document.getElementById("hintButton");
 const hintDisplay = document.getElementById("hintDisplay");
+const solutionDiv = document.getElementById("overlaySolution");
+const hideSolutionButton = document.getElementById("hideSolution");
 
 // CONFIGURAZIONE INIZIALE DELLA PAGINA -------------------------------------------------------------------------------
 scoreDisplay.className = "score";
@@ -68,6 +72,8 @@ updateModeDisplay();
 toggleGuidedModeButton.addEventListener("click", () => {
     guidedMode = !guidedMode;
     toggleGuidedModeButton.textContent = !guidedMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
+    currentScore /= 2;
+    pointsToDeduct = Math.ceil(pointsToDeduct / 2);
 });
 
 // Avvio del gioco e passaggio al prossimo round
@@ -77,10 +83,35 @@ startGameButton.addEventListener("click", () => {
     console.log(selectedMinigame);
 });
 
+showSolutionButton.addEventListener("click", () => {
+    handleOverlayDisplay("hide")
+    solutionDiv.style.display = "flex";
+    piano.playChord(generatedChord);
+    generatedChord.forEach(note => {
+        piano.view.setKeyColor(note, "green");
+    });
+});
+
+hideSolutionButton.addEventListener("click", () => {
+    handleOverlayDisplay("timeOver");
+    solutionDiv.style.display = "none";
+    generatedChord.forEach(note => {
+        piano.view.resetKeyColor(note)
+    });
+})
+
 goNextRoundButton.addEventListener("click", () => {
-    if (activeRoundID < maxRounds) {
+    isAssistanONDisabled = toggleGuidedModeButton.textContent === "ASSISTANT MODE ON" ? true : false;
+    if (isAssistanONDisabled){
+        guidedMode = !guidedMode;
+        toggleGuidedModeButton.textContent = !guidedMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
+    }
+    if (activeRoundID < maxRounds + 1) {
         startRound();
         handleOverlayDisplay("hide");
+    }else if (activeRoundID == maxRounds + 1) {
+        handleOverlayDisplay("gameOver");
+        activeRoundID++;
     } else {
         window.location.href = "../../gameTitleScreen.html";
     }
@@ -148,12 +179,7 @@ function handleCorrectGuess() {
     totalScore += currentScore;
     updateScoreDisplay();
     isRoundActive = false;
-
-    if (activeRoundID < maxRounds) {
-        handleOverlayDisplay("goodGuess");
-    } else {
-        handleOverlayDisplay("gameOver");
-    }
+    handleOverlayDisplay("goodGuess");
 }
 
 function handleGuidedMode(pressedNotes) {
@@ -256,12 +282,7 @@ function updateHints() {
 }
 
 function endRound() {
-    if (activeRoundID < maxRounds) {
-        handleOverlayDisplay("timeOver");
-    } else {
-        handleOverlayDisplay("gameOver");
-    }
-
+    handleOverlayDisplay("timeOver");
     clearInterval(timerInterval);
     isRoundActive = false;
 }
@@ -306,28 +327,36 @@ function handleOverlayDisplay(overlayType) {
     scoreLabel.style.display = "none";
     scoreDivisionLabel.style.display = "none";
     startGameButton.style.display = "none";
+    showSolutionButton.style.display = "none";    
     goNextRoundButton.style.display = "none";
     
     switch(overlayType) {
       case "startGame":
+        overlayTitle.innerHTML = "PRESS START WHEN YOU ARE READY";
+        overlaySubtitle.innerHTML = "";
         startGameButton.style.display = "block"
         break;
       case "timeOver":
         disableKeyboardInput();
+        overlayTitle.innerHTML = "TIME OVER";
+        overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
+        showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block"
-        overlayTitle.innerHTML = "ROUND OVER \n TIME IS OVER"
         break;
       case "goodGuess":
         disableKeyboardInput();
-        overlayTitle.innerHTML = "ROUND OVER\nYOU GUESSED RIGHT!"
+        overlayTitle.innerHTML = "GOOD GUESS";
+        overlaySubtitle.innerHTML = "YOU ARE A BOSS!";
         goNextRoundButton.style.display = "block"
         break;
       case "gameOver":
         disableKeyboardInput();
-        overlayTitle.innerHTML = "GAME OVER"
-        scoreLabel.style.display = "flex"
-        goNextRoundButton.style.display = "block"
-        goNextRoundButton.innerHTML = "MAIN MENU"
+        overlayTitle.innerHTML = "GAME OVER";
+        overlaySubtitle.style.display = "none";
+        scoreLabel.style.display = "flex";
+        scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
+        goNextRoundButton.innerHTML = "MAIN MENU";
+        goNextRoundButton.style.display = "block";
         break;
       case "hide":
         overlayPanel.style.display = "none"

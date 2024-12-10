@@ -1,0 +1,7 @@
+GDT
+- bloccare tasto play solution finche non e finita ripriduzione
+- implementare label round
+- implementare practice mode
+
+FL
+- implementare assistant mode con click mouse

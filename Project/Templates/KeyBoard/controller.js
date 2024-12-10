@@ -46,11 +46,17 @@ class PianoController {
         this.view.resetKeyColor(note); // Resetta sempre il colore del tasto al rilascio
         this.synths[note].triggerRelease();
     
+        // Aggiungi un controllo per assicurarti che il colore del tasto sia sempre resettato
+        if (!this.getPressedNotes().includes(note)) {
+            this.view.resetKeyColor(note);
+        }
+    
         const activeKeys = document.querySelectorAll(".key.active");
         if (activeKeys.length === 0) {
             this.allKeysReleased = true;
         }
     }
+    
     
 
     delayedUpdatePressedNotes(newNote) {

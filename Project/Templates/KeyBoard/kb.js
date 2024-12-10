@@ -3,8 +3,11 @@ import { generateRandomChord } from "./chord.js";
 
 let firstNote = 48;
 let keysNumber = 25;
+let lastNote = firstNote + keysNumber
 
 let piano = new PianoController("piano", keysNumber, firstNote);
+
+let previousPressedNotes = []; // Variabile globale per memorizzare lo stato precedente delle note premute
 
 const pointsToDeduct = 25; // Punti da togliere
 const deductionInterval = 30; // Intervallo in secondi per la detrazione
@@ -15,9 +18,71 @@ let currentScore = 100; // Punteggio iniziale per il turno corrente
 let timeLeft = 120; // Tempo massimo in secondi
 let timerInterval; // Variabile per il timer
 let isRoundActive = false; // Flag per indicare se un round è attivo
+let activeRoundID = 0;
+let maxRounds = 3
 
 const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
+
+// OVERLAY PANEL HANDLING -----------------------------------------------------------------------------------------------------------------------------
+let overlayPanel = document.getElementById("overlayDiv")
+let scoreLabel = document.getElementById("scoreLabel")
+let overlayTitle = document.getElementById("overlayTitle")
+
+let startGameButton = document.getElementById("startGame")
+let goNextRoundButton = document.getElementById("goNextRound")
+let scoreDivisionLabel = document.getElementById("scoreDivisionLabel")
+
+startGameButton.addEventListener("click", () => {
+  handleOverlayDisplay("hide")
+  if (!isRoundActive) {
+      startRound(); // Avvia un nuovo round
+  }
+})
+
+goNextRoundButton.addEventListener("click", () => {
+    if (activeRoundID < maxRounds) { // Controlla se ci sono ancora round disponibili
+      startRound();
+      handleOverlayDisplay("hide");
+      piano.init()
+    } else {
+        window.location.href = "../../gameTitleScreen.html";
+    }
+});
+
+
+let handleOverlayDisplay = function (overlayType) {
+  // Default settings
+  overlayPanel.style.display = "flex";
+  scoreLabel.style.display = "none";
+  scoreDivisionLabel.style.display = "none";
+  startGameButton.style.display = "none";
+  goNextRoundButton.style.display = "none";
+  
+  switch(overlayType){
+    case "startGame":
+      startGameButton.style.display = "block"
+      break;
+    case "timeOver":
+      goNextRoundButton.style.display = "block"
+      overlayTitle.innerHTML = "TIME IS OVER"
+      break;
+    case "goodGuess":
+        overlayTitle = "YOU GUESSED RIGHT!"
+        goNextRoundButton.style.display = "block"
+    case "gameOver":
+      overlayTitle.innerHTML = "GAME OVER"
+      scoreLabel.style.display = "flex"
+      goNextRoundButton.style.display = "block"
+      goNextRoundButton.innerHTML = "MAIN MENU"
+      break;
+    case "hide":
+      overlayPanel.style.display = "none"
+      break;
+    default:
+      console.log("Error: overlayType '" + overlayType + "' does not exist.")
+  }
+}
 
 
 scoreDisplay.className = "score";
@@ -63,10 +128,18 @@ let hintTimer = 0; // Tempo trascorso per mostrare gli hint
 let flagHintsButton = [true, true, true]; // Stato degli hint
 let flagHintsAuto = [true, true, true]; // Stato degli hint
 
-// Ascolta le note suonate dal giocatore
-document.addEventListener("keydown", () => {
-    checkChord();
-}); 
+
+document.addEventListener("keydown", (event) => {
+    const note = piano.view.keyMap[event.code]; // Controlla se il tasto è mappato a una nota MIDI
+    if (note !== undefined) {
+        checkChord(); // Chiama la funzione solo se il tasto è valido
+    } else {
+        console.log(`Tasto non valido premuto: ${event.code}`); // Debug per tasti non validi
+    }
+});
+
+
+
 
 // Funzione per aggiornare il display del punteggio totale
 function updateScoreDisplay() {
@@ -132,10 +205,15 @@ function startTimer() {
 
         // Gestisci lo scadere del tempo
         if (timeLeft <= 0) {
+            activeRoundID++; // Incrementa il round
+
+            if(activeRoundID < maxRounds)
+                handleOverlayDisplay("timeOver")
+            else
+                handleOverlayDisplay("gameOver")
+
             clearInterval(timerInterval);
             isRoundActive = false; // Termina il round
-            timerDisplay.textContent = `Time's up!`;
-            hintDisplay.textContent = `It was ${generatedChordData.noteRoot}${generatedChordData.chordType}\nin ${generatedChordData.inversion}`;
         }
     }, 1000); 
 }
@@ -167,21 +245,54 @@ function generateNewChord() {
 
 // Funzione per controllare l'accordo
 function checkChord() {
-  const pressedNotes = piano.getPressedNotes();
-  console.log("Premute:", pressedNotes);
-  console.log("Da indovinare:", generatedChord.sort());
+    const pressedNotes = piano.getPressedNotes();
+        // Controlla se le note premute sono diverse da quelle dell'ultima chiamata
+    if (arraysEqual(pressedNotes, previousPressedNotes)) {
+        return; // Esci se lo stato non è cambiato
+    }
 
-  if (guidedMode) {
-      // Colora i tasti in base alla loro correttezza
-      pressedNotes.forEach(note => {
-          if (generatedChord.includes(note)) {
-              piano.view.setKeyColor(note, "green"); // Nota corretta
-          } else {
-              piano.view.setKeyColor(note, "red"); // Nota errata
-          }
-      });
+    // Aggiorna lo stato precedente con le note attuali
+    previousPressedNotes = [...pressedNotes];
+    console.log("Premute:", pressedNotes);
+    console.log("Da indovinare:", generatedChord.sort());
+
+    if (guidedMode) {
+        // Memorizza le note attualmente premute
+        const currentColorNotes = new Set(pressedNotes);
+
+        // Colora i tasti attualmente premuti
+        pressedNotes.forEach(note => {
+            if (generatedChord.includes(note)) {
+                piano.view.setKeyColor(note, "green");
+            } else {
+                piano.view.setKeyColor(note, "red");
+            }
+        });
+
+        // Resetta i colori per i tasti che non sono più premuti
+        for (let i = firstNote; i <= lastNote; i++) {
+            if (!currentColorNotes.has(i)) {
+                piano.view.resetKeyColor(i);
+            }
+        }
+    }
+
+    // Verifica l'accordo e aggiorna i feedback
+    if (pressedNotes.length >= 3 && arraysEqual(generatedChord, pressedNotes)) {
+        clearInterval(timerInterval); // Ferma il timer
+        totalScore += currentScore; // Aggiungi il punteggio corrente al totale
+        updateScoreDisplay(); // Aggiorna il display del punteggio
+        isRoundActive = false; // Termina il round
+        //feedbackDisplay.textContent = "Accordo corretto!";
+        //chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
+    }
+
+    if(arraysEqual(pressedNotes, generatedChord)){
+        handleOverlayDisplay("goodGuess")
     }
 }
+
+
 
 // Riproduce l'accordo generato quando si preme il pulsante "PLAY SOLUTION"
 playSolutionButton.addEventListener("click", () => {
@@ -194,60 +305,8 @@ playSolutionButton.addEventListener("click", () => {
 });
 
 // Funzione ausiliaria per confrontare due array
-
-
-// OVERLAY PANEL HANDLING -----------------------------------------------------------------------------------------------------------------------------
-let overlayPanel = document.getElementById("overlayDiv")
-let scoreLabel = document.getElementById("scoreLabel")
-
-let startGameButton = document.getElementById("startGame")
-let goNextRoundButton = document.getElementById("goNextRound")
-let scoreDivisionLabel = document.getElementById("scoreDivisionLabel")
-
-startGameButton.addEventListener("click", () => {
-  handleOverlayDisplay("hide")
-  if (!isRoundActive) {
-      startRound(); // Avvia un nuovo round
-  }
-})
-
-goNextRoundButton.addEventListener("click", () => {
-    if (roundIndex < maxRounds - 1) { // Controlla se ci sono ancora round disponibili
-      roundIndex++; // Incrementa il round
-      startRound();
-      handleOverlayDisplay("hide");
-      // Qui puoi inserire la logica per inizializzare il round successivo
-      console.log(`Round ${levelIndex + 1} iniziato`);
-    } else {
-      handleOverlayDisplay("gameOver"); // Termina il gioco
-      console.log("Game Over. Ritorno al menu principale.");
-    }
-  });
-
-
-let handleOverlayDisplay = function (overlayType) {
-  // Default settings
-  overlayPanel.style.display = "flex";
-  scoreLabel.style.display = "none";
-  scoreDivisionLabel.style.display = "none";
-  startGameButton.style.display = "none";
-  goNextRoundButton.style.display = "none";
-  
-  switch(overlayType){
-    case "startGame":
-      startGameButton.style.display = "block"
-      break;
-    case "timeOver":
-      goNextRoundButton.style.display = "block"
-      break;
-    case "gameOver":
-      scoreLabel.style.display = "flex"
-      goNextRoundButton.style.display = "block"
-      break;
-    case "hide":
-      overlayPanel.style.display = "none"
-      break;
-    default:
-      console.log("Error: overlayType '" + overlayType + "' does not exist.")
-  }
+function arraysEqual(arr1, arr2) {
+    const sortedArr1 = [...arr1].sort();
+    const sortedArr2 = [...arr2].sort();
+    return JSON.stringify(sortedArr1) === JSON.stringify(sortedArr2);
 }

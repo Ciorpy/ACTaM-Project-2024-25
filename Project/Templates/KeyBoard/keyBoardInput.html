@@ -35,6 +35,7 @@
       <div class="button" id="hintButton">HINT</div>
       <div class="button" id="toggleGuidedMode">ASSISTANT MODE OFF</div>
     </div>
+
     <div class="overlayBG" id="overlayDiv">
       <div class="overlayTitle" id="overlayTitle">CLICK START GAME WHEN READY</div>
       <div class="overlayTitle" id="overlaySubtitle"></div>
@@ -47,9 +48,11 @@
       </div>
       <div class="overlayMenu">
         <div class="button" id="startGame">START GAME</div>
-        <div class="button" id="goNextRound">NEXT LEVEL</div>
+        <div class="button" id="showSolution" style="display: none">SHOW SOLUTION</div>
+        <div class="button" id="goNextRound" style="display: none">NEXT LEVEL</div>
       </div>
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <script type="module" src="kb.js"></script>
   </body>

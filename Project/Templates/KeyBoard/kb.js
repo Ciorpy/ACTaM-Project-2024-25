@@ -17,9 +17,71 @@ let currentScore = 100; // Punteggio iniziale per il turno corrente
 let timeLeft = 120; // Tempo massimo in secondi
 let timerInterval; // Variabile per il timer
 let isRoundActive = false; // Flag per indicare se un round è attivo
+let activeRoundID = 0;
+let maxRounds = 3
 
 const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
+
+// OVERLAY PANEL HANDLING -----------------------------------------------------------------------------------------------------------------------------
+let overlayPanel = document.getElementById("overlayDiv")
+let scoreLabel = document.getElementById("scoreLabel")
+let overlayTitle = document.getElementById("overlayTitle")
+
+let startGameButton = document.getElementById("startGame")
+let goNextRoundButton = document.getElementById("goNextRound")
+let scoreDivisionLabel = document.getElementById("scoreDivisionLabel")
+
+startGameButton.addEventListener("click", () => {
+  handleOverlayDisplay("hide")
+  if (!isRoundActive) {
+      startRound(); // Avvia un nuovo round
+  }
+})
+
+goNextRoundButton.addEventListener("click", () => {
+    if (activeRoundID < maxRounds) { // Controlla se ci sono ancora round disponibili
+      startRound();
+      handleOverlayDisplay("hide");
+      piano.init()
+    } else {
+        window.location.href = "../../gameTitleScreen.html";
+    }
+});
+
+
+let handleOverlayDisplay = function (overlayType) {
+  // Default settings
+  overlayPanel.style.display = "flex";
+  scoreLabel.style.display = "none";
+  scoreDivisionLabel.style.display = "none";
+  startGameButton.style.display = "none";
+  goNextRoundButton.style.display = "none";
+  
+  switch(overlayType){
+    case "startGame":
+      startGameButton.style.display = "block"
+      break;
+    case "timeOver":
+      goNextRoundButton.style.display = "block"
+      overlayTitle.innerHTML = "TIME IS OVER"
+      break;
+    case "goodGuess":
+        overlayTitle = "YOU GUESSED RIGHT!"
+        goNextRoundButton.style.display = "block"
+    case "gameOver":
+      overlayTitle.innerHTML = "GAME OVER"
+      scoreLabel.style.display = "flex"
+      goNextRoundButton.style.display = "block"
+      goNextRoundButton.innerHTML = "MAIN MENU"
+      break;
+    case "hide":
+      overlayPanel.style.display = "none"
+      break;
+    default:
+      console.log("Error: overlayType '" + overlayType + "' does not exist.")
+  }
+}
 
 
 scoreDisplay.className = "score";
@@ -142,10 +204,17 @@ function startTimer() {
 
         // Gestisci lo scadere del tempo
         if (timeLeft <= 0) {
+            activeRoundID++; // Incrementa il round
+
+            piano.deactivate()
+
+            if(activeRoundID < maxRounds)
+                handleOverlayDisplay("timeOver")
+            else
+                handleOverlayDisplay("gameOver")
+
             clearInterval(timerInterval);
             isRoundActive = false; // Termina il round
-            timerDisplay.textContent = `Time's up!`;
-            hintDisplay.textContent = `It was ${generatedChordData.noteRoot}${generatedChordData.chordType}\nin ${generatedChordData.inversion}`;
         }
     }, 1000); 
 }
@@ -224,6 +293,11 @@ function checkChord() {
         //chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
         text.textContent = "Right Chord, here you another one."
     }
+
+    if(arraysEqual(pressedNotes, generatedChord)){
+        piano.deactivate()
+        handleOverlayDisplay("goodGuess")
+    }
 }
 
 
@@ -239,60 +313,8 @@ playSolutionButton.addEventListener("click", () => {
 });
 
 // Funzione ausiliaria per confrontare due array
-
-
-// OVERLAY PANEL HANDLING -----------------------------------------------------------------------------------------------------------------------------
-let overlayPanel = document.getElementById("overlayDiv")
-let scoreLabel = document.getElementById("scoreLabel")
-
-let startGameButton = document.getElementById("startGame")
-let goNextRoundButton = document.getElementById("goNextRound")
-let scoreDivisionLabel = document.getElementById("scoreDivisionLabel")
-
-startGameButton.addEventListener("click", () => {
-  handleOverlayDisplay("hide")
-  if (!isRoundActive) {
-      startRound(); // Avvia un nuovo round
-  }
-})
-
-goNextRoundButton.addEventListener("click", () => {
-    if (roundIndex < maxRounds - 1) { // Controlla se ci sono ancora round disponibili
-      roundIndex++; // Incrementa il round
-      startRound();
-      handleOverlayDisplay("hide");
-      // Qui puoi inserire la logica per inizializzare il round successivo
-      console.log(`Round ${levelIndex + 1} iniziato`);
-    } else {
-      handleOverlayDisplay("gameOver"); // Termina il gioco
-      console.log("Game Over. Ritorno al menu principale.");
-    }
-  });
-
-
-let handleOverlayDisplay = function (overlayType) {
-  // Default settings
-  overlayPanel.style.display = "flex";
-  scoreLabel.style.display = "none";
-  scoreDivisionLabel.style.display = "none";
-  startGameButton.style.display = "none";
-  goNextRoundButton.style.display = "none";
-  
-  switch(overlayType){
-    case "startGame":
-      startGameButton.style.display = "block"
-      break;
-    case "timeOver":
-      goNextRoundButton.style.display = "block"
-      break;
-    case "gameOver":
-      scoreLabel.style.display = "flex"
-      goNextRoundButton.style.display = "block"
-      break;
-    case "hide":
-      overlayPanel.style.display = "none"
-      break;
-    default:
-      console.log("Error: overlayType '" + overlayType + "' does not exist.")
-  }
+function arraysEqual(arr1, arr2) {
+    const sortedArr1 = [...arr1].sort();
+    const sortedArr2 = [...arr2].sort();
+    return JSON.stringify(sortedArr1) === JSON.stringify(sortedArr2);
 }

@@ -134,6 +134,9 @@ goNextRoundButton.addEventListener("click", () => {
     playSolutionButton.innerHTML = "STOP SOLUTION";
     isSolutionPlaying = true;
     resetDrumMachine();
+  } else if (levelIndex == 3) {
+    handleOverlayDisplay("gameOver")
+    levelIndex++
   } else {
     window.location.href = "../../gameTitleScreen.html";
   }
@@ -207,14 +210,10 @@ let roundTimer = function () {
   if (timer <= 0) {
     clearInterval(timerInterval);
     levelIndex = levelIndex + 1;
-    if (levelIndex < 3) {
-      roundScore = 100;
-      buildSolution()
-      timer = maxTimer;
-      timeOver("timeOver");
-    } else {
-      timeOver("gameOver");
-    }
+    roundScore = 100;
+    buildSolution()
+    timer = maxTimer;
+    timeOver("timeOver");
   }
   if (timer % scoreSubTimer == 0) {
     roundScore -= 25;
@@ -513,14 +512,10 @@ let goodGuess = function () {
   currentScore.innerHTML = "CURRENT SCORE: " + totalScore;
 
   clearInterval(timerInterval);
-  if (levelIndex < 3) {
-    handleOverlayDisplay("goodGuess");
-    solution = chosenPresets[levelIndex];
-    roundScore = maxScore;
-    timer = maxTimer;
-  } else {
-    handleOverlayDisplay("gameOver");
-  }
+  handleOverlayDisplay("goodGuess");
+  solution = chosenPresets[levelIndex];
+  roundScore = maxScore;
+  timer = maxTimer;
 };
 
 let wrongGuess = function () {

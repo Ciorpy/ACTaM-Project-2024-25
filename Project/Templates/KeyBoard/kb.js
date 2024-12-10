@@ -19,7 +19,7 @@ let timeLeft = 120; // Tempo massimo in secondi
 let timerInterval; // Variabile per il timer
 let isRoundActive = false; // Flag per indicare se un round è attivo
 let activeRoundID = 0;
-let maxRounds = 3
+let maxRounds = 2
 
 const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
@@ -205,9 +205,8 @@ function startTimer() {
 
         // Gestisci lo scadere del tempo
         if (timeLeft <= 0) {
-            activeRoundID++; // Incrementa il round
 
-            if(activeRoundID < maxRounds)
+            if(activeRoundID < maxRounds + 1)
                 handleOverlayDisplay("timeOver")
             else
                 handleOverlayDisplay("gameOver")
@@ -221,6 +220,7 @@ function startTimer() {
 // Funzione per iniziare un nuovo round
 function startRound() {
     isRoundActive = true;
+    activeRoundID++
     generateNewChord();
     startTimer();
 }

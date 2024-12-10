@@ -1,3 +1,5 @@
+import { isInputDisabled } from "./kb.js";
+
 class PianoView {
     constructor(containerId, numberOfKeys, startMidiNote) {
         this.containerId = containerId;
@@ -83,6 +85,8 @@ class PianoView {
         });
     
         document.addEventListener("keydown", (event) => {
+            if (isInputDisabled) return; // Ignora gli input se disabilitati
+
             const key = event.code;
             if (this.keyMap[key] && !activeKeys.has(key)) { // Esegui solo se il tasto non è già attivo
                 activeKeys.add(key); // Aggiungi il tasto attivo

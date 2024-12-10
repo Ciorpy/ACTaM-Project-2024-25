@@ -29,6 +29,7 @@ let generatedChord = [];
 let hintTimer = 0;
 let flagHints; 
 let isShowingHint;
+let isInputDisabled = false; // Variabile di controllo per abilitare/disabilitare gli input
 
 let userLegend = {
     chords_GM: "CHORDS",
@@ -80,7 +81,6 @@ goNextRoundButton.addEventListener("click", () => {
     if (activeRoundID < maxRounds) {
         startRound();
         handleOverlayDisplay("hide");
-        piano.init();
     } else {
         window.location.href = "../../gameTitleScreen.html";
     }
@@ -98,11 +98,15 @@ playSolutionButton.addEventListener("click", () => {
 
 // Gestione degli hint
 hintButton.addEventListener("click", () => {
+    if (isInputDisabled) return; // Ignora gli input se disabilitati
+
     if (hintTimer >= hintInterval) updateHints();
 });
 
 // Mappatura tastiera
 document.addEventListener("keydown", (event) => {
+    if (isInputDisabled) return; // Ignora gli input se disabilitati
+
     const note = piano.view.keyMap[event.code];
     if (note !== undefined) checkChord();
 });
@@ -112,6 +116,8 @@ function startRound() {
     isRoundActive = true;
     activeRoundID++;
     startTimer();
+    enableKeyboardInput();
+    piano.init();
     if (selectedMinigame === "chords_GM") generateNewChord();
     else if (selectedMinigame === "harmony_GM") /*funzione harmonia*/;
 }
@@ -260,6 +266,16 @@ function endRound() {
     isRoundActive = false;
 }
 
+// Funzione per disabilitare gli input
+function disableKeyboardInput() {
+    isInputDisabled = true;
+}
+
+// Funzione per abilitare gli input
+function enableKeyboardInput() {
+    isInputDisabled = false;
+}
+
 // AGGIORNAMENTO INTERFACCIA -----------------------------------------------------------------------------------------
 function updateScoreDisplay() {
     scoreDisplay.textContent = `CURRENT SCORE: ${totalScore}`;
@@ -297,14 +313,17 @@ function handleOverlayDisplay(overlayType) {
         startGameButton.style.display = "block"
         break;
       case "timeOver":
+        disableKeyboardInput();
         goNextRoundButton.style.display = "block"
         overlayTitle.innerHTML = "ROUND OVER \n TIME IS OVER"
         break;
       case "goodGuess":
-          overlayTitle.innerHTML = "ROUND OVER\nYOU GUESSED RIGHT!"
-          goNextRoundButton.style.display = "block"
-          break;
+        disableKeyboardInput();
+        overlayTitle.innerHTML = "ROUND OVER\nYOU GUESSED RIGHT!"
+        goNextRoundButton.style.display = "block"
+        break;
       case "gameOver":
+        disableKeyboardInput();
         overlayTitle.innerHTML = "GAME OVER"
         scoreLabel.style.display = "flex"
         goNextRoundButton.style.display = "block"
@@ -317,3 +336,5 @@ function handleOverlayDisplay(overlayType) {
         console.log("Error: overlayType '" + overlayType + "' does not exist.")
     }
   }
+
+export { isInputDisabled };

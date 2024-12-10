@@ -19,7 +19,7 @@ let timeLeft = 120; // Tempo massimo in secondi
 let timerInterval; // Variabile per il timer
 let isRoundActive = false; // Flag per indicare se un round è attivo
 let activeRoundID = 0;
-let maxRounds = 2
+let maxRounds = 2;
 
 const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
@@ -59,17 +59,18 @@ let handleOverlayDisplay = function (overlayType) {
   startGameButton.style.display = "none";
   goNextRoundButton.style.display = "none";
   
-  switch(overlayType){
+  switch(overlayType) {
     case "startGame":
       startGameButton.style.display = "block"
       break;
     case "timeOver":
       goNextRoundButton.style.display = "block"
-      overlayTitle.innerHTML = "TIME IS OVER"
+      overlayTitle.innerHTML = "ROUND OVER \n TIME IS OVER"
       break;
     case "goodGuess":
-        overlayTitle = "YOU GUESSED RIGHT!"
+        overlayTitle.innerHTML = "ROUND OVER\nYOU GUESSED RIGHT!"
         goNextRoundButton.style.display = "block"
+        break;
     case "gameOver":
       overlayTitle.innerHTML = "GAME OVER"
       scoreLabel.style.display = "flex"
@@ -206,10 +207,11 @@ function startTimer() {
         // Gestisci lo scadere del tempo
         if (timeLeft <= 0) {
 
-            if(activeRoundID < maxRounds + 1)
-                handleOverlayDisplay("timeOver")
-            else
-                handleOverlayDisplay("gameOver")
+            if(activeRoundID < maxRounds) {
+                handleOverlayDisplay("timeOver");
+            } else {
+                handleOverlayDisplay("gameOver");
+            }
 
             clearInterval(timerInterval);
             isRoundActive = false; // Termina il round
@@ -283,12 +285,14 @@ function checkChord() {
         totalScore += currentScore; // Aggiungi il punteggio corrente al totale
         updateScoreDisplay(); // Aggiorna il display del punteggio
         isRoundActive = false; // Termina il round
-        //feedbackDisplay.textContent = "Accordo corretto!";
-        //chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
     }
 
-    if(arraysEqual(pressedNotes, generatedChord)){
-        handleOverlayDisplay("goodGuess")
+    if (arraysEqual(pressedNotes, generatedChord)) {
+        if (activeRoundID < maxRounds){
+            handleOverlayDisplay("goodGuess");
+        } else {
+            handleOverlayDisplay("gameOver");
+        }
     }
 }
 

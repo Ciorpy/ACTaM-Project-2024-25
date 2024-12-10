@@ -142,12 +142,23 @@
     border: 2px solid green;
 }
 
-.userMenu {
+.userMenu, .overlayMenu, .subTitle {
     padding: 10px;
-    gap: 20px;
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
+}
+
+.userMenu, .subTitle {
+    gap: 40px;
     background-color: rgb(9, 33, 65);
+}
+
+.subTitle{
+    margin-right: 50px;
+    font-size: 25px;
+    text-align: center;
+    color: cornflowerblue;
 }
 
 .button {
@@ -171,7 +182,7 @@
 }
 
 .bpmInput input {
-    width: 240px;
+    width: 200px;
 }
 
 .button:hover{
@@ -213,7 +224,7 @@
     flex-direction: row;
 }
 
-.timeOverBG, .wrongGuessBG, .endGameBG{
+.overlayBG{
     display: none;
     top: 0;
     left: 0;
@@ -224,7 +235,7 @@
     flex-direction: column;
 }
 
-.wrongGuessTextArea{
+.overlayTitle{
     margin: auto;
     display: flex;
     flex-direction: column;

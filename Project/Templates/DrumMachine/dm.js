@@ -504,8 +504,8 @@ let finalScore = document.getElementById("finalScreenPanel");
 let goodGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
-  const endGameAudio = new Audio("../../Sounds/maneskin.wav");
-  endGameAudio.play();
+  // const endGameAudio = new Audio("../../Sounds/maneskin.wav");
+  // endGameAudio.play();
 
   levelIndex = levelIndex + 1;
   totalScore += roundScore;

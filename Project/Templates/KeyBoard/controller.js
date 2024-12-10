@@ -33,29 +33,35 @@ class PianoController {
             this.allKeysReleased = false;
         }
     
-        if (!this.model.getPressedNotes().includes(note)) { // Controlla che la nota non sia già attiva
+        const pressedNotes = this.model.getPressedNotes();
+    
+        // Aggiungi il controllo esplicito
+        if (!pressedNotes.includes(note)) {
             this.view.setActiveKey(note, true);
             this.synths[note].triggerAttack(Tone.Frequency(note, "midi"));
-            this.delayedUpdatePressedNotes(note);
+            pressedNotes.push(note); // Aggiungi la nota alla lista dei tasti premuti
+            this.model.setPressedNotes(pressedNotes); // Sincronizza il modello
         }
     }
     
-
     stopNote(note) {
         this.view.setActiveKey(note, false);
-        this.view.resetKeyColor(note); // Resetta sempre il colore del tasto al rilascio
+        this.view.resetKeyColor(note);
         this.synths[note].triggerRelease();
     
-        // Aggiungi un controllo per assicurarti che il colore del tasto sia sempre resettato
-        if (!this.getPressedNotes().includes(note)) {
-            this.view.resetKeyColor(note);
+        const pressedNotes = this.model.getPressedNotes();
+        const index = pressedNotes.indexOf(note);
+    
+        if (index > -1) {
+            pressedNotes.splice(index, 1); // Rimuovi la nota dalla lista
+            this.model.setPressedNotes(pressedNotes);
         }
     
-        const activeKeys = document.querySelectorAll(".key.active");
-        if (activeKeys.length === 0) {
+        if (pressedNotes.length === 0) {
             this.allKeysReleased = true;
         }
     }
+    
     
     
 

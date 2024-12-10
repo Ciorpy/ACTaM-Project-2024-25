@@ -113,14 +113,14 @@ function generateNewChord() {
 
 function checkChord() {
     const pressedNotes = piano.getPressedNotes();
-    if (arraysEqual(pressedNotes, previousPressedNotes)) return;
-
-    previousPressedNotes = [...pressedNotes];
-    console.log("Premute:", pressedNotes);
-    console.log("Da indovinare:", generatedChord.sort());
-
     if (guidedMode) handleGuidedMode(pressedNotes);
-    if (pressedNotes.length >= 3 && arraysEqual(generatedChord, pressedNotes)) handleCorrectGuess();
+    if (pressedNotes.length >= 3) {
+        if (arraysEqual(pressedNotes, previousPressedNotes)) return;
+        previousPressedNotes = [...pressedNotes];
+        console.log("Premute:", pressedNotes);
+        console.log("Da indovinare:", generatedChord.sort());
+        if (arraysEqual(generatedChord, pressedNotes)) handleCorrectGuess();
+    }
 }
 
 function handleCorrectGuess() {
@@ -168,7 +168,6 @@ function updateTimer() {
 
     if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
         currentScore = Math.max(0, currentScore - pointsToDeduct);
-        console.log(`Current Score updated: ${currentScore}`);
     }
 
     if (hintTimer >= hintInterval) updateHints();

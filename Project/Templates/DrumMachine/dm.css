@@ -143,6 +143,7 @@
 }
 
 .userMenu, .overlayMenu, .subTitle {
+    margin-bottom: 70px;
     padding: 10px;
     display: flex;
     flex-direction: row;

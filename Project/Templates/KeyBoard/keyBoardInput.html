@@ -21,12 +21,12 @@
   </head>
   <body>
     <div class="title">Keyboard</div>
-    <div class="subtitle" id="level"></div>
     <div class="container" id="pianoContainer">
       <div class="piano" id="piano"></div>
       <div class="info">
+        <div class="subtitle" id="level"></div>
+        <div class="text" id="timerDisplay">CURRENT SCORE: 0</div>
         <div class="text" id="scoreDisplay">REMAINING TIME: 120s</div>
-        <div class="text" id="timerDisplay">Total Score: 0</div>
         <div class="text" id="hintDisplay"></div>
       </div>
     </div> 
@@ -37,7 +37,7 @@
     </div>
 
     <div class="overlayBG" id="overlayDiv">
-      <div class="overlayTitle" id="overlayTitle">CLICK START GAME WHEN READY</div>
+      <div class="overlayTitle" id="overlayTitle">PRESS START WHEN YOU ARE READY</div>
       <div class="overlayTitle" id="overlaySubtitle"></div>
       <div class="overlayTitle" id="scoreLabel"></div>
       <div id="overlayImg"></div>
@@ -47,7 +47,7 @@
         <div class="levelScore" id="level3"></div>
       </div>
       <div class="overlayMenu">
-        <div class="button" id="startGame">START GAME</div>
+        <div class="button" id="startGame">START</div>
         <div class="button" id="showSolution" style="display: none">SHOW SOLUTION</div>
         <div class="button" id="goNextRound" style="display: none">NEXT LEVEL</div>
       </div>

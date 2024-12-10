@@ -31,6 +31,14 @@ let flagHintsButton;
 let flagHintsAuto; 
 let isShowingHint;
 
+let userLegend = {
+    chords_GM: "CHORDS",
+    harmony_GM: "HARMONY",
+    easyDiff: "EASY",
+    mediumDiff: "MEDIUM",
+    hardDiff: "HARD",
+  };
+
 // Elementi DOM principali
 const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
@@ -160,7 +168,7 @@ function startTimer() {
     flagHintsButton = false;
     flagHintsAuto = [true, true, true];
     updateTimerDisplay();
-    hintDisplay.textContent = "Play it!";
+    hintDisplay.textContent = "PLAY IT!";
 
     timerInterval = setInterval(updateTimer, 1000);
 }
@@ -181,9 +189,9 @@ function updateTimer() {
             flagHintsAuto[i] = false; // Disabilita il flag corrente
 
             // Aggiorna il display con il messaggio di hint disponibile
-            if (i === 0) hintDisplay.textContent = "1st hint available";
-            if (i === 1) hintDisplay.textContent = "2nd hint available";
-            if (i === 2) hintDisplay.textContent = "3rd hint available";
+            if (i === 0) hintDisplay.textContent = "1st HINT AVAILABLE";
+            if (i === 1) hintDisplay.textContent = "2nd HINT AVAILABLE";
+            if (i === 2) hintDisplay.textContent = "3rd HINT AVAILABLE";
 
             // Il pulsante deve sempre restare su "SHOW HINT" per i nuovi hint disponibili
             hintButton.textContent = "SHOW HINT";
@@ -227,13 +235,13 @@ function updateHints() {
         // Nasconde l'hint corrente e mostra che è disponibile
         switch (currentHint) {
             case 1:
-                hintDisplay.textContent = "1st hint hided, it's still available.";
+                hintDisplay.textContent = "1st HINT HIDDEN, IT'S STILL AVAILABLE.";
                 break;
             case 2:
-                hintDisplay.textContent = "2nd hint hided, it's still available.";
+                hintDisplay.textContent = "2nd HINT HIDDEN, IT'S STILL AVAILABLE.";
                 break;
             case 3:
-                hintDisplay.textContent = "3rd hint hided, it's still available.";
+                hintDisplay.textContent = "3rd HINT HIDDEN, IT'S STILL AVAILABLE.";
                 break;
         }
         hintButton.textContent = "SHOW HINT";
@@ -253,15 +261,15 @@ function endRound() {
 
 // AGGIORNAMENTO INTERFACCIA -----------------------------------------------------------------------------------------
 function updateScoreDisplay() {
-    scoreDisplay.textContent = `Total Score: ${totalScore}`;
+    scoreDisplay.textContent = `CURRENT SCORE: ${totalScore}`;
 }
 
 function updateTimerDisplay() {
-    timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+    timerDisplay.textContent = `REMAINING TIME: ${timeLeft}s`;
 }
 
 function updateLevelDisplay() {
-    levelDisplay.textContent = `Chords difficulty - ${selectedLevel}`;
+    levelDisplay.textContent = `CHORDS DIFFICULTY: ${userLegend[selectedLevel]}`;
 }
 
 // UTILITY -----------------------------------------------------------------------------------------------------------

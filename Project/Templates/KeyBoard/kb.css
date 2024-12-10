@@ -24,12 +24,12 @@
 
 .info {
     display: flex;
+    text-align: center;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
     gap: 15px;
-    padding-left: 20px;
-    color: cornflowerblue;
+    margin-top: 30px;
+    color: orange;
 }
 
 .piano {
@@ -54,25 +54,18 @@
 }
 
 .subtitle {
-    font-family: "Slackey", sans-serif;
-    font-weight: 700;
-    width: 100%;
-    height: 40px;
-    line-height: 40px;
     font-size: 30px;
     text-align: center;
     color: cornflowerblue;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .text {
     padding: 20px;
-    font-family: "Audiowide", serif;
-    font-weight: 700;
-    font-size: 28px;
+    font-size: 30px;
     text-align: center;
     color: cornflowerblue;
-    width: 420px;
+    
 }
 
 .key {
@@ -115,12 +108,12 @@
 }
 
 .userMenu, .overlayMenu {
-    padding: 10px 50px;
+    margin-bottom: 100px;
+    padding: 10px;
     display: flex;
-    justify-content: space-between;
     flex-direction: row;
     background-color: rgba(0,0,0,0);
-    gap: 20px;
+    justify-content: space-around;
 }
 
 .userMenu {
@@ -128,10 +121,8 @@
 }
 
 .button {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    margin-top: 50px;
+    padding: 30px;
     border: 2px solid orange;
     width: 300px;
     text-align: center;
@@ -155,8 +146,7 @@
 }
 
 .score, .timer {
-    font-family: "Audiowide", sans-serif;
-    font-size: 1.5em;
+    font-size: 30px;
     margin: 10px;
     text-align: center;
 }

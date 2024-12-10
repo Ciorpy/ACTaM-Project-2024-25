@@ -149,8 +149,8 @@ let handleOverlayDisplay = function (overlayType) {
 
   switch (overlayType) {
     case "startGame":
-      overlayTitle.innerHTML = "PRESS START WHEN READY";
-      overlaySubtitle.innerHTML = "THEN CLICK ON 'PLAY SOLUTION'";
+      overlayTitle.innerHTML = "PRESS START WHEN YOU ARE READY";
+      overlaySubtitle.innerHTML = "";
       startGameButton.style.display = "block";
       break;
     case "wrongGuess":
@@ -225,8 +225,8 @@ let roundTimer = function () {
 
 if (practiceModeFlag == "false") {
   selectedPresets = minigamePresets[selectedMinigame][difficultyLevel];
-  solution = selectedPresets[levelIndex];
   chosenPresets = getRandomDrumPatterns(selectedPresets);
+  solution = chosenPresets[levelIndex];
   handleOverlayDisplay("startGame");
 } else {
   selectedPresets = null;

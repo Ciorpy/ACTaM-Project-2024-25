@@ -108,7 +108,7 @@
 }
 
 .userMenu, .overlayMenu {
-    margin-bottom: 100px;
+    margin-bottom: 70px;
     padding: 10px;
     display: flex;
     flex-direction: row;

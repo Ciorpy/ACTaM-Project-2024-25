@@ -3,6 +3,7 @@ import { generateRandomChord } from "./chord.js";
 
 let firstNote = 48;
 let keysNumber = 25;
+let lastNote = firstNote + keysNumber
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 
@@ -206,8 +207,6 @@ function startTimer() {
         if (timeLeft <= 0) {
             activeRoundID++; // Incrementa il round
 
-            piano.deactivate()
-
             if(activeRoundID < maxRounds)
                 handleOverlayDisplay("timeOver")
             else
@@ -279,23 +278,16 @@ function checkChord() {
     }
 
     // Verifica l'accordo e aggiorna i feedback
-    if (pressedNotes.length >= 3 && !arraysEqual(generatedChord, pressedNotes)) {
-        wrongAttempts++;
-        //feedbackDisplay.textContent = "Accordo non corretto. Riprova!";
-    } else if (arraysEqual(generatedChord, pressedNotes)) {
+    if (pressedNotes.length >= 3 && arraysEqual(generatedChord, pressedNotes)) {
         clearInterval(timerInterval); // Ferma il timer
         totalScore += currentScore; // Aggiungi il punteggio corrente al totale
         updateScoreDisplay(); // Aggiorna il display del punteggio
         isRoundActive = false; // Termina il round
-        wrongAttempts = 0; // Reset degli errori
-        chordCount++;
         //feedbackDisplay.textContent = "Accordo corretto!";
         //chordCountDisplay.textContent = `Accordi indovinati: ${chordCount}`;
-        text.textContent = "Right Chord, here you another one."
     }
 
     if(arraysEqual(pressedNotes, generatedChord)){
-        piano.deactivate()
         handleOverlayDisplay("goodGuess")
     }
 }

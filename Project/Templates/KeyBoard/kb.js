@@ -22,13 +22,12 @@ let activeRoundID = 0;
 let maxRounds = 2;
 let guidedMode = false; 
 let selectedLevel = localStorage.getItem("Difficulty");
-let selectedMinigame = localStorage.getItem("Gamemode");
-let practiceModeFlag = localStorage.getItem("Practice");
+let selectedMinigame = localStorage.getItem("Gamemode"); // Chords o Harmony
+let practiceModeFlag = localStorage.getItem("Practice"); // Game o Practice
 let generatedChordData = {};
 let generatedChord = [];
 let hintTimer = 0;
-let flagHintsButton;
-let flagHintsAuto; 
+let flagHints; 
 let isShowingHint;
 
 let userLegend = {
@@ -50,6 +49,7 @@ const goNextRoundButton = document.getElementById("goNextRound");
 const scoreDivisionLabel = document.getElementById("scoreDivisionLabel");
 const toggleGuidedModeButton = document.getElementById("toggleGuidedMode");
 const levelDisplay = document.getElementById("level");
+const modeDisplay = document.getElementById("mode");
 const playSolutionButton = document.getElementById("playSolutionButton");
 const hintButton = document.getElementById("hintButton");
 const hintDisplay = document.getElementById("hintDisplay");
@@ -60,6 +60,7 @@ timerDisplay.className = "timer";
 updateScoreDisplay();
 updateTimerDisplay();
 updateLevelDisplay();
+updateModeDisplay();
 
 // EVENT LISTENERS ----------------------------------------------------------------------------------------------------
 // Gestione modalità guidata
@@ -110,8 +111,9 @@ document.addEventListener("keydown", (event) => {
 function startRound() {
     isRoundActive = true;
     activeRoundID++;
-    generateNewChord();
     startTimer();
+    if (selectedMinigame === "chords_GM") generateNewChord();
+    else if (selectedMinigame === "harmony_GM") /*funzione harmonia*/;
 }
 
 function generateNewChord() {
@@ -165,8 +167,7 @@ function startTimer() {
     timeLeft = 120;
     currentScore = 100;
     hintTimer = 0;
-    flagHintsButton = false;
-    flagHintsAuto = [true, true, true];
+    flagHints = [true, true, true];
     updateTimerDisplay();
     hintDisplay.textContent = "PLAY IT!";
 
@@ -184,9 +185,9 @@ function updateTimer() {
     }
 
     // Gestione automatica degli hint
-    for (let i = 0; i < flagHintsAuto.length; i++) {
-        if (hintTimer >= hintInterval * (i + 1) && flagHintsAuto[i]) {
-            flagHintsAuto[i] = false; // Disabilita il flag corrente
+    for (let i = 0; i < flagHints.length; i++) {
+        if (hintTimer >= hintInterval * (i + 1) && flagHints[i]) {
+            flagHints[i] = false; // Disabilita il flag corrente
 
             // Aggiorna il display con il messaggio di hint disponibile
             if (i === 0) hintDisplay.textContent = "1st HINT AVAILABLE";
@@ -215,7 +216,7 @@ function updateHints() {
     }
 
     // Determina se si sta mostrando o nascondendo l'hint
-    const isShowingHint = hintButton.textContent === "SHOW HINT";
+    isShowingHint = hintButton.textContent === "SHOW HINT";
 
     if (isShowingHint) {
         // Mostra l'hint corrente
@@ -268,8 +269,12 @@ function updateTimerDisplay() {
     timerDisplay.textContent = `REMAINING TIME: ${timeLeft}s`;
 }
 
+function updateModeDisplay() {
+    modeDisplay.textContent = `GAMEMODE: ${userLegend[selectedMinigame]}`;
+}
+
 function updateLevelDisplay() {
-    levelDisplay.textContent = `CHORDS DIFFICULTY: ${userLegend[selectedLevel]}`;
+    levelDisplay.textContent = `DIFFICULTY: ${userLegend[selectedLevel]}`;
 }
 
 // UTILITY -----------------------------------------------------------------------------------------------------------

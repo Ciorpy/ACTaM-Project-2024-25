@@ -8,14 +8,14 @@ const keysNumber = 25;
 const lastNote = firstNote + keysNumber;
 const pointsToDeduct = 25;
 const deductionInterval = 30; 
-const hintInterval = 30; 
+const hintInterval = 30;
 
 // Variabili globali
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
 let totalScore = 0;
 let currentScore = 100;
-let timeLeft = 120;
+let timeLeft;
 let timerInterval;
 let isRoundActive = false;
 let activeRoundID = 0;
@@ -27,8 +27,9 @@ let practiceModeFlag = localStorage.getItem("Practice");
 let generatedChordData = {};
 let generatedChord = [];
 let hintTimer = 0;
-let flagHintsButton = [true, true, true];
-let flagHintsAuto = [true, true, true];
+let flagHintsButton;
+let flagHintsAuto; 
+let isShowingHint;
 
 // Elementi DOM principali
 const scoreDisplay = document.getElementById("scoreDisplay");
@@ -63,6 +64,7 @@ toggleGuidedModeButton.addEventListener("click", () => {
 startGameButton.addEventListener("click", () => {
     handleOverlayDisplay("hide");
     if (!isRoundActive) startRound();
+    console.log(selectedMinigame);
 });
 
 goNextRoundButton.addEventListener("click", () => {
@@ -86,7 +88,9 @@ playSolutionButton.addEventListener("click", () => {
 });
 
 // Gestione degli hint
-hintButton.addEventListener("click", showHint);
+hintButton.addEventListener("click", () => {
+    if (hintTimer >= hintInterval) updateHints();
+});
 
 // Mappatura tastiera
 document.addEventListener("keydown", (event) => {
@@ -153,7 +157,7 @@ function startTimer() {
     timeLeft = 120;
     currentScore = 100;
     hintTimer = 0;
-    flagHintsButton = [true, true, true];
+    flagHintsButton = false;
     flagHintsAuto = [true, true, true];
     updateTimerDisplay();
     hintDisplay.textContent = "Play it!";
@@ -166,42 +170,74 @@ function updateTimer() {
     hintTimer++;
     updateTimerDisplay();
 
+    // Deduzione del punteggio a intervalli regolari
     if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
         currentScore = Math.max(0, currentScore - pointsToDeduct);
     }
 
-    if (hintTimer >= hintInterval) updateHints();
+    // Gestione automatica degli hint
+    for (let i = 0; i < flagHintsAuto.length; i++) {
+        if (hintTimer >= hintInterval * (i + 1) && flagHintsAuto[i]) {
+            flagHintsAuto[i] = false; // Disabilita il flag corrente
+
+            // Aggiorna il display con il messaggio di hint disponibile
+            if (i === 0) hintDisplay.textContent = "1st hint available";
+            if (i === 1) hintDisplay.textContent = "2nd hint available";
+            if (i === 2) hintDisplay.textContent = "3rd hint available";
+
+            // Il pulsante deve sempre restare su "SHOW HINT" per i nuovi hint disponibili
+            hintButton.textContent = "SHOW HINT";
+        }
+    }
+
+    // Controllo fine round
     if (timeLeft <= 0) endRound();
 }
 
-function showHint() {
-    if (hintTimer >= hintInterval && flagHintsButton[0]) {
-        flagHintsButton[0] = false;
-        hintDisplay.textContent = `Root ${generatedChordData.noteRoot}`;
-    }
-    if (hintTimer >= hintInterval * 2 && flagHintsButton[1]) {
-        flagHintsButton[1] = false;
-        hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
-    } 
-    if (hintTimer >= hintInterval * 3 && flagHintsButton[2]) {
-        flagHintsButton[2] = false;
-        hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}\nin ${generatedChordData.inversion}`;
-    } 
-}
-
 function updateHints() {
-    if (hintTimer >= hintInterval && flagHintsAuto[0]) {
-        flagHintsAuto[0] = false;
-        hintDisplay.textContent = "1st hint available";
+    let currentHint = 0;
+
+    // Determina l'hint attuale in base al timer
+    if (hintTimer >= hintInterval * 3) {
+        currentHint = 3;
+    } else if (hintTimer >= hintInterval * 2) {
+        currentHint = 2;
+    } else if (hintTimer >= hintInterval) {
+        currentHint = 1;
     }
-    if (hintTimer >= hintInterval * 2 && flagHintsAuto[1]) {
-        flagHintsAuto[1] = false;
-        hintDisplay.textContent = "2nd hint available";
-    } 
-    if (hintTimer >= hintInterval * 3 && flagHintsAuto[2]) {
-        flagHintsAuto[2] = false;
-        hintDisplay.textContent = "3rd hint available";
-        }
+
+    // Determina se si sta mostrando o nascondendo l'hint
+    const isShowingHint = hintButton.textContent === "SHOW HINT";
+
+    if (isShowingHint) {
+        // Mostra l'hint corrente
+        switch (currentHint) {
+            case 1:
+                hintDisplay.textContent = `Root ${generatedChordData.noteRoot}`;
+                break;
+            case 2:
+                hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
+                break;
+            case 3:
+                hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}\nin ${generatedChordData.inversion}`;
+                break;
+        }
+        hintButton.textContent = "HIDE HINT";
+    } else {
+        // Nasconde l'hint corrente e mostra che è disponibile
+        switch (currentHint) {
+            case 1:
+                hintDisplay.textContent = "1st hint hided, it's still available.";
+                break;
+            case 2:
+                hintDisplay.textContent = "2nd hint hided, it's still available.";
+                break;
+            case 3:
+                hintDisplay.textContent = "3rd hint hided, it's still available.";
+                break;
+        }
+        hintButton.textContent = "SHOW HINT";
+    }
 }
 
 function endRound() {

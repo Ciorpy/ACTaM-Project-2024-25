@@ -1,13 +1,5 @@
 GDT
-- implementare label round
-- implementare grafica figa simil batteria con immagine di sfondo tastiera e ombre sui tasti
-
-- timer doppio in play solution
-- punteggio assistant e hint
-- mostrare il nome dell' laccordo suonato e show solution epr i tasti
-
+- mostrare il nome dell' laccordo suonato e show solution per i tasti
 
 FL
-- vedere funzionamento controller -> - sutain release audio
-- implementare assistant mode con click mouse
 - implementare practice mode

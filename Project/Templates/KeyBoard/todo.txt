@@ -2,6 +2,7 @@ GDT
 - implementare label round
 - implementare practice mode
 - implementare grafica figa simil batteria con immagine di sfondo tastiera e ombre sui tasti
+- MIGLIORARE SUONI CON CODE DIVERSE ACCORCIANDOLI
 
 FL
 - implementare assistant mode con click mouse

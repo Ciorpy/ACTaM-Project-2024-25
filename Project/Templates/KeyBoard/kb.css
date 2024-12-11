@@ -53,19 +53,21 @@
     color: cornflowerblue;
 }
 
-.subtitle {
-    font-size: 30px;
-    text-align: center;
+.subTitle {
+    font-size: 25px;
+    margin-bottom: 70px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
     color: cornflowerblue;
-    margin-bottom: 40px;
 }
 
 .text {
     padding: 20px;
     font-size: 30px;
     text-align: center;
-    color: cornflowerblue;
-    
+    color: orange;
 }
 
 .key {

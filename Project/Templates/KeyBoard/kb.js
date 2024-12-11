@@ -58,6 +58,7 @@ const scoreDivisionLabel = document.getElementById("scoreDivisionLabel");
 const toggleGuidedModeButton = document.getElementById("toggleGuidedMode");
 const levelDisplay = document.getElementById("level");
 const modeDisplay = document.getElementById("mode");
+const roundDisplay = document.getElementById("round");
 const playSolutionButton = document.getElementById("playSolutionButton");
 const hintButton = document.getElementById("hintButton");
 const hintDisplay = document.getElementById("hintDisplay");
@@ -71,10 +72,12 @@ updateScoreDisplay();
 updateTimerDisplay();
 updateLevelDisplay();
 updateModeDisplay();
+updateRoundDisplay();
 
 // EVENT LISTENERS ----------------------------------------------------------------------------------------------------
 // Avvio del gioco e passaggio al prossimo round
 startGameButton.addEventListener("click", () => {
+    updateRoundDisplay();
     handleOverlayDisplay("hide");
     if (!isRoundActive) startRound();
     console.log(selectedMinigame);
@@ -98,6 +101,7 @@ hideSolutionButton.addEventListener("click", () => {
 })
 
 goNextRoundButton.addEventListener("click", () => {
+    updateRoundDisplay();
     isAssistanONDisabled = toggleGuidedModeButton.textContent === "ASSISTANT MODE ON" ? true : false;
     if (isAssistanONDisabled){
         guidedMode = !guidedMode;
@@ -321,11 +325,16 @@ function updateTimerDisplay() {
 }
 
 function updateModeDisplay() {
-    modeDisplay.innerHTML = "GAMEMODE: " + userLegend[selectedMinigame]
+    modeDisplay.innerHTML = userLegend[selectedMinigame]
 }
 
 function updateLevelDisplay() {
     levelDisplay.innerHTML = "DIFFICULTY: " + userLegend[selectedLevel];
+}
+
+function updateRoundDisplay() {
+    let roundShowed = activeRoundID + 1; 
+    roundDisplay.innerHTML = "ROUND: " + roundShowed;
 }
 
 // UTILITY -----------------------------------------------------------------------------------------------------------

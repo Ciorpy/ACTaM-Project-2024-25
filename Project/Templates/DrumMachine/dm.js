@@ -179,6 +179,7 @@ let handleOverlayDisplay = function (overlayType) {
     case "goodGuess":
       overlayTitle.innerHTML = "GOOD GUESS";
       overlaySubtitle.innerHTML = "YOU ARE A BOSS!";
+      showSolutionButton.style.display = "block";
       goNextRoundButton.style.display = "block";
       break;
     case "timeOver":
@@ -420,6 +421,7 @@ function resetDrumMachine() {
     Array(semicrome).fill(false)
   );
 }
+
 startStopButton.addEventListener("click", () => {
   guessIndex = 0;
   if (isPlaying) {
@@ -535,7 +537,6 @@ let goodGuess = function () {
 
   clearInterval(timerInterval);
   handleOverlayDisplay("goodGuess");
-  solution = chosenPresets[levelIndex];
   roundScore = maxScore;
   timer = maxTimer;
 };
@@ -575,6 +576,7 @@ checkInputButton.addEventListener("click", () => {
 let solutionDiv = document.getElementById("overlaySolution")
 
 let showSolution = function () {
+  buildSolution()
   handleOverlayDisplay("hide")
   solutionDiv.style.display = "flex"
   solutionInterval = setInterval(playSolution, setBpm(bpm))

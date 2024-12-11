@@ -1,5 +1,4 @@
 GDT
-- mostrare il nome dell' laccordo suonato e show solution per i tasti
 
 FL
 - implementare practice mode

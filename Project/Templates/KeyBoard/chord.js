@@ -54,7 +54,7 @@ function generateChordsMIDI(rootMIDI) {
 
 
 // Funzione per riconoscere l'accordo dato un array di note MIDI
-function recognizeChordMIDI(inputNotes) {
+export function recognizeChordMIDI(inputNotes) {
   // Normalizza le note all'interno di un'ottava (0-11)
   const normalizedInput = inputNotes.map(note => note % notesInOctave).sort((a, b) => a - b);
 
@@ -66,13 +66,58 @@ function recognizeChordMIDI(inputNotes) {
 
       // Controllo su tutte le possibili inversioni
       if (areInversions(normalizedInput, normalizedChord)) {
-        return `Root: ${midiToNoteName(rootMIDI)}, Chord: ${chordName}`;
+        return `ROOT: ${midiToNoteName(rootMIDI)}, CHORD: ${chordName}`;
       }
     }
   }
 
-  return "Accordo non riconosciuto";
+  return "ACCORDO NON RICONOSCIUTO";
 }
+
+// Funzione per riconoscere l'accordo dato un array di note MIDI
+export function recognizeChordMIDIchat(inputNotes) {
+  // Normalizza le note all'interno di un'ottava (0-11)
+  const normalizedInput = inputNotes.map(note => note % notesInOctave).sort((a, b) => a - b);
+
+  for (let rootMIDI = 0; rootMIDI < notesInOctave; rootMIDI++) {
+    const chords = generateChordsMIDI(rootMIDI);
+
+    for (let chordName in chords) {
+      const chordNotes = chords[chordName];
+      const normalizedChord = chordNotes.map(note => note % notesInOctave).sort((a, b) => a - b);
+
+      // Genera tutte le inversioni dell'accordo
+      const inversions = generateInversions(chordNotes);
+
+      for (let i = 0; i < inversions.length; i++) {
+        const inversion = inversions[i];
+        const normalizedInversion = inversion.map(note => note % notesInOctave).sort((a, b) => a - b);
+
+        // Confronta l'input normalizzato con l'inversione normalizzata
+        if (arraysEqual(normalizedInput, normalizedInversion)) {
+          const updatedRoot = inversion[0];
+          const inversionType = i === 0 ? "ROOT POSITION" : `${i}° INVERSION`;
+        }
+      }
+    }
+  }
+
+  return {
+    midiRoot: updatedRoot,
+    noteRoot: midiToNoteName(updatedRoot),
+    chordType: chordName,
+    inversion: inversionType,
+    midiNotes: inversion,
+    notes: inversion.map(midiToNoteName)
+  };
+}
+
+// Funzione per confrontare due array
+function arraysEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+  return arr1.every((val, index) => val === arr2[index]);
+}
+
 
 // Funzione per confrontare array e riconoscere inversioni
 function areInversions(arr1, arr2) {
@@ -159,8 +204,8 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff") {
   // Determina la nuova root in base all'inversione
   const updatedRoot = selectedInversionIndex === 0 ? selectedInversion[0]
     : selectedInversion[selectedInversion.length - (selectedInversionIndex)];
-  const inversionType = selectedInversionIndex === 0 ? "Root Position"
-    : `${selectedInversionIndex}` + "° Inversion";
+  const inversionType = selectedInversionIndex === 0 ? "ROOT POSITION"
+    : `${selectedInversionIndex}` + "° INVERSION";
 
   return {
     midiRoot: updatedRoot,

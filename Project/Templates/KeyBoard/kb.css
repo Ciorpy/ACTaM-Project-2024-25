@@ -180,7 +180,7 @@
     background-color: rgba(255,255,255,0.3);
 }
 
-.overlayTitle{
+.overlayTitle, .overlayTitleSolution{
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -188,4 +188,9 @@
     text-align: center;
     font-size: 150px;
     background-color: rgba(0,0,0,0);
+}
+
+.overlayTitleSolution {
+    margin-top: 70px;
+    font-size: 120px;
 }

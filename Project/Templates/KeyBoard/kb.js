@@ -1,6 +1,7 @@
 // IMPORTAZIONI E CONFIGURAZIONE INIZIALE -----------------------------------------------------------------------------
 import PianoController from "./controller.js";
 import { generateRandomChord } from "./chord.js";
+import { recognizeChordMIDIchat } from "./chord.js";
 
 // Costanti e configurazione globale
 const firstNote = 48;
@@ -27,6 +28,7 @@ let selectedLevel = localStorage.getItem("Difficulty");
 let selectedMinigame = localStorage.getItem("Gamemode"); // Chords o Harmony
 let practiceModeFlag = localStorage.getItem("Practice"); // Game o Practice
 let generatedChordData = {};
+let chordData = {};
 let generatedChord = [];
 let hintTimer = 0;
 let flagHints; 
@@ -45,12 +47,18 @@ let userLegend = {
     hardDiff: "HARD",
   };
 
+if(practiceModeFlag == "true") practiceModeFlag = true;
+else if (practiceModeFlag == "false") practiceModeFlag = false;
+
 // Elementi DOM principali
 const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
 const overlayPanel = document.getElementById("overlayDiv");
 const scoreLabel = document.getElementById("scoreLabel");
 const overlayTitle = document.getElementById("overlayTitle");
+const overlaySubtitle = document.getElementById("overlaySubtitle");
+const overlayTitleSolution = document.getElementById("overlayTitleSolution");
+const overlaySubtitleSolution = document.getElementById("overlaySubtitleSolution");
 const startGameButton = document.getElementById("startGame");
 const showSolutionButton = document.getElementById("showSolution");
 const goNextRoundButton = document.getElementById("goNextRound");
@@ -64,15 +72,36 @@ const hintButton = document.getElementById("hintButton");
 const hintDisplay = document.getElementById("hintDisplay");
 const solutionDiv = document.getElementById("overlaySolution");
 const hideSolutionButton = document.getElementById("hideSolution");
+const mainMenuButton = document.getElementById("mainMenu"); 
 
 // CONFIGURAZIONE INIZIALE DELLA PAGINA -------------------------------------------------------------------------------
 scoreDisplay.className = "score";
 timerDisplay.className = "timer";
-updateScoreDisplay();
-updateTimerDisplay();
-updateLevelDisplay();
-updateModeDisplay();
-updateRoundDisplay();
+if(practiceModeFlag){
+    handleOverlayDisplay("hide");
+    startGameButton.style.display = "none";
+    playSolutionButton.style.display = "none";
+    hintButton.style.display = "none";
+    roundDisplay.style.display = "none";
+    toggleGuidedModeButton.style.display = "none";
+    mainMenuButton.style.display = "flex";
+    levelDisplay.style.display = "none";
+    scoreDisplay.style.display = "none";
+    timerDisplay.style.display = "none";
+    piano.init();
+    const pressedNotes = piano.getPressedNotes();
+    if (pressedNotes.length >= 3) {
+        chordData = recognizeChordMIDIchat(pressedNotes);
+    }
+    hintDisplay.innerHTML = `${chordData.noteRoot}${chordData.chordType} IN ${chordData.inversion}`
+} else {
+    mainMenuButton.style.display = "none";
+    updateScoreDisplay();
+    updateTimerDisplay();
+    updateLevelDisplay();
+    updateModeDisplay();
+    updateRoundDisplay();
+}
 
 // EVENT LISTENERS ----------------------------------------------------------------------------------------------------
 // Avvio del gioco e passaggio al prossimo round
@@ -86,6 +115,8 @@ startGameButton.addEventListener("click", () => {
 showSolutionButton.addEventListener("click", () => {
     handleOverlayDisplay("hide")
     solutionDiv.style.display = "flex";
+    overlaySubtitleSolution.innerHTML = "";
+    overlayTitleSolution.innerHTML = "IT'S A " + `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
     piano.playChord(generatedChord);
     generatedChord.forEach(note => {
         piano.view.setKeyColor(note, "green");
@@ -146,6 +177,10 @@ toggleGuidedModeButton.addEventListener("click", () => {
     toggleGuidedModeButton.textContent = !guidedMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
 });
 
+mainMenuButton.addEventListener("click", () => {
+    window.location.href = "../../gameTitleScreen.html";
+});
+
 // Mappatura tastiera
 document.addEventListener("keydown", (event) => {
     if (isInputDisabled) return; // Ignora gli input se disabilitati
@@ -157,11 +192,6 @@ document.addEventListener("mousedown", (event) =>{
     const pressedNotes = piano.getPressedNotes();
     if (guidedMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red"); 
 })
-
-if(practiceModeFlag) {
-    
-}
-
 
 // FUNZIONI PRINCIPALI -----------------------------------------------------------------------------------------------
 function startRound() {
@@ -226,7 +256,7 @@ function startTimer() {
     hintTimer = 0;
     flagHints = [true, true, true];
     updateTimerDisplay();
-    hintDisplay.textContent = "PLAY IT!";
+    hintDisplay.textContent = " ";
     timerInterval = setInterval(updateTimer, 1000);
 }
 
@@ -279,7 +309,7 @@ function updateHints() {
         switch (currentHint) {
             case 1:
                 flagHintsPoint[0] = true;
-                hintDisplay.textContent = `Root ${generatedChordData.noteRoot}`;
+                hintDisplay.textContent = `ROOT ${generatedChordData.noteRoot}`;
                 break;
             case 2:
                 flagHintsPoint[1] = true;
@@ -287,7 +317,7 @@ function updateHints() {
                 break;
             case 3:
                 flagHintsPoint[2] = true;
-                hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType} in ${generatedChordData.inversion}`;
+                hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
                 break;
         }
         hintButton.textContent = "HIDE HINT";
@@ -295,13 +325,13 @@ function updateHints() {
         // Nasconde l'hint corrente e mostra che è disponibile
         switch (currentHint) {
             case 1:
-                hintDisplay.textContent = "1st HINT HIDDEN.";
+                hintDisplay.textContent = "1st HINT HIDDEN";
                 break;
             case 2:
-                hintDisplay.textContent = "2nd HINT HIDDEN.";
+                hintDisplay.textContent = "2nd HINT HIDDEN";
                 break;
             case 3:
-                hintDisplay.textContent = "3rd HINT HIDDEN.";
+                hintDisplay.textContent = "3rd HINT HIDDEN";
                 break;
         }
         hintButton.textContent = "SHOW HINT";
@@ -371,14 +401,15 @@ function handleOverlayDisplay(overlayType) {
       case "timeOver":
         disableInput();
         overlayTitle.innerHTML = "TIME OVER";
-        overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
+        overlayTitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
         showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block"
         break;
       case "goodGuess":
         disableInput();
         overlayTitle.innerHTML = "GOOD GUESS";
-        overlaySubtitle.innerHTML = "YOU ARE A BOSS!";
+        overlaySubtitle.innerHTML = "YOU ARE A BOSS!";        
+        showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block"
         break;
       case "gameOver":

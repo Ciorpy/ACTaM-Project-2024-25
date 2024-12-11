@@ -145,10 +145,15 @@ toggleGuidedModeButton.addEventListener("click", () => {
 // Mappatura tastiera
 document.addEventListener("keydown", (event) => {
     if (isInputDisabled) return; // Ignora gli input se disabilitati
-
     const note = piano.view.keyMap[event.code];
     if (note !== undefined) checkChord();
 });
+
+document.addEventListener("mousedown", (event) =>{
+    const pressedNotes = piano.getPressedNotes();
+    if (guidedMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red"); 
+})
+
 
 // FUNZIONI PRINCIPALI -----------------------------------------------------------------------------------------------
 function startRound() {

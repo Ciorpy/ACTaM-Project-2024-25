@@ -4,6 +4,7 @@ GDT
 
 - timer doppio in play solution
 - punteggio assistant e hint
+- mostrare il nome dell' laccordo suonato e show solution epr i tasti
 
 
 FL

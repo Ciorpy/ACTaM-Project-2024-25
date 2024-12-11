@@ -1,8 +1,12 @@
 GDT
+- aggiornare samples e mettere release (da tone.js)
 - implementare label round
-- implementare practice mode
 - implementare grafica figa simil batteria con immagine di sfondo tastiera e ombre sui tasti
-- MIGLIORARE SUONI CON CODE DIVERSE ACCORCIANDOLI
+- sutain release audio
+- timer doppio in play solution
+- punteggio assistant e hint
+
 
 FL
 - implementare assistant mode con click mouse
+- implementare practice mode

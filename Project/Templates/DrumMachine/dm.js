@@ -57,7 +57,7 @@ let roundScore = maxScore; // Sets actual score to maxScore
 let totalScore = 0; // Stores the total score achieved by the user
 
 // Timer
-let maxTimer = 10; // Stores how much time is given to the player to complete each level
+let maxTimer = 120; // Stores how much time is given to the player to complete each level
 let timer = maxTimer; // Sets starting timer value to default value
 let scoreSubTimer = maxTimer / 4;
 

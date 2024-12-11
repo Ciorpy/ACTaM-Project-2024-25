@@ -43,7 +43,7 @@ class PianoView {
                 // Mostra il nome del tasto
                 const keyLabel = document.createElement("span");
                 keyLabel.classList.add("key-label");
-                keyLabel.textContent = keyboardKey.replace("Key", "").replace("Digit", "");
+                keyLabel.textContent = keyboardKey.replace("Key", "").replace("Digit", "").replace("Comma", ",");
                 key.appendChild(keyLabel);
             }
     

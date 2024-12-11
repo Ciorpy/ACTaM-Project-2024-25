@@ -33,6 +33,9 @@ let flagHints;
 let isShowingHint;
 let isAssistanONDisabled;
 let isInputDisabled = false; // Variabile di controllo per abilitare/disabilitare gli input
+let assistantFlag = false;
+let flagHintsPoint = [false, false, false];
+let percAssistant = 50;
 
 let userLegend = {
     chords_GM: "CHORDS",
@@ -70,14 +73,6 @@ updateLevelDisplay();
 updateModeDisplay();
 
 // EVENT LISTENERS ----------------------------------------------------------------------------------------------------
-// Gestione modalità guidata
-toggleGuidedModeButton.addEventListener("click", () => {
-    guidedMode = !guidedMode;
-    toggleGuidedModeButton.textContent = !guidedMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
-    currentScore /= 2;
-    pointsToDeduct = Math.ceil(pointsToDeduct / 2);
-});
-
 // Avvio del gioco e passaggio al prossimo round
 startGameButton.addEventListener("click", () => {
     handleOverlayDisplay("hide");
@@ -124,7 +119,12 @@ playSolutionButton.addEventListener("click", () => {
     if (isInputDisabled) return; // Ignora il click se il tasto è disabilitato
 
     disableInput();
-    startTimerSolution();
+    clearInterval(timerIntervalSolution);
+    timeLeftSolution = 2;
+    timerIntervalSolution = setInterval( () => {
+        timeLeftSolution--;
+        if (timeLeftSolution <= 0) enableInput();
+    }, 1000);
     piano.playChord(generatedChord); // Riproduce il tuo accordo
 });
 
@@ -133,6 +133,13 @@ hintButton.addEventListener("click", () => {
     if (isInputDisabled) return; // Ignora gli input se disabilitati
 
     if (hintTimer >= hintInterval) updateHints();
+});
+
+// Gestione modalità guidata
+toggleGuidedModeButton.addEventListener("click", () => {
+    assistantFlag = true;
+    guidedMode = !guidedMode;
+    toggleGuidedModeButton.textContent = !guidedMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
 });
 
 // Mappatura tastiera
@@ -177,6 +184,10 @@ function checkChord() {
 
 function handleCorrectGuess() {
     clearInterval(timerInterval);
+    if (assistantFlag) currentScore *= (1 - percAssistant / 100);
+    if (flagHintsPoint[2]) currentScore -= 15;
+    if (flagHintsPoint[1]) currentScore -= 8;
+    if (flagHintsPoint[0]) currentScore -= 2;
     totalScore += currentScore;
     updateScoreDisplay();
     isRoundActive = false;
@@ -204,12 +215,6 @@ function startTimer() {
     updateTimerDisplay();
     hintDisplay.textContent = "PLAY IT!";
     timerInterval = setInterval(updateTimer, 1000);
-}
-
-function startTimerSolution() {
-    clearInterval(timerIntervalSolution);
-    timeLeftSolution = 2;
-    timerIntervalSolution = setInterval(updateTimerSolution, 1000);
 }
 
 function updateTimer() {
@@ -241,11 +246,6 @@ function updateTimer() {
     if (timeLeft <= 0) endRound();
 }
 
-function updateTimerSolution() {
-    timeLeftSolution--;
-    if (timeLeftSolution <= 0) enableInput();
-}
-
 function updateHints() {
     let currentHint = 0;
 
@@ -265,12 +265,15 @@ function updateHints() {
         // Mostra l'hint corrente
         switch (currentHint) {
             case 1:
+                flagHintsPoint[0] = true;
                 hintDisplay.textContent = `Root ${generatedChordData.noteRoot}`;
                 break;
             case 2:
+                flagHintsPoint[1] = true;
                 hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
                 break;
             case 3:
+                flagHintsPoint[2] = true;
                 hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}\nin ${generatedChordData.inversion}`;
                 break;
         }

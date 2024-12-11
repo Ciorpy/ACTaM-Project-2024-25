@@ -35,7 +35,7 @@ const pianoSampler = new Tone.Sampler({
         "A7": "A7.mp3",
         "C8": "C8.mp3"
     },
-    baseUrl: "https://tonejs.github.io/audio/salamander/" // URL dei sample di pianoforte
+    baseUrl: "../../Sounds/Piano Samples/" // URL dei sample di pianoforte
 }).toDestination();
 
 // Aggiungi un listener per sapere quando i sample sono pronti

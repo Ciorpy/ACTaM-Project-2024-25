@@ -1,0 +1,21 @@
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCQ80_P6wHcfcOzyZjwh4fnAXnvo_n9WIs",
+    authDomain: "musicmind-76c18.firebaseapp.com",
+    projectId: "musicmind-76c18",
+    storageBucket: "musicmind-76c18.firebasestorage.app",
+    messagingSenderId: "714424349218",
+    appId: "1:714424349218:web:d09166e841aa36da91907b",
+    measurementId: "G-2NZDZE71EV"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);

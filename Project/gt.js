@@ -208,9 +208,4 @@ backButtonC.addEventListener("click", () => {
   gamemodeSelectorMenu.style.display = "none";
 });
 
-
-
-document.getElementById('userForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const username = document.getElementById('username').value;
-});
+const username = document.getElementById('username').value;

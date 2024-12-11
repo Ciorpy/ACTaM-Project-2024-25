@@ -37,6 +37,7 @@ let bpm = defaultBpm; // Sets actual BPM to default value
 // Control Booleans
 let isPlaying = false; // Control boolean used to determine if the user is playing his guess
 let isSolutionPlaying = false; // Control boolean used to determine if the user is playing the solution pattern
+let hasRoundEnded = false;
 
 // Indexes
 let guessIndex = 0; // Index used to have track of the actual semicrome that is being played in the guess
@@ -58,14 +59,15 @@ let totalScore = 0; // Stores the total score achieved by the user
 // Timer
 let maxTimer = 120; // Stores how much time is given to the player to complete each level
 let timer = maxTimer; // Sets starting timer value to default value
-let scoreSubTimer = 30;
+let scoreSubTimer = maxTimer / 4;
 
 // Preload of stored values from main menu
 let selectedMinigame = localStorage.getItem("Gamemode"); // Gets from localStorage the selected Minigame (Grooves / Fills)
 let difficultyLevel = localStorage.getItem("Difficulty"); // Gets from localStorage the selected Difficulty Level
 let practiceModeFlag = localStorage.getItem("Practice"); // Gets from localStorage the selected mode (Game / Practice)
 
-let gamemodeDisplay = document.getElementById("gamemodeDisplay");
+let gamemodeDisplay =  document.getElementById("title")
+let roundDisplay = document.getElementById("roundDisplay");
 let difficultyDisplay = document.getElementById("difficultyDisplay");
 
 let userLegend = {
@@ -77,10 +79,11 @@ let userLegend = {
 };
 
 if (practiceModeFlag == "false") {
-  gamemodeDisplay.innerHTML = "GAMEMODE: " + userLegend[selectedMinigame];
+  gamemodeDisplay.innerHTML = userLegend[selectedMinigame]
+  roundDisplay.innerHTML = "ROUND: 1"
   difficultyDisplay.innerHTML = "DIFFICULTY: " + userLegend[difficultyLevel];
 } else {
-  gamemodeDisplay.style.display = "none";
+  roundDisplay.style.display = "none";
   difficultyDisplay.style.display = "none";
 }
 
@@ -139,9 +142,11 @@ goNextRoundButton.addEventListener("click", () => {
     timerInterval = setInterval(roundTimer, 1000);
     handleOverlayDisplay("hide");
     solution = chosenPresets[levelIndex];
+    roundDisplay.innerHTML = "ROUND: " + (levelIndex + 1)
     solutionInterval = setInterval(playSolution, setBpm(bpm));
     playSolutionButton.innerHTML = "STOP SOLUTION";
     isSolutionPlaying = true;
+    hasRoundEnded = false;
     resetDrumMachine();
   } else if (levelIndex == 3) {
     handleOverlayDisplay("gameOver")
@@ -223,10 +228,10 @@ let roundTimer = function () {
   if (timer <= 0) {
     clearInterval(timerInterval);
     levelIndex = levelIndex + 1;
-    roundScore = 100;
     buildSolution()
     timer = maxTimer;
     timeOver("timeOver");
+    hasRoundEnded = true;
   }
   if (timer % scoreSubTimer == 0) {
     roundScore -= 25;
@@ -541,7 +546,8 @@ let wrongGuess = function () {
   handleOverlayDisplay("wrongGuess");
 
   setTimeout(() => {
-    handleOverlayDisplay("hide");
+    if(!hasRoundEnded)
+      handleOverlayDisplay("hide");
   }, 2000);
 };
 

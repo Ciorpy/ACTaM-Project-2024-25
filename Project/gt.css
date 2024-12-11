@@ -98,10 +98,16 @@ body {
 }
 
 .username-container {
-  background: white;
-  padding: 50px;
-  border-radius: 8px;
+  background: rgb(9, 33, 65);
+  border-radius: 15px;
   width: 650px;
+}
+
+.username, #username {
+  color: cornflowerblue;
+  margin: 10px;
+  font-size: 40px;
+  text-align: center;
 }
 
 .settingsItem{

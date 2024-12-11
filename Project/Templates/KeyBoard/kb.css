@@ -9,20 +9,26 @@
 }
 
 .container {
+    height: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between; /* Migliora la spaziatura */
-    align-items: flex-start; /* Allinea verticalmente */
-    position: relative;
     background-color: rgb(9, 33, 65);
-    height: 600px;
-    user-select: none;
-    padding: 40px 100px; /* Padding più uniforme */
+    width: 100%;
+    gap: 0px;
     border-bottom: 3px solid orange;
-    gap: 20px; /* Spaziatura tra contenitore e info */
+    padding: 0px 150px;
+}
+
+.pianoContainer {
+    height: 750px;
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    gap: 0px;
 }
 
 .info {
+    width: 30%;
     display: flex;
     text-align: center;
     flex-direction: column;
@@ -30,16 +36,18 @@
     gap: 15px;
     margin-top: 30px;
     color: orange;
+    padding: 0px 40px;
 }
 
 .piano {
     display: flex;
     flex-direction: row;
     position: relative;
-    height: 400px;
+    height: 450px;
+    width: 1000px;
     user-select: none;
-    width: calc(100% - 450px);;
     justify-content: center;
+    margin: auto;
 }
 
 .title {
@@ -81,7 +89,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    font-size: 10px;
+    font-size: 15px;
     box-sizing: border-box;
 }
 
@@ -95,7 +103,8 @@
     height: 60%; 
     background: black;
     color: white;
-    z-index: 2;
+    z-index: 2;    
+    font-size: 15px;
 }
 
 .key.black span {
@@ -123,7 +132,6 @@
 }
 
 .button {
-    margin-top: 50px;
     padding: 30px;
     border: 2px solid orange;
     width: 300px;

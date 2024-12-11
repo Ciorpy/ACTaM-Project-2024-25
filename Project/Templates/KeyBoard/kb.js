@@ -85,15 +85,12 @@ if(practiceModeFlag){
     roundDisplay.style.display = "none";
     toggleGuidedModeButton.style.display = "none";
     mainMenuButton.style.display = "flex";
-    levelDisplay.style.display = "none";
+    mainMenuButton.style.textAlign = "center";
+    roundDisplay.style.display = "none";
     scoreDisplay.style.display = "none";
     timerDisplay.style.display = "none";
+    levelDisplay.innerHTML = "JUST HAVE FUN, CHORDS YOU PLAY WILL BE RECOGNIZED"
     piano.init();
-    const pressedNotes = piano.getPressedNotes();
-    if (pressedNotes.length >= 3) {
-        chordData = recognizeChordMIDIchat(pressedNotes);
-    }
-    hintDisplay.innerHTML = `${chordData.noteRoot}${chordData.chordType} IN ${chordData.inversion}`
 } else {
     mainMenuButton.style.display = "none";
     updateScoreDisplay();
@@ -186,6 +183,12 @@ document.addEventListener("keydown", (event) => {
     if (isInputDisabled) return; // Ignora gli input se disabilitati
     const note = piano.view.keyMap[event.code];
     if (note !== undefined) checkChord();
+    const pressedNotes = piano.getPressedNotes();
+    if (practiceModeFlag && pressedNotes.length >= 3) {
+        chordData = recognizeChordMIDIchat(pressedNotes);
+        updateHints();
+        console.log(practiceModeFlag);
+    }
 });
 
 document.addEventListener("mousedown", (event) =>{
@@ -336,6 +339,8 @@ function updateHints() {
         }
         hintButton.textContent = "SHOW HINT";
     }
+
+    if (practiceModeFlag) hintDisplay.innerHTML = `${chordData.noteRoot}${chordData.chordType} IN ${chordData.inversion}`;
 }
 
 function endRound() {

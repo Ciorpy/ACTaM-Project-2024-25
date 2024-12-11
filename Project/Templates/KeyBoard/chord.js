@@ -74,7 +74,6 @@ export function recognizeChordMIDI(inputNotes) {
   return "ACCORDO NON RICONOSCIUTO";
 }
 
-// Funzione per riconoscere l'accordo dato un array di note MIDI
 export function recognizeChordMIDIchat(inputNotes) {
   // Normalizza le note all'interno di un'ottava (0-11)
   const normalizedInput = inputNotes.map(note => note % notesInOctave).sort((a, b) => a - b);
@@ -84,10 +83,7 @@ export function recognizeChordMIDIchat(inputNotes) {
 
     for (let chordName in chords) {
       const chordNotes = chords[chordName];
-      const normalizedChord = chordNotes.map(note => note % notesInOctave).sort((a, b) => a - b);
-
-      // Genera tutte le inversioni dell'accordo
-      const inversions = generateInversions(chordNotes);
+      const inversions = generateInversions(chordNotes); // Genera tutte le inversioni
 
       for (let i = 0; i < inversions.length; i++) {
         const inversion = inversions[i];
@@ -95,20 +91,32 @@ export function recognizeChordMIDIchat(inputNotes) {
 
         // Confronta l'input normalizzato con l'inversione normalizzata
         if (arraysEqual(normalizedInput, normalizedInversion)) {
-          const updatedRoot = inversion[0];
+          // La root cambia in base all'inversione corrente
+          const updatedRoot = inversion[i];
           const inversionType = i === 0 ? "ROOT POSITION" : `${i}° INVERSION`;
+
+          // Restituisci il risultato come dizionario
+          return {
+            midiRoot: updatedRoot,
+            noteRoot: midiToNoteName(updatedRoot),
+            chordType: chordName,
+            inversion: inversionType,
+            midiNotes: inversion,
+            notes: inversion.map(midiToNoteName),
+          };
         }
       }
     }
   }
 
+  // Se nessun accordo viene riconosciuto
   return {
-    midiRoot: updatedRoot,
-    noteRoot: midiToNoteName(updatedRoot),
-    chordType: chordName,
-    inversion: inversionType,
-    midiNotes: inversion,
-    notes: inversion.map(midiToNoteName)
+    midiRoot: null,
+    noteRoot: null,
+    chordType: "UNKNOWN",
+    inversion: null,
+    midiNotes: [],
+    notes: []
   };
 }
 
@@ -117,7 +125,6 @@ function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false;
   return arr1.every((val, index) => val === arr2[index]);
 }
-
 
 // Funzione per confrontare array e riconoscere inversioni
 function areInversions(arr1, arr2) {

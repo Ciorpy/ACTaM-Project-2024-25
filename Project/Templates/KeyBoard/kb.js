@@ -16,6 +16,7 @@ let totalScore = 0;
 let currentScore = 100;
 let pointsToDeduct = 25;
 let timeLeft;
+let timeLeftSolution;
 let timerInterval;
 let isRoundActive = false;
 let activeRoundID = 0;
@@ -119,12 +120,11 @@ goNextRoundButton.addEventListener("click", () => {
 
 // Riproduzione della soluzione
 playSolutionButton.addEventListener("click", () => {
-    if (generatedChord.length > 0) {
-        piano.playChord(generatedChord);
-        console.log("Accordo riprodotto:", generatedChord);
-    } else {
-        console.log("Nessun accordo da riprodurre");
-    }
+    if (isInputDisabled) return; // Ignora il click se il tasto è disabilitato
+
+    disableInput();
+    startTimerSolution();
+    piano.playChord(generatedChord); // Riproduce il tuo accordo
 });
 
 // Gestione degli hint
@@ -147,7 +147,7 @@ function startRound() {
     isRoundActive = true;
     activeRoundID++;
     startTimer();
-    enableKeyboardInput();
+    enableInput();
     piano.init();
     if (selectedMinigame === "chords_GM") generateNewChord();
     else if (selectedMinigame === "harmony_GM") /*funzione harmonia*/;
@@ -202,8 +202,13 @@ function startTimer() {
     flagHints = [true, true, true];
     updateTimerDisplay();
     hintDisplay.textContent = "PLAY IT!";
-
     timerInterval = setInterval(updateTimer, 1000);
+}
+
+function startTimerSolution() {
+    clearInterval(timerInterval);
+    timeLeftSolution = 2;
+    timerInterval = setInterval(updateTimerSolution, 1000);
 }
 
 function updateTimer() {
@@ -233,6 +238,11 @@ function updateTimer() {
 
     // Controllo fine round
     if (timeLeft <= 0) endRound();
+}
+
+function updateTimerSolution() {
+    timeLeftSolution--;
+    if (timeLeftSolution <= 0) enableInput();
 }
 
 function updateHints() {
@@ -288,12 +298,12 @@ function endRound() {
 }
 
 // Funzione per disabilitare gli input
-function disableKeyboardInput() {
+function disableInput() {
     isInputDisabled = true;
 }
 
 // Funzione per abilitare gli input
-function enableKeyboardInput() {
+function enableInput() {
     isInputDisabled = false;
 }
 
@@ -337,20 +347,20 @@ function handleOverlayDisplay(overlayType) {
         startGameButton.style.display = "block"
         break;
       case "timeOver":
-        disableKeyboardInput();
+        disableInput();
         overlayTitle.innerHTML = "TIME OVER";
         overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
         showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block"
         break;
       case "goodGuess":
-        disableKeyboardInput();
+        disableInput();
         overlayTitle.innerHTML = "GOOD GUESS";
         overlaySubtitle.innerHTML = "YOU ARE A BOSS!";
         goNextRoundButton.style.display = "block"
         break;
       case "gameOver":
-        disableKeyboardInput();
+        disableInput();
         overlayTitle.innerHTML = "GAME OVER";
         overlaySubtitle.style.display = "none";
         scoreLabel.style.display = "flex";

@@ -1,7 +1,7 @@
 GDT
-- bloccare tasto play solution finche non e finita ripriduzione
 - implementare label round
 - implementare practice mode
+- implementare grafica figa simil batteria con immagine di sfondo tastiera e ombre sui tasti
 
 FL
 - implementare assistant mode con click mouse

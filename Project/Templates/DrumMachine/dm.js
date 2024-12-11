@@ -84,6 +84,15 @@ if (practiceModeFlag == "false") {
   difficultyDisplay.style.display = "none";
 }
 
+let mainMenuButton = document.getElementById("mainMenuButton")
+
+if(practiceModeFlag == "true")
+  mainMenuButton.style.display = "block"
+
+mainMenuButton.addEventListener("click", () => {
+  window.location.href = "../../gameTitleScreen.html";
+})
+
 // Dictionary of dictionaries used to access the correct array based on specified gamemode and difficulty level
 let minigamePresets = {
   // Grooves Gamemode
@@ -206,6 +215,10 @@ function getRandomDrumPatterns(array) {
 
 let timerDisplay = document.getElementById("timer");
 
+if (practiceModeFlag == "true") {
+  timerDisplay.style.display = "none";
+}
+
 let roundTimer = function () {
   if (timer <= 0) {
     clearInterval(timerInterval);
@@ -220,7 +233,7 @@ let roundTimer = function () {
     console.log("Punteggio rimanente: " + roundScore);
   }
   timer -= 1;
-  timerDisplay.innerHTML = timer + "s";
+  timerDisplay.innerHTML ="REMAINING TIME: " + timer + "s";
 };
 
 if (practiceModeFlag == "false") {
@@ -500,6 +513,10 @@ playSolutionButton.addEventListener("click", () => {
 let currentScore = document.getElementById("currentScore");
 let finalScreen = document.getElementById("fScreen");
 let finalScore = document.getElementById("finalScreenPanel");
+
+if (practiceModeFlag == "true") {
+  currentScore.style.display = "none";
+}
 
 let goodGuess = function () {
   if (isSolutionPlaying) stopSolution();

@@ -65,7 +65,8 @@ let selectedMinigame = localStorage.getItem("Gamemode"); // Gets from localStora
 let difficultyLevel = localStorage.getItem("Difficulty"); // Gets from localStorage the selected Difficulty Level
 let practiceModeFlag = localStorage.getItem("Practice"); // Gets from localStorage the selected mode (Game / Practice)
 
-let gamemodeDisplay = document.getElementById("gamemodeDisplay");
+let gamemodeDisplay =  document.getElementById("title")
+let roundDisplay = document.getElementById("roundDisplay");
 let difficultyDisplay = document.getElementById("difficultyDisplay");
 
 let userLegend = {
@@ -77,10 +78,11 @@ let userLegend = {
 };
 
 if (practiceModeFlag == "false") {
-  gamemodeDisplay.innerHTML = "GAMEMODE: " + userLegend[selectedMinigame];
+  gamemodeDisplay.innerHTML = userLegend[selectedMinigame]
+  roundDisplay.innerHTML = "ROUND: 1"
   difficultyDisplay.innerHTML = "DIFFICULTY: " + userLegend[difficultyLevel];
 } else {
-  gamemodeDisplay.style.display = "none";
+  roundDisplay.style.display = "none";
   difficultyDisplay.style.display = "none";
 }
 
@@ -139,6 +141,7 @@ goNextRoundButton.addEventListener("click", () => {
     timerInterval = setInterval(roundTimer, 1000);
     handleOverlayDisplay("hide");
     solution = chosenPresets[levelIndex];
+    roundDisplay.innerHTML = "ROUND: " + (levelIndex + 1)
     solutionInterval = setInterval(playSolution, setBpm(bpm));
     playSolutionButton.innerHTML = "STOP SOLUTION";
     isSolutionPlaying = true;

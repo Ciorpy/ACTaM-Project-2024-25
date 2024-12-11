@@ -20,23 +20,12 @@
 }
 
 .pianoContainer {
-    padding-top: 88px;
-    padding-left: 145px;
     height: 750px;
     width: 70%;
     display: flex;
     flex-direction: row;
-    background: url('../../Images/imm_tastiera_notasti.svg') no-repeat center center ;
-    background-size: contain;
     gap: 0px;
 }
-
-/*.pianoImage {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}*/
-
 
 .info {
     width: 30%;
@@ -54,8 +43,8 @@
     display: flex;
     flex-direction: row;
     position: relative;
-    height: 255px;
-    width: 902px;
+    height: 450px;
+    width: 1000px;
     user-select: none;
     justify-content: center;
     margin: auto;

@@ -278,7 +278,7 @@ function updateHints() {
                 break;
             case 3:
                 flagHintsPoint[2] = true;
-                hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}\nin ${generatedChordData.inversion}`;
+                hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType} in ${generatedChordData.inversion}`;
                 break;
         }
         hintButton.textContent = "HIDE HINT";
@@ -286,13 +286,13 @@ function updateHints() {
         // Nasconde l'hint corrente e mostra che è disponibile
         switch (currentHint) {
             case 1:
-                hintDisplay.textContent = "1st HINT HIDDEN, IT'S STILL AVAILABLE.";
+                hintDisplay.textContent = "1st HINT HIDDEN.";
                 break;
             case 2:
-                hintDisplay.textContent = "2nd HINT HIDDEN, IT'S STILL AVAILABLE.";
+                hintDisplay.textContent = "2nd HINT HIDDEN.";
                 break;
             case 3:
-                hintDisplay.textContent = "3rd HINT HIDDEN, IT'S STILL AVAILABLE.";
+                hintDisplay.textContent = "3rd HINT HIDDEN.";
                 break;
         }
         hintButton.textContent = "SHOW HINT";
@@ -329,12 +329,12 @@ function updateModeDisplay() {
 }
 
 function updateLevelDisplay() {
-    levelDisplay.innerHTML = "DIFFICULTY: " + userLegend[selectedLevel];
+    levelDisplay.innerHTML = "DIFFICULTY:\n" + userLegend[selectedLevel];
 }
 
 function updateRoundDisplay() {
     let roundShowed = activeRoundID + 1; 
-    roundDisplay.innerHTML = "ROUND: " + roundShowed;
+    roundDisplay.innerHTML = "ROUND:\n" + roundShowed;
 }
 
 // UTILITY -----------------------------------------------------------------------------------------------------------

@@ -16,7 +16,6 @@
     width: 100%;
     gap: 0px;
     border-bottom: 3px solid orange;
-    padding: 0px 150px;
 }
 
 .pianoContainer {
@@ -36,7 +35,6 @@
     gap: 15px;
     margin-top: 30px;
     color: orange;
-    padding: 0px 40px;
 }
 
 .piano {
@@ -44,7 +42,7 @@
     flex-direction: row;
     position: relative;
     height: 450px;
-    width: 1000px;
+    width: 1200px;
     user-select: none;
     justify-content: center;
     margin: auto;

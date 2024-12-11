@@ -15,7 +15,7 @@ let previousPressedNotes = [];
 let totalScore = 0;
 let currentScore = 100;
 let pointsToDeduct = 25;
-let timeLeft;
+let timeLeft = 120;
 let timeLeftSolution;
 let timerInterval;
 let timerIntervalSolution;
@@ -174,7 +174,7 @@ function generateNewChord() {
     do {
         generatedChordData = generateRandomChord(firstNote, selectedLevel);
         generatedChord = generatedChordData.midiNotes.sort();
-    } while(generatedChord[generatedChord.length - 1] > lastNote);
+    } while(generatedChord[generatedChord.length - 1] >= lastNote);
     piano.playChord(generatedChord);
 
 }
@@ -326,7 +326,7 @@ function updateScoreDisplay() {
 }
 
 function updateTimerDisplay() {
-    timerDisplay.innerHTML = `${timeLeft}s`;
+    timerDisplay.innerHTML = "REMAINING TIME: " + `${timeLeft}s`;
 }
 
 function updateModeDisplay() {
@@ -334,12 +334,12 @@ function updateModeDisplay() {
 }
 
 function updateLevelDisplay() {
-    levelDisplay.innerHTML = "DIFFICULTY:\n" + userLegend[selectedLevel];
+    levelDisplay.innerHTML = "   DIFFICULTY: " + userLegend[selectedLevel];
 }
 
 function updateRoundDisplay() {
     let roundShowed = activeRoundID + 1; 
-    roundDisplay.innerHTML = "ROUND:\n" + roundShowed;
+    roundDisplay.innerHTML = "   ROUND: " + roundShowed;
 }
 
 // UTILITY -----------------------------------------------------------------------------------------------------------

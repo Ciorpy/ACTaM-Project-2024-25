@@ -2,6 +2,11 @@ GDT
 - implementare label round
 - implementare grafica figa simil batteria con immagine di sfondo tastiera e ombre sui tasti
 
+- timer doppio in play solution
+- punteggio assistant e hint
+
+
 FL
+- vedere funzionamento controller -> - sutain release audio
 - implementare assistant mode con click mouse
 - implementare practice mode

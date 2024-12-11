@@ -158,6 +158,10 @@ document.addEventListener("mousedown", (event) =>{
     if (guidedMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red"); 
 })
 
+if(practiceModeFlag) {
+    
+}
+
 
 // FUNZIONI PRINCIPALI -----------------------------------------------------------------------------------------------
 function startRound() {

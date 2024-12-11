@@ -18,6 +18,7 @@ let pointsToDeduct = 25;
 let timeLeft;
 let timeLeftSolution;
 let timerInterval;
+let timerIntervalSolution;
 let isRoundActive = false;
 let activeRoundID = 0;
 let maxRounds = 2;
@@ -206,9 +207,9 @@ function startTimer() {
 }
 
 function startTimerSolution() {
-    clearInterval(timerInterval);
+    clearInterval(timerIntervalSolution);
     timeLeftSolution = 2;
-    timerInterval = setInterval(updateTimerSolution, 1000);
+    timerIntervalSolution = setInterval(updateTimerSolution, 1000);
 }
 
 function updateTimer() {

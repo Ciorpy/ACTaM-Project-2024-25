@@ -35,6 +35,7 @@ const pianoSampler = new Tone.Sampler({
         "A7": "A7.mp3",
         "C8": "C8.mp3"
     },
+    release: 1.5,
     baseUrl: "../../Sounds/Piano Samples/" // URL dei sample di pianoforte
 }).toDestination();
 
@@ -47,7 +48,7 @@ class PianoController {
     constructor(containerId, numberOfKeys, startMidiNote) {
         this.model = new PianoModel();
         this.view = new PianoView(containerId, numberOfKeys, startMidiNote);
-        this.synths = {};
+        //this.synths = {};
         this.allKeysReleased = true;
 
         this.init();
@@ -55,11 +56,11 @@ class PianoController {
 
     init() {
         this.view.renderKeyboard();
-        this.initializeSynths();
+        //this.initializeSynths();
         this.view.bindNoteEvents(this.playNote.bind(this), this.stopNote.bind(this));
     }
 
-    initializeSynths() {
+    /* initializeSynths() {
         for (let i = 0; i < this.view.numberOfKeys; i++) {
             const midiNote = this.view.startMidiNote + i;
             this.synths[midiNote] = new Tone.Synth({
@@ -67,7 +68,7 @@ class PianoController {
                 envelope: { attack: 0.01, decay: 0.3, sustain: 0.2, release: 0.8 },
             }).toDestination();
         }
-    }
+    } */
 
     playNote(note) {
         if (this.allKeysReleased) {
@@ -80,7 +81,7 @@ class PianoController {
         // Aggiungi il controllo esplicito
         if (!pressedNotes.includes(note)) {
             this.view.setActiveKey(note, true);
-            pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "1n");
+            pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "4n");
             pressedNotes.push(note); // Aggiungi la nota alla lista dei tasti premuti
             this.model.setPressedNotes(pressedNotes); // Sincronizza il modello
         }
@@ -89,7 +90,7 @@ class PianoController {
     stopNote(note) {
         this.view.setActiveKey(note, false);
         this.view.resetKeyColor(note);
-        this.synths[note].triggerRelease();
+        //this.synths[note].triggerRelease();
     
         const pressedNotes = this.model.getPressedNotes();
         const index = pressedNotes.indexOf(note);
@@ -118,7 +119,7 @@ class PianoController {
 
     playChord(chord) {
         chord.forEach(note => {
-            pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "1n");
+            pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "2n");
         });
     }
 

@@ -91,10 +91,17 @@ body {
   padding-bottom: 50px;
 }
 
-#settingsMenu, #practiceMenu {
+#settingsMenu, #practiceMenu, #multiPlayerMenu, #gamemodeSelectorMenu, #difficultySelectorMenu {
   border: 2px solid orange;
   padding: 30px;
   border-radius: 20px;
+}
+
+.username-container {
+  background: white;
+  padding: 50px;
+  border-radius: 8px;
+  width: 650px;
 }
 
 .settingsItem{

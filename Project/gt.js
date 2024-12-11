@@ -15,10 +15,12 @@ document.getElementById("funnyMSG").innerHTML = funnyMSGS[randomN];
 
 // Menu navigation system
 let mainMenu = document.getElementById("mainMenu");
+let multiPlayerMenu = document.getElementById("multiPlayerMenu");
 let settingsMenu = document.getElementById("settingsMenu");
 let practiceMenu = document.getElementById("practiceMenu");
 let creditsMenu = document.getElementById("creditsMenu");
 let singplePlayerKey = document.getElementById("SP_Key");
+let multiPlayerKey = document.getElementById("MP_Key");
 let settingsKey = document.getElementById("S_Key");
 let practiceKey = document.getElementById("H2P_Key");
 let creditsKey = document.getElementById("C_Key");
@@ -27,8 +29,17 @@ singplePlayerKey.addEventListener("click", () => {
   loadGamemodeSelector()
 })
 
+multiPlayerKey.addEventListener("click", () => {
+  mainMenu.style.display = "none";
+  multiPlayerMenu.style.display = "block";
+  settingsMenu.style.display = "none";
+  practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
+});
+
 settingsKey.addEventListener("click", () => {
   mainMenu.style.display = "none";
+  multiPlayerMenu.style.display = "none";
   settingsMenu.style.display = "block";
   practiceMenu.style.display = "none";
   creditsMenu.style.display = "none";
@@ -36,6 +47,7 @@ settingsKey.addEventListener("click", () => {
 
 practiceKey.addEventListener("click", () => {
   mainMenu.style.display = "none";
+  multiPlayerMenu.style.display = "none";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "block";
   creditsMenu.style.display = "none";
@@ -43,6 +55,7 @@ practiceKey.addEventListener("click", () => {
 
 creditsKey.addEventListener("click", () => {
   mainMenu.style.display = "none";
+  multiPlayerMenu.style.display = "none";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   creditsMenu.style.display = "block";
@@ -57,7 +70,10 @@ volumeSlider.addEventListener("input", ()=>{
 });
 
 
-
+let loadGamemodeSelector = function () {
+  mainMenu.style.display = "none"
+  gamemodeSelectorMenu.style.display = "block"
+}
 
 let gamemodeSelectorMenu = document.getElementById("gamemodeSelectorMenu")
 
@@ -66,18 +82,16 @@ let backButtonGMS = document.getElementById("backGMS");
 
 backButtonGMS.addEventListener("click", () => {
   mainMenu.style.display = "block";
+  multiPlayerMenu.style.display = "none";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   creditsMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "none";
 });
-let loadGamemodeSelector = function () {
-  mainMenu.style.display = "none"
-  gamemodeSelectorMenu.style.display = "block"
-}
 
 backButtonS.addEventListener("click", () => {
   mainMenu.style.display = "block";
+  multiPlayerMenu.style.display = "none";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   creditsMenu.style.display = "none";
@@ -103,6 +117,7 @@ let backButton2GM = document.getElementById("back2GM")
 
 backButton2GM.addEventListener("click", () => {
   mainMenu.style.display = "none";
+  multiPlayerMenu.style.display = "none";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   creditsMenu.style.display = "none";
@@ -160,10 +175,22 @@ PracticeButtons.forEach((item, index) => {
   })
 })
 
+let backButtonMP = document.getElementById("backMP");
+
+backButtonMP.addEventListener("click", () => {
+  mainMenu.style.display = "block";
+  multiPlayerMenu.style.display = "none";
+  settingsMenu.style.display = "none";
+  practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "none";
+});
+
 let backButtonP = document.getElementById("backP");
 
 backButtonP.addEventListener("click", () => {
   mainMenu.style.display = "block";
+  multiPlayerMenu.style.display = "none";
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   creditsMenu.style.display = "none";
@@ -174,8 +201,16 @@ let backButtonC = document.getElementById("backC");
 
 backButtonC.addEventListener("click", () => {
   mainMenu.style.display = "block";
+  multiPlayerMenu.style.display = "none";
   settingsMenu.style.display = "none";
   creditsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "none";
+});
+
+
+
+document.getElementById('userForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
 });

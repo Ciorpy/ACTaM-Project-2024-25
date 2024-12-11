@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="menu" id="gamemodeSelectorMenu" style="display: none">
-        <div class="title">Game mode</div>
+        <div class="title">Game Mode</div>
         <div class="menu">
           <div class="menuButtonList">
             <div class="menuElement" id="chords_GM">CHORDS</div>
@@ -58,6 +58,25 @@
             <div class="menuElement" id="hardDiff">HARD</div>          
             <div class="backButton settingsItemTitle" id="back2GM">
               BACK TO GAME MENU
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="menu" id="multiPlayerMenu" style="display: none">
+        <div class="title">Start a New Game</div>
+        <div class="menu">
+          <div class="menuButtonList">
+            <div class="username-container">
+              <form id="userForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <button type="submit">Submit</button>
+              </form>
+            </div>
+            <div class="menuElement" id="host">HOST</div>
+            <div class="menuElement" id="partecipate">PARTECIPATE</div>         
+            <div class="backButton settingsItemTitle" id="backMP">
+              BACK TO MENU
             </div>
           </div>
         </div>

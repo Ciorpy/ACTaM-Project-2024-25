@@ -310,19 +310,19 @@ function enableInput() {
 
 // AGGIORNAMENTO INTERFACCIA -----------------------------------------------------------------------------------------
 function updateScoreDisplay() {
-    scoreDisplay.textContent = `CURRENT SCORE: ${totalScore}`;
+    scoreDisplay.innerHTML = "CURRENT SCORE: " + `${totalScore}`;
 }
 
 function updateTimerDisplay() {
-    timerDisplay.textContent = `REMAINING TIME: ${timeLeft}s`;
+    timerDisplay.innerHTML = `${timeLeft}s`;
 }
 
 function updateModeDisplay() {
-    modeDisplay.textContent = `GAMEMODE: ${userLegend[selectedMinigame]}`;
+    modeDisplay.innerHTML = "GAMEMODE: " + userLegend[selectedMinigame]
 }
 
 function updateLevelDisplay() {
-    levelDisplay.textContent = `DIFFICULTY: ${userLegend[selectedLevel]}`;
+    levelDisplay.innerHTML = "DIFFICULTY: " + userLegend[selectedLevel];
 }
 
 // UTILITY -----------------------------------------------------------------------------------------------------------

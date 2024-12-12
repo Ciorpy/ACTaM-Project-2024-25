@@ -1,7 +1,7 @@
 // IMPORTAZIONI E CONFIGURAZIONE INIZIALE -----------------------------------------------------------------------------
 import PianoController from "./controller.js";
 import { generateRandomChord } from "./chord.js";
-import { recognizeChordMIDIchat } from "./chord.js";
+import { recognizeChordMIDI } from "./chord.js";
 
 // Costanti e configurazione globale
 const firstNote = 48;
@@ -89,7 +89,11 @@ if(practiceModeFlag){
     roundDisplay.style.display = "none";
     scoreDisplay.style.display = "none";
     timerDisplay.style.display = "none";
-    levelDisplay.innerHTML = "JUST HAVE FUN, CHORDS YOU PLAY WILL BE RECOGNIZED"
+    hintDisplay.style.padding = "0px";
+    hintDisplay.style.fontSize = "40px";
+    levelDisplay.style.fontSize = "40px";
+    levelDisplay.style.marginBottom = "0px";
+    levelDisplay.innerHTML = "JUST HAVE FUN! CHORDS PLAYED WILL BE RECOGNIZED"
     piano.init();
 } else {
     mainMenuButton.style.display = "none";
@@ -180,14 +184,17 @@ mainMenuButton.addEventListener("click", () => {
 
 // Mappatura tastiera
 document.addEventListener("keydown", (event) => {
-    if (isInputDisabled) return; // Ignora gli input se disabilitati
-    const note = piano.view.keyMap[event.code];
-    if (note !== undefined) checkChord();
-    const pressedNotes = piano.getPressedNotes();
+    const pressedNotes = piano.getPressedNotes().sort();
     if (practiceModeFlag && pressedNotes.length >= 3) {
-        chordData = recognizeChordMIDIchat(pressedNotes);
+        chordData = recognizeChordMIDI(pressedNotes);
         updateHints();
         console.log(practiceModeFlag);
+    } else if (practiceModeFlag && pressedNotes.length < 3) {
+        hintDisplay.innerHTML = "";
+    } else {
+        if (isInputDisabled) return; // Ignora gli input se disabilitati
+        const note = piano.view.keyMap[event.code];
+        if (note !== undefined) checkChord();
     }
 });
 
@@ -202,9 +209,10 @@ function startRound() {
     activeRoundID++;
     startTimer();
     enableInput();
-    piano.init();
-    if (selectedMinigame === "chords_GM") generateNewChord();
-    else if (selectedMinigame === "harmony_GM") /*funzione harmonia*/;
+    if (selectedMinigame === "chords_GM") {
+        piano.init();
+        generateNewChord();
+    } else if (selectedMinigame === "harmony_GM") /*funzione harmonia*/;
 }
 
 function generateNewChord() {
@@ -293,54 +301,57 @@ function updateTimer() {
 }
 
 function updateHints() {
-    let currentHint = 0;
-
-    // Determina l'hint attuale in base al timer
-    if (hintTimer >= hintInterval * 3) {
-        currentHint = 3;
-    } else if (hintTimer >= hintInterval * 2) {
-        currentHint = 2;
-    } else if (hintTimer >= hintInterval) {
-        currentHint = 1;
-    }
-
-    // Determina se si sta mostrando o nascondendo l'hint
-    isShowingHint = hintButton.textContent === "SHOW HINT";
-
-    if (isShowingHint) {
-        // Mostra l'hint corrente
-        switch (currentHint) {
-            case 1:
-                flagHintsPoint[0] = true;
-                hintDisplay.textContent = `ROOT ${generatedChordData.noteRoot}`;
-                break;
-            case 2:
-                flagHintsPoint[1] = true;
-                hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
-                break;
-            case 3:
-                flagHintsPoint[2] = true;
-                hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
-                break;
-        }
-        hintButton.textContent = "HIDE HINT";
+    if (practiceModeFlag) {
+        hintDisplay.innerHTML = chordData.noteRoot !== null ? `${chordData.noteRoot}${chordData.chordType} IN ${chordData.inversion}` : "";
     } else {
-        // Nasconde l'hint corrente e mostra che è disponibile
-        switch (currentHint) {
-            case 1:
-                hintDisplay.textContent = "1st HINT HIDDEN";
-                break;
-            case 2:
-                hintDisplay.textContent = "2nd HINT HIDDEN";
-                break;
-            case 3:
-                hintDisplay.textContent = "3rd HINT HIDDEN";
-                break;
-        }
-        hintButton.textContent = "SHOW HINT";
-    }
+        let currentHint = 0;
 
-    if (practiceModeFlag) hintDisplay.innerHTML = `${chordData.noteRoot}${chordData.chordType} IN ${chordData.inversion}`;
+        // Determina l'hint attuale in base al timer
+        if (hintTimer >= hintInterval * 3) {
+            currentHint = 3;
+        } else if (hintTimer >= hintInterval * 2) {
+            currentHint = 2;
+        } else if (hintTimer >= hintInterval) {
+            currentHint = 1;
+        }
+
+        // Determina se si sta mostrando o nascondendo l'hint
+        isShowingHint = hintButton.textContent === "SHOW HINT";
+
+        if (isShowingHint) {
+            // Mostra l'hint corrente
+            switch (currentHint) {
+                case 1:
+                    flagHintsPoint[0] = true;
+                    hintDisplay.textContent = `ROOT ${generatedChordData.noteRoot}`;
+                    break;
+                case 2:
+                    flagHintsPoint[1] = true;
+                    hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
+                    break;
+                case 3:
+                    flagHintsPoint[2] = true;
+                    hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
+                    break;
+            }
+            hintButton.textContent = "HIDE HINT";
+        } else {
+            // Nasconde l'hint corrente e mostra che è disponibile
+            switch (currentHint) {
+                case 1:
+                    hintDisplay.textContent = "1st HINT HIDDEN";
+                    break;
+                case 2:
+                    hintDisplay.textContent = "2nd HINT HIDDEN";
+                    break;
+                case 3:
+                    hintDisplay.textContent = "3rd HINT HIDDEN";
+                    break;
+            }
+            hintButton.textContent = "SHOW HINT";
+        }
+    }
+    
 }
 
 function endRound() {

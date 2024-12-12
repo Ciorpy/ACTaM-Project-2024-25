@@ -52,59 +52,37 @@ function generateChordsMIDI(rootMIDI) {
   };
 }
 
-
-// Funzione per riconoscere l'accordo dato un array di note MIDI
 export function recognizeChordMIDI(inputNotes) {
   // Normalizza le note all'interno di un'ottava (0-11)
-  const normalizedInput = inputNotes.map(note => note % notesInOctave).sort((a, b) => a - b);
-
-  for (let rootMIDI = 0; rootMIDI < notesInOctave; rootMIDI++) {
-    const chords = generateChordsMIDI(rootMIDI);
-
-    for (let chordName in chords) {
-      const normalizedChord = chords[chordName].map(note => note % notesInOctave).sort((a, b) => a - b);
-
-      // Controllo su tutte le possibili inversioni
-      if (areInversions(normalizedInput, normalizedChord)) {
-        return `ROOT: ${midiToNoteName(rootMIDI)}, CHORD: ${chordName}`;
-      }
-    }
-  }
-
-  return "ACCORDO NON RICONOSCIUTO";
-}
-
-export function recognizeChordMIDIchat(inputNotes) {
-  // Normalizza le note all'interno di un'ottava (0-11)
-  const normalizedInput = inputNotes.map(note => note % notesInOctave).sort((a, b) => a - b);
+  const normalizedInput = inputNotes.map(note => note % notesInOctave);
+  const normalizedAndSortedInput = [...normalizedInput].sort((a, b) => a - b);
 
   for (let rootMIDI = 0; rootMIDI < notesInOctave; rootMIDI++) {
     const chords = generateChordsMIDI(rootMIDI);
 
     for (let chordName in chords) {
       const chordNotes = chords[chordName];
-      const inversions = generateInversions(chordNotes); // Genera tutte le inversioni
+      const normalizedChord = chordNotes.map(note => note % notesInOctave);
+      const normalizedAndSortedChord = [...normalizedChord].sort((a, b) => a - b);
 
-      for (let i = 0; i < inversions.length; i++) {
-        const inversion = inversions[i];
-        const normalizedInversion = inversion.map(note => note % notesInOctave).sort((a, b) => a - b);
+      // Confronta l'input normalizzato e ordinato con l'accordo normalizzato e ordinato
+      if (arraysEqual(normalizedAndSortedInput, normalizedAndSortedChord)) {
+        // Identifica la root nell'input normalizzato (non ordinato)
+        const rootIndex = normalizedInput.indexOf(rootMIDI % notesInOctave);
+        const inversionType =
+          rootIndex === 0
+            ? "ROOT POSITION"
+            : `${normalizedInput.length - rootIndex}° INVERSION`;
 
-        // Confronta l'input normalizzato con l'inversione normalizzata
-        if (arraysEqual(normalizedInput, normalizedInversion)) {
-          // La root cambia in base all'inversione corrente
-          const updatedRoot = inversion[i];
-          const inversionType = i === 0 ? "ROOT POSITION" : `${i}° INVERSION`;
-
-          // Restituisci il risultato come dizionario
-          return {
-            midiRoot: updatedRoot,
-            noteRoot: midiToNoteName(updatedRoot),
-            chordType: chordName,
-            inversion: inversionType,
-            midiNotes: inversion,
-            notes: inversion.map(midiToNoteName),
-          };
-        }
+        // Restituisci il risultato come dizionario
+        return {
+          midiRoot: rootMIDI,
+          noteRoot: midiToNoteName(rootMIDI),
+          chordType: chordName,
+          inversion: inversionType,
+          midiNotes: inputNotes,
+          notes: inputNotes.map(midiToNoteName),
+        };
       }
     }
   }

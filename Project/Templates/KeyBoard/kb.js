@@ -84,7 +84,7 @@ if(practiceModeFlag){
     hintButton.style.display = "none";
     roundDisplay.style.display = "none";
     toggleGuidedModeButton.style.display = "none";
-    mainMenuButton.style.display = "flex";
+    mainMenuButton.style.display = "block";
     mainMenuButton.style.textAlign = "center";
     roundDisplay.style.display = "none";
     scoreDisplay.style.display = "none";

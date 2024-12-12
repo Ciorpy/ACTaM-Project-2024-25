@@ -1,3 +1,11 @@
+import {
+  getAuth,
+  signInAnonymously,
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+import { app } from "./firebase.js";
+const auth = getAuth(app);
+
 let usernameField = document.getElementById("username");
 let hostButton = document.getElementById("host");
 let partecipateButton = document.getElementById("partecipate");

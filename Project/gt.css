@@ -193,3 +193,9 @@ body {
   border-color: rgb(145, 95, 4);
   cursor: auto;
 }
+
+.notSelectable:hover{
+  background-color: rgb(4, 14, 27);
+  border-color: rgb(145, 95, 4);
+  cursor: auto;
+}

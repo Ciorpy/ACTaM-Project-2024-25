@@ -187,7 +187,7 @@ let handleOverlayDisplay = function (overlayType) {
       goodGuessFlag = true;
       overlayTitle.innerHTML = "GOOD GUESS";
       overlaySubtitle.innerHTML = "YOU ARE A BOSS!";
-      showSolutionButton.style.display = "block";
+      showSolutionButton.style.display = "none";
       goNextRoundButton.style.display = "block";
       break;
     case "timeOver":

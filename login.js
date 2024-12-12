@@ -10,6 +10,21 @@ let usernameField = document.getElementById("username");
 let hostButton = document.getElementById("host");
 let partecipateButton = document.getElementById("partecipate");
 
+hostButton.style.pointerEvents = "none";
+partecipateButton.style.pointerEvents = "none";
+
+const signInAnonymouslyUser = async () => {
+  try {
+    const userCredential = await signInAnonymously(auth);
+    const user = userCredential.user;
+    console.log("Signed in anonymously:", user.uid);
+
+    localStorage.setItem("userNickname", usernameField.value);
+  } catch (error) {
+    console.error("Error during anonymous sign-in:", error);
+  }
+};
+
 usernameField.addEventListener("input", () => {
   if (usernameField.value.trim() != "") {
     hostButton.classList.toggle("notSelectable", false);
@@ -24,4 +39,42 @@ usernameField.addEventListener("input", () => {
     hostButton.style.pointerEvents = "none";
     partecipateButton.style.pointerEvents = "none";
   }
+});
+
+hostButton.addEventListener("click", () => {
+  signInAnonymouslyUser();
+  handleLobbyMenuLayout("host");
+});
+
+partecipateButton.addEventListener("click", () => {
+  signInAnonymouslyUser();
+  handleLobbyMenuLayout("player");
+});
+
+let multiPlayerMenu = document.getElementById("multiPlayerMenu");
+let lobbyMenu = document.getElementById("lobbySelector");
+let lobbyTitle = document.getElementById("lobbyTitle");
+
+let createButton = document.getElementById("CREATE");
+let joinButton = document.getElementById("JOIN");
+
+let handleLobbyMenuLayout = function (role) {
+  multiPlayerMenu.style.display = "none";
+  lobbyMenu.style.display = "block";
+  if (role == "player") {
+    lobbyTitle.innerHTML = "JOIN LOBBY";
+    createButton.style.display = "block";
+    joinButton.style.display = "none";
+  } else if (role == "host") {
+    lobbyTitle.innerHTML = "CREATE LOBBY";
+    createButton.style.display = "none";
+    joinButton.style.display = "block";
+  }
+};
+
+let backToMP_MenuButton = document.getElementById("backLS");
+
+backToMP_MenuButton.addEventListener("click", () => {
+  multiPlayerMenu.style.display = "block";
+  lobbyMenu.style.display = "none";
 });

@@ -111,7 +111,7 @@ body {
   text-align: center;
 }
 
-#username {
+#username, #lobbyName, #lobbyPW {
   background-color: white;
   color: cornflowerblue;
   margin: 10px;

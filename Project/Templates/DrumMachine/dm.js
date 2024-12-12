@@ -127,6 +127,9 @@ let showSolutionButton = document.getElementById("showSolution");
 let goNextRoundButton = document.getElementById("goNextRound");
 let scoreDivisionLabel = document.getElementById("scoreDivisionLabel");
 
+let timeOverFlag;
+let goodGuessFlag;
+
 startGameButton.addEventListener("click", () => {
   timerInterval = setInterval(roundTimer, 1000);
   handleOverlayDisplay("hide");
@@ -141,6 +144,8 @@ showSolutionButton.addEventListener("click", () => {
 
 goNextRoundButton.addEventListener("click", () => {
   if (levelIndex < 3) {
+    timeOverFlag = false;
+    goodGuessFlag = false;
     timerInterval = setInterval(roundTimer, 1000);
     handleOverlayDisplay("hide");
     solution = chosenPresets[levelIndex];
@@ -179,12 +184,14 @@ let handleOverlayDisplay = function (overlayType) {
       overlaySubtitle.innerHTML = "DON'T WORRY, KEEP TRYING!";
       break;
     case "goodGuess":
+      goodGuessFlag = true;
       overlayTitle.innerHTML = "GOOD GUESS";
       overlaySubtitle.innerHTML = "YOU ARE A BOSS!";
       showSolutionButton.style.display = "block";
       goNextRoundButton.style.display = "block";
       break;
     case "timeOver":
+      timeOverFlag = true;
       overlayTitle.innerHTML = "TIME OVER";
       overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
       showSolutionButton.style.display = "block";
@@ -591,7 +598,8 @@ hideSolutionButton.addEventListener("click", () => {
 })
 
 let hideSolution = function () {
-  handleOverlayDisplay("timeOver")
+  if (timeOverFlag) handleOverlayDisplay("timeOver");
+  if (goodGuessFlag) handleOverlayDisplay("goodGuess");
   solutionDiv.style.display = "none"
   clearInterval(solutionInterval)
 }

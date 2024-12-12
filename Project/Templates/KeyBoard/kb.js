@@ -38,6 +38,8 @@ let isInputDisabled = false; // Variabile di controllo per abilitare/disabilitar
 let assistantFlag = false;
 let flagHintsPoint = [false, false, false];
 let percAssistant = 50;
+let timeOverFlag;
+let goodGuessFlag;
 
 let userLegend = {
     chords_GM: "CHORDS",
@@ -125,7 +127,8 @@ showSolutionButton.addEventListener("click", () => {
 });
 
 hideSolutionButton.addEventListener("click", () => {
-    handleOverlayDisplay("timeOver");
+    if (timeOverFlag) handleOverlayDisplay("timeOver");
+    if (goodGuessFlag) handleOverlayDisplay("goodGuess");
     solutionDiv.style.display = "none";
     generatedChord.forEach(note => {
         piano.view.resetKeyColor(note)
@@ -205,6 +208,8 @@ document.addEventListener("mousedown", (event) =>{
 
 // FUNZIONI PRINCIPALI -----------------------------------------------------------------------------------------------
 function startRound() {
+    timeOverFlag = false;
+    goodGuessFlag = false;
     isRoundActive = true;
     activeRoundID++;
     startTimer();
@@ -242,7 +247,8 @@ function handleCorrectGuess() {
     if (flagHintsPoint[2]) currentScore -= 15;
     if (flagHintsPoint[1]) currentScore -= 8;
     if (flagHintsPoint[0]) currentScore -= 2;
-    totalScore += currentScore;
+    if (currentScore >= 0) totalScore += Math.floor(currentScore);
+    else totalScore += 0;
     updateScoreDisplay();
     isRoundActive = false;
     handleOverlayDisplay("goodGuess");
@@ -416,6 +422,7 @@ function handleOverlayDisplay(overlayType) {
         break;
       case "timeOver":
         disableInput();
+        timeOverFlag = true;
         overlayTitle.innerHTML = "TIME OVER";
         overlayTitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
         showSolutionButton.style.display = "block";
@@ -423,6 +430,7 @@ function handleOverlayDisplay(overlayType) {
         break;
       case "goodGuess":
         disableInput();
+        goodGuessFlag = true;
         overlayTitle.innerHTML = "GOOD GUESS";
         overlaySubtitle.innerHTML = "YOU ARE A BOSS!";        
         showSolutionButton.style.display = "block";

@@ -9,35 +9,33 @@ const keysNumber = 25;
 const lastNote = firstNote + keysNumber;
 const deductionInterval = 30; 
 const hintInterval = 30;
+const pointsToDeduct = 25;
+const percAssistant = 50;
+const maxRounds = 3;
 
 // Variabili globali
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
 let totalScore = 0;
-let currentScore = 100;
-let pointsToDeduct = 25;
-let timeLeft = 120;
-let timeLeftSolution;
+let currentScore;
+let timeLeft;
 let timerInterval;
-let timerIntervalSolution;
 let isRoundActive = false;
 let activeRoundID = 0;
-let maxRounds = 2;
-let guidedMode = false; 
+let assistantMode = false; 
 let selectedLevel = localStorage.getItem("Difficulty");
-let selectedMinigame = localStorage.getItem("Gamemode"); // Chords o Harmony
-let practiceModeFlag = localStorage.getItem("Practice"); // Game o Practice
+let selectedMinigame = localStorage.getItem("Gamemode");
+let practiceModeFlag = localStorage.getItem("Practice") == "true" ? true : false;
 let generatedChordData = {};
 let chordData = {};
 let generatedChord = [];
-let hintTimer = 0;
+let hintTimer;
 let flagHints; 
 let isShowingHint;
 let isAssistanONDisabled;
-let isInputDisabled = false; // Variabile di controllo per abilitare/disabilitare gli input
+let isInputDisabled = true;
 let assistantFlag = false;
 let flagHintsPoint = [false, false, false];
-let percAssistant = 50;
 let timeOverFlag;
 let goodGuessFlag;
 
@@ -47,10 +45,7 @@ let userLegend = {
     easyDiff: "EASY",
     mediumDiff: "MEDIUM",
     hardDiff: "HARD",
-  };
-
-if(practiceModeFlag == "true") practiceModeFlag = true;
-else if (practiceModeFlag == "false") practiceModeFlag = false;
+};
 
 // Elementi DOM principali
 const scoreDisplay = document.getElementById("scoreDisplay");
@@ -65,7 +60,7 @@ const startGameButton = document.getElementById("startGame");
 const showSolutionButton = document.getElementById("showSolution");
 const goNextRoundButton = document.getElementById("goNextRound");
 const scoreDivisionLabel = document.getElementById("scoreDivisionLabel");
-const toggleGuidedModeButton = document.getElementById("toggleGuidedMode");
+const toggleAssistantModeButton = document.getElementById("toggleAssistantModeButton");
 const levelDisplay = document.getElementById("level");
 const modeDisplay = document.getElementById("mode");
 const roundDisplay = document.getElementById("round");
@@ -77,15 +72,13 @@ const hideSolutionButton = document.getElementById("hideSolution");
 const mainMenuButton = document.getElementById("mainMenu"); 
 
 // CONFIGURAZIONE INIZIALE DELLA PAGINA -------------------------------------------------------------------------------
-scoreDisplay.className = "score";
-timerDisplay.className = "timer";
 if(practiceModeFlag){
     handleOverlayDisplay("hide");
     startGameButton.style.display = "none";
     playSolutionButton.style.display = "none";
     hintButton.style.display = "none";
     roundDisplay.style.display = "none";
-    toggleGuidedModeButton.style.display = "none";
+    toggleAssistantModeButton.style.display = "none";
     mainMenuButton.style.display = "block";
     mainMenuButton.style.textAlign = "center";
     roundDisplay.style.display = "none";
@@ -112,9 +105,8 @@ startGameButton.addEventListener("click", () => {
     updateRoundDisplay();
     handleOverlayDisplay("hide");
     if (!isRoundActive) startRound();
-    console.log(selectedMinigame);
 });
-
+ 
 showSolutionButton.addEventListener("click", () => {
     handleOverlayDisplay("hide")
     solutionDiv.style.display = "flex";
@@ -123,7 +115,7 @@ showSolutionButton.addEventListener("click", () => {
     piano.playChord(generatedChord);
     generatedChord.forEach(note => {
         piano.view.setKeyColor(note, "green");
-    });
+    }); // -> capire perche si possono deselezionare cliccando la tastiera
 });
 
 hideSolutionButton.addEventListener("click", () => {
@@ -137,15 +129,15 @@ hideSolutionButton.addEventListener("click", () => {
 
 goNextRoundButton.addEventListener("click", () => {
     updateRoundDisplay();
-    isAssistanONDisabled = toggleGuidedModeButton.textContent === "ASSISTANT MODE ON" ? true : false;
+    isAssistanONDisabled = toggleAssistantModeButton.textContent === "ASSISTANT MODE ON" ? true : false;
     if (isAssistanONDisabled){
-        guidedMode = !guidedMode;
-        toggleGuidedModeButton.textContent = !guidedMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
+        assistantMode = !assistantMode;
+        toggleAssistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
     }
-    if (activeRoundID < maxRounds + 1) {
+    if (activeRoundID < maxRounds) {
         startRound();
         handleOverlayDisplay("hide");
-    }else if (activeRoundID == maxRounds + 1) {
+    }else if (activeRoundID == maxRounds) {
         handleOverlayDisplay("gameOver");
         activeRoundID++;
     } else {
@@ -155,30 +147,19 @@ goNextRoundButton.addEventListener("click", () => {
 
 // Riproduzione della soluzione
 playSolutionButton.addEventListener("click", () => {
-    if (isInputDisabled) return; // Ignora il click se il tasto è disabilitato
-
-    disableInput();
-    clearInterval(timerIntervalSolution);
-    timeLeftSolution = 2;
-    timerIntervalSolution = setInterval( () => {
-        timeLeftSolution--;
-        if (timeLeftSolution <= 0) enableInput();
-    }, 1000);
-    piano.playChord(generatedChord); // Riproduce il tuo accordo
+    piano.playChord(generatedChord); 
 });
 
 // Gestione degli hint
 hintButton.addEventListener("click", () => {
-    if (isInputDisabled) return; // Ignora gli input se disabilitati
-
     if (hintTimer >= hintInterval) updateHints();
 });
 
 // Gestione modalità guidata
-toggleGuidedModeButton.addEventListener("click", () => {
+toggleAssistantModeButton.addEventListener("click", () => {
     assistantFlag = true;
-    guidedMode = !guidedMode;
-    toggleGuidedModeButton.textContent = !guidedMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
+    assistantMode = !assistantMode;
+    toggleAssistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
 });
 
 mainMenuButton.addEventListener("click", () => {
@@ -187,23 +168,15 @@ mainMenuButton.addEventListener("click", () => {
 
 // Mappatura tastiera
 document.addEventListener("keydown", (event) => {
-    const pressedNotes = piano.getPressedNotes().sort();
-    if (practiceModeFlag && pressedNotes.length >= 3) {
-        chordData = recognizeChordMIDI(pressedNotes);
-        updateHints();
-        console.log(practiceModeFlag);
-    } else if (practiceModeFlag && pressedNotes.length < 3) {
-        hintDisplay.innerHTML = "";
-    } else {
-        if (isInputDisabled) return; // Ignora gli input se disabilitati
-        const note = piano.view.keyMap[event.code];
-        if (note !== undefined) checkChord();
-    }
+    if (isInputDisabled) return; 
+    const note = piano.view.keyMap[event.code];
+    if (note !== undefined && !practiceModeFlag) checkChord();
+    else if (note !== undefined && practiceModeFlag) identifyChord();
 });
 
 document.addEventListener("mousedown", (event) =>{
     const pressedNotes = piano.getPressedNotes();
-    if (guidedMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red"); 
+    if (assistantMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red"); 
 })
 
 // FUNZIONI PRINCIPALI -----------------------------------------------------------------------------------------------
@@ -211,13 +184,14 @@ function startRound() {
     timeOverFlag = false;
     goodGuessFlag = false;
     isRoundActive = true;
+    hintButton.textContent = "HINT BLOCKED" // -> DA RIVEDERE
     activeRoundID++;
     startTimer();
     enableInput();
     if (selectedMinigame === "chords_GM") {
         piano.init();
         generateNewChord();
-    } else if (selectedMinigame === "harmony_GM") /*funzione harmonia*/;
+    } else if (selectedMinigame === "harmony_GM"); // -> DA IMPLEMENTARE
 }
 
 function generateNewChord() {
@@ -226,17 +200,24 @@ function generateNewChord() {
         generatedChord = generatedChordData.midiNotes.sort();
     } while(generatedChord[generatedChord.length - 1] >= lastNote);
     piano.playChord(generatedChord);
+}
 
+function identifyChord() {
+    const pressedNotes = piano.getPressedNotes().sort();
+    if (pressedNotes.length >= 3) {
+        chordData = recognizeChordMIDI(pressedNotes);
+        updateHints();
+    } else {
+        hintDisplay.innerHTML = "";
+    } 
 }
 
 function checkChord() {
     const pressedNotes = piano.getPressedNotes();
-    if (guidedMode) handleGuidedMode(pressedNotes);
+    if (assistantMode) handleAssistantMode(pressedNotes);
     if (pressedNotes.length >= 3) {
         if (arraysEqual(pressedNotes, previousPressedNotes)) return;
         previousPressedNotes = [...pressedNotes];
-        console.log("Premute:", pressedNotes);
-        console.log("Da indovinare:", generatedChord.sort());
         if (arraysEqual(generatedChord, pressedNotes)) handleCorrectGuess();
     }
 }
@@ -244,9 +225,9 @@ function checkChord() {
 function handleCorrectGuess() {
     clearInterval(timerInterval);
     if (assistantFlag) currentScore *= (1 - percAssistant / 100);
-    if (flagHintsPoint[2]) currentScore -= 15;
+    if (flagHintsPoint[2]) currentScore -= 12;
     if (flagHintsPoint[1]) currentScore -= 8;
-    if (flagHintsPoint[0]) currentScore -= 2;
+    if (flagHintsPoint[0]) currentScore -= 4;
     if (currentScore >= 0) totalScore += Math.floor(currentScore);
     else totalScore += 0;
     updateScoreDisplay();
@@ -254,13 +235,11 @@ function handleCorrectGuess() {
     handleOverlayDisplay("goodGuess");
 }
 
-function handleGuidedMode(pressedNotes) {
+function handleAssistantMode(pressedNotes) {
     const currentColorNotes = new Set(pressedNotes);
-
     pressedNotes.forEach(note => {
         piano.view.setKeyColor(note, generatedChord.includes(note) ? "green" : "red");
     });
-
     for (let i = firstNote; i <= lastNote; i++) {
         if (!currentColorNotes.has(i)) piano.view.resetKeyColor(i);
     }
@@ -281,29 +260,24 @@ function updateTimer() {
     timeLeft--;
     hintTimer++;
     updateTimerDisplay();
-
-    // Deduzione del punteggio a intervalli regolari
     if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
         currentScore = Math.max(0, currentScore - pointsToDeduct);
     }
+    hintsToShow()
+    if (timeLeft <= 0) endRound();
+}
 
-    // Gestione automatica degli hint
+
+function hintsToShow() {
     for (let i = 0; i < flagHints.length; i++) {
         if (hintTimer >= hintInterval * (i + 1) && flagHints[i]) {
-            flagHints[i] = false; // Disabilita il flag corrente
-
-            // Aggiorna il display con il messaggio di hint disponibile
+            flagHints[i] = false;
             if (i === 0) hintDisplay.textContent = "1st HINT AVAILABLE";
             if (i === 1) hintDisplay.textContent = "2nd HINT AVAILABLE";
             if (i === 2) hintDisplay.textContent = "3rd HINT AVAILABLE";
-
-            // Il pulsante deve sempre restare su "SHOW HINT" per i nuovi hint disponibili
             hintButton.textContent = "SHOW HINT";
         }
     }
-
-    // Controllo fine round
-    if (timeLeft <= 0) endRound();
 }
 
 function updateHints() {
@@ -312,7 +286,6 @@ function updateHints() {
     } else {
         let currentHint = 0;
 
-        // Determina l'hint attuale in base al timer
         if (hintTimer >= hintInterval * 3) {
             currentHint = 3;
         } else if (hintTimer >= hintInterval * 2) {
@@ -321,11 +294,10 @@ function updateHints() {
             currentHint = 1;
         }
 
-        // Determina se si sta mostrando o nascondendo l'hint
         isShowingHint = hintButton.textContent === "SHOW HINT";
 
         if (isShowingHint) {
-            // Mostra l'hint corrente
+
             switch (currentHint) {
                 case 1:
                     flagHintsPoint[0] = true;
@@ -342,7 +314,7 @@ function updateHints() {
             }
             hintButton.textContent = "HIDE HINT";
         } else {
-            // Nasconde l'hint corrente e mostra che è disponibile
+
             switch (currentHint) {
                 case 1:
                     hintDisplay.textContent = "1st HINT HIDDEN";
@@ -366,12 +338,10 @@ function endRound() {
     isRoundActive = false;
 }
 
-// Funzione per disabilitare gli input
 function disableInput() {
     isInputDisabled = true;
 }
 
-// Funzione per abilitare gli input
 function enableInput() {
     isInputDisabled = false;
 }
@@ -406,7 +376,6 @@ function arraysEqual(arr1, arr2) {
 }
 
 function handleOverlayDisplay(overlayType) {
-    // Default settings
     overlayPanel.style.display = "flex";
     scoreLabel.style.display = "none";
     scoreDivisionLabel.style.display = "none";
@@ -445,11 +414,10 @@ function handleOverlayDisplay(overlayType) {
         goNextRoundButton.innerHTML = "MAIN MENU";
         goNextRoundButton.style.display = "block";
         break;
-      case "hide":
+    case "hide":
         overlayPanel.style.display = "none"
-        break;
-      default:
-        console.log("Error: overlayType '" + overlayType + "' does not exist.")
+        break;    
+    default: console.log("Error: overlayType '" + overlayType + "' does not exist.")
     }
   }
 

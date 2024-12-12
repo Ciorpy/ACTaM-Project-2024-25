@@ -153,12 +153,6 @@
     color: white;
 }
 
-.score, .timer {
-    font-size: 30px;
-    margin: 10px;
-    text-align: center;
-}
-
 .overlayBG, .overlaySolution {
     display: flex;
     top: 0;

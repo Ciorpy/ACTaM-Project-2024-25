@@ -69,6 +69,7 @@ let practiceModeFlag = localStorage.getItem("Practice"); // Gets from localStora
 let gamemodeDisplay =  document.getElementById("title")
 let roundDisplay = document.getElementById("roundDisplay");
 let difficultyDisplay = document.getElementById("difficultyDisplay");
+let practiceMessage = document.getElementById("practiceMessage")
 
 let userLegend = {
   grooves_GM: "GROOVES",
@@ -82,6 +83,7 @@ if (practiceModeFlag == "false") {
   gamemodeDisplay.innerHTML = userLegend[selectedMinigame]
   roundDisplay.innerHTML = "ROUND: 1"
   difficultyDisplay.innerHTML = "DIFFICULTY: " + userLegend[difficultyLevel];
+  practiceMessage.style.display = "none"
 } else {
   roundDisplay.style.display = "none";
   difficultyDisplay.style.display = "none";

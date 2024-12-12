@@ -21,7 +21,6 @@
       href="https://fonts.googleapis.com/css2?family=Slackey&display=swap"
       rel="stylesheet"
     />
-  </head>
   <body>
     <div class="gameScreen">
       <div class="menu" id="mainMenu">
@@ -42,7 +41,7 @@
             <div class="menuElement" id="chords_GM">CHORDS</div>
             <div class="menuElement" id="harmony_GM">HARMONY</div>
             <div class="menuElement" id="grooves_GM">GROOVES</div>
-            <div class="menuElement" id="fills_GM">FILLS</div>          
+            <div class="menuElement" id="fills_GM">FILLS</div>
             <div class="backButton settingsItemTitle" id="backGMS">
               BACK TO MENU
             </div>
@@ -55,7 +54,7 @@
           <div class="menuButtonList">
             <div class="menuElement" id="easyDiff">EASY</div>
             <div class="menuElement" id="mediumDiff">MEDIUM</div>
-            <div class="menuElement" id="hardDiff">HARD</div>          
+            <div class="menuElement" id="hardDiff">HARD</div>
             <div class="backButton settingsItemTitle" id="back2GM">
               BACK TO GAME MENU
             </div>
@@ -68,10 +67,10 @@
           <div class="menuButtonList">
             <div class="username-container">
               <div class="username">USERNAME:</div>
-              <input type="text" id="username" name="username" required>
+              <input type="text" id="username" name="username" required />
             </div>
-            <div class="menuElement" id="host">HOST</div>
-            <div class="menuElement" id="partecipate">PARTECIPATE</div>         
+            <div class="menuElement notSelectable" id="host">HOST</div>
+            <div class="menuElement notSelectable" id="partecipate">PARTECIPATE</div>
             <div class="backButton settingsItemTitle" id="backMP">
               BACK TO MENU
             </div>
@@ -83,7 +82,7 @@
         <div class="menu">
           <div class="menuButtonList">
             <div class="menuElement" id="PracticeDM">DRUM MACHINE</div>
-            <div class="menuElement" id="PracticeKB">KEYBOARD</div>          
+            <div class="menuElement" id="PracticeKB">KEYBOARD</div>
             <div class="backButton settingsItemTitle" id="backP">
               BACK TO MENU
             </div>
@@ -119,14 +118,15 @@
         <div class="footerCredits">
           <div>PoliMi - Music And Acoustic Engineering</div>
           <div>Advanced Coding Tools and Methodologies 2024/25</div>
-        </div>        
-        <img src="./Images/download.gif"/>
-        <div class="backButton settingsItemTitle" id="backC">
-           BACK TO MENU
         </div>
+        <img src="./Images/download.gif" />
+        <div class="backButton settingsItemTitle" id="backC">BACK TO MENU</div>
       </div>
     </div>
 
     <script src="gt.js"></script>
+    <script type="module" src="../firebase.js"></script>
+    <script type="module" src="../login.js"></script>
+  </head>
   </body>
 </html>

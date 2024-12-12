@@ -187,3 +187,9 @@ body {
 .finalScreen{
   display: none;
 }
+
+.notSelectable{
+  background-color: rgb(4, 14, 27);
+  border-color: rgb(145, 95, 4);
+  cursor: auto;
+}

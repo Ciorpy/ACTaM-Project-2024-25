@@ -78,3 +78,38 @@ backToMP_MenuButton.addEventListener("click", () => {
   multiPlayerMenu.style.display = "block";
   lobbyMenu.style.display = "none";
 });
+
+let nameField = document.getElementById("lobbyName");
+let pwField = document.getElementById("lobbyPW");
+
+nameField.addEventListener("input", () => {
+  if (nameField.value.trim() != "" && pwField.value.trim() != "") {
+    createButton.classList.toggle("notSelectable", false);
+    joinButton.classList.toggle("notSelectable", false);
+
+    createButton.style.pointerEvents = "auto";
+    joinButton.style.pointerEvents = "auto";
+  } else {
+    createButton.classList.toggle("notSelectable", true);
+    joinButton.classList.toggle("notSelectable", true);
+
+    createButton.style.pointerEvents = "none";
+    joinButton.style.pointerEvents = "none";
+  }
+});
+
+pwField.addEventListener("input", () => {
+  if (nameField.value.trim() != "" && pwField.value.trim() != "") {
+    createButton.classList.toggle("notSelectable", false);
+    joinButton.classList.toggle("notSelectable", false);
+
+    createButton.style.pointerEvents = "auto";
+    joinButton.style.pointerEvents = "auto";
+  } else {
+    createButton.classList.toggle("notSelectable", true);
+    joinButton.classList.toggle("notSelectable", true);
+
+    createButton.style.pointerEvents = "none";
+    joinButton.style.pointerEvents = "none";
+  }
+});

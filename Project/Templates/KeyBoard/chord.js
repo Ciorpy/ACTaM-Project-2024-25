@@ -1,6 +1,5 @@
 const notesInOctave = 12;
 
-// Funzione per generare gli accordi (database dinamico)
 function generateChordsMIDI(rootMIDI) {
   return {
     // Triadi
@@ -53,28 +52,20 @@ function generateChordsMIDI(rootMIDI) {
 }
 
 export function recognizeChordMIDI(inputNotes) {
-  // Normalizza le note all'interno di un'ottava (0-11)
   const normalizedInput = inputNotes.map(note => note % notesInOctave);
   const normalizedAndSortedInput = [...normalizedInput].sort((a, b) => a - b);
-
   for (let rootMIDI = 0; rootMIDI < notesInOctave; rootMIDI++) {
     const chords = generateChordsMIDI(rootMIDI);
-
     for (let chordName in chords) {
       const chordNotes = chords[chordName];
       const normalizedChord = chordNotes.map(note => note % notesInOctave);
       const normalizedAndSortedChord = [...normalizedChord].sort((a, b) => a - b);
-
-      // Confronta l'input normalizzato e ordinato con l'accordo normalizzato e ordinato
       if (arraysEqual(normalizedAndSortedInput, normalizedAndSortedChord)) {
-        // Identifica la root nell'input normalizzato (non ordinato)
         const rootIndex = normalizedInput.indexOf(rootMIDI % notesInOctave);
         const inversionType =
           rootIndex === 0
             ? "ROOT POSITION"
             : `${normalizedInput.length - rootIndex}° INVERSION`;
-
-        // Restituisci il risultato come dizionario
         return {
           midiRoot: rootMIDI,
           noteRoot: midiToNoteName(rootMIDI),
@@ -86,8 +77,6 @@ export function recognizeChordMIDI(inputNotes) {
       }
     }
   }
-
-  // Se nessun accordo viene riconosciuto
   return {
     midiRoot: null,
     noteRoot: null,
@@ -98,48 +87,31 @@ export function recognizeChordMIDI(inputNotes) {
   };
 }
 
-// Funzione per confrontare due array
 function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false;
   return arr1.every((val, index) => val === arr2[index]);
 }
 
-// Funzione per confrontare array e riconoscere inversioni
-function areInversions(arr1, arr2) {
-  if (arr1.length !== arr2.length) return false;
-  for (let i = 0; i < arr1.length; i++) {
-    if (arr1.every((_, j) => arr1[j] === arr2[(j + i) % arr2.length])) {
-      return true;
-    }
-  }
-  return false;
-}
-
-// Converte un numero MIDI in nome della nota
 function midiToNoteName(midi) {
   const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
   return noteNames[midi % notesInOctave];
 }
 
-
-// Funzione per generare tutte le inversioni di un accordo
 function generateInversions(chordNotes) {
   const inversions = [];
   const numNotes = chordNotes.length;
 
   for (let i = 0; i < numNotes; i++) {
     const inversion = chordNotes
-      .slice(i) // Prendi le note dalla posizione corrente fino alla fine
-      .concat(chordNotes.slice(0, i).map(note => note + 12)); // Sposta in alto le note precedenti
+      .slice(i)
+      .concat(chordNotes.slice(0, i).map(note => note + 12));
     inversions.push(inversion);
   }
 
   return inversions;
 }
 
-// Funzione di generazione di un accordo random con inversioni
-export function generateRandomChord(startNote = 60, difficulty = "easyDiff") {
-  // Lista di tipi di accordi possibili
+export function generateRandomChord(startNote = 60, difficulty = "easyDiff", root = null, type = null) {
   const chordTypesByDifficulty = {
     easyDiff: [
       "Maj", "min", 
@@ -167,26 +139,18 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff") {
       //"7(11)", "m11", "Maj11", "6(11)", "13", "m13", "Maj13"
     //]
   };
-
-  // Ottieni i tipi di accordi per il livello di difficoltà specificato
+  let randomRoot = null;
+  if (root == null) randomRoot = Math.floor(Math.random() * 12) + startNote;
+  else randomRoot = root;
   const chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
-
-  // Seleziona una root e un tipo di accordo casuale
-  const randomRoot = Math.floor(Math.random() * 12) + startNote;
-  const randomChordType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
-
-  // Genera l'accordo in base al tipo selezionato
+  let randomChordType = null;
+  if (type == null) randomChordType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
+  else randomChordType = type;
   const chords = generateChordsMIDI(randomRoot);
   const chord = chords[randomChordType];
-
-  // Genera tutte le inversioni
   const inversions = generateInversions(chord);
-
-  // Seleziona una delle inversioni casualmente
   const selectedInversionIndex = Math.floor(Math.random() * inversions.length);
   const selectedInversion = inversions[selectedInversionIndex];
-
-  // Determina la nuova root in base all'inversione
   const updatedRoot = selectedInversionIndex === 0 ? selectedInversion[0]
     : selectedInversion[selectedInversion.length - (selectedInversionIndex)];
   const inversionType = selectedInversionIndex === 0 ? "ROOT POSITION"

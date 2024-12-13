@@ -2,13 +2,14 @@
 import PianoController from "./controller.js";
 import { generateRandomChord } from "./chord.js";
 import { recognizeChordMIDI } from "./chord.js";
+import { generateChordPattern } from "./harmony.js";
 
 // Costanti e configurazione globale
 const firstNote = 48;
 const keysNumber = 25;
 const lastNote = firstNote + keysNumber;
 const deductionInterval = 30; 
-const hintInterval = 30;
+const hintInterval = 10;
 const pointsToDeduct = 25;
 const percAssistant = 50;
 const maxRounds = 3;
@@ -38,6 +39,11 @@ let assistantFlag = false;
 let flagHintsPoint = [false, false, false];
 let timeOverFlag;
 let goodGuessFlag;
+let missingChord = null;
+let missingChordDetails = null;
+let progressionData = null;
+let result = "";
+let delay = 0;
 
 let userLegend = {
     chords_GM: "CHORDS",
@@ -111,19 +117,33 @@ startGameButton.addEventListener("click", () => {
 showSolutionButton.addEventListener("click", () => {
     handleOverlayDisplay("hide")
     solutionDiv.style.display = "flex";
-    overlaySubtitleSolution.innerHTML = "";
-    overlayTitleSolution.innerHTML = "IT'S A " + `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
-    piano.playChord(generatedChord);
-    generatedChord.forEach(note => {
-        piano.view.setKeyColor(note, "green");
-    }); // -> capire perche si possono deselezionare cliccando la tastiera
+    if (selectedMinigame === "chords_GM") {
+        overlayTitleSolution.innerHTML = "IT'S A " + `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
+        overlaySubtitleSolution.innerHTML = "";
+        piano.playChord(generatedChord);
+        generatedChord.forEach(note => {
+            piano.view.setKeyColor(note, "green");
+        });
+    } else if (selectedMinigame === "harmony_GM") {
+        overlayTitleSolution.innerHTML = "IT'S A " + `${progressionData.name}` + " OF " + `${missingChordDetails.noteRoot}${missingChordDetails.chordType}`;
+        overlaySubtitleSolution.innerHTML = `${result} - ${missingChordDetails.noteRoot}${missingChordDetails.chordType}`;
+        playProgression(progressionData, missingChord);
+        setTimeout(() => {
+            missingChord.forEach(note => {
+                piano.view.setKeyColor(note, "green");
+            });
+        }, delay);
+    }
 });
 
 hideSolutionButton.addEventListener("click", () => {
     if (timeOverFlag) handleOverlayDisplay("timeOver");
     if (goodGuessFlag) handleOverlayDisplay("goodGuess");
     solutionDiv.style.display = "none";
-    generatedChord.forEach(note => {
+    if (selectedMinigame === "chords_GM") generatedChord.forEach(note => {
+        piano.view.resetKeyColor(note)
+    });
+    else if (selectedMinigame === "harmony_GM") missingChord.forEach(note => {
         piano.view.resetKeyColor(note)
     });
 })
@@ -148,7 +168,8 @@ goNextRoundButton.addEventListener("click", () => {
 
 // Riproduzione della soluzione
 playSolutionButton.addEventListener("click", () => {
-    piano.playChord(generatedChord); 
+    if (selectedMinigame === "chords_GM") piano.playChord(generatedChord);
+    else if (selectedMinigame === "harmony_GM") playProgression(progressionData);
 });
 
 // Gestione degli hint
@@ -175,28 +196,28 @@ document.addEventListener("keydown", (event) => {
     else if (note !== undefined && practiceModeFlag) identifyChord();
 });
 
-document.addEventListener("mousedown", (event) =>{
+document.addEventListener("click", () =>{
     if (isInputDisabled) return;
     const pressedNotes = piano.getPressedNotes();
-    if (assistantMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red"); 
+    if (selectedMinigame === "chords_GM" && assistantMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red");
+    else if (selectedMinigame === "harmony_GM" && assistantMode) piano.view.setKeyColor(pressedNotes, missingChord.includes(pressedNotes[0]) ? "green" : "red");
 })
 
 // FUNZIONI PRINCIPALI -----------------------------------------------------------------------------------------------
 function startRound() {
     timeOverFlag = false;
     goodGuessFlag = false;
+    assistantFlag = false;
     isRoundActive = true;
-    hintButton.textContent = "HINT BLOCKED" // -> DA RIVEDERE
-    hintButton.classList.add('no-hover'); // -> DA RIVEDERE COME SOPRA, TOGLIE HOVER QUANDO BLOCCATO (IN updateHint ovviamente lo rimetto)
-    hintButton.classList.add('notSelectable'); // -> DA RIVEDERE COME SOPRA, PULSANTE  (IN updateHint ovviamente lo rimetto)
-    hintButton.style.
+    result = "";
+    delay = 0;
     activeRoundID++;
+    resetHintButton();  // -> DA RIVEDERE, SE NON TI PIACE, COSì MI SEMBRA PIù ELEGANTE
     startTimer();
     enableInput();
-    if (selectedMinigame === "chords_GM") {
-        piano.init();
-        generateNewChord();
-    } else if (selectedMinigame === "harmony_GM"); // -> DA IMPLEMENTARE
+    piano.init();
+    if (selectedMinigame === "chords_GM") generateNewChord();
+    else if (selectedMinigame === "harmony_GM") generateNewProgression(), updateResult(); // -> DA IMPLEMENTARE
 }
 
 function generateNewChord() {
@@ -206,6 +227,33 @@ function generateNewChord() {
     } while(generatedChord[generatedChord.length - 1] >= lastNote);
     piano.playChord(generatedChord);
 }
+
+function generateNewProgression() {
+    do {
+        progressionData = generateChordPattern(firstNote, selectedLevel);
+        missingChordDetails = progressionData.missingChordData;
+        missingChord = missingChordDetails.midiNotes
+    } while (missingChord[missingChord.length - 1] >= lastNote);
+    playProgression(progressionData);
+}
+
+function playProgression(progressionData, missingChord = null) { 
+    delay = 0;
+    progressionData.progressionDetails.forEach(chord => {
+        if (chord) {
+            setTimeout(() => {
+                piano.playChord(chord.midiNotes);
+            }, delay);
+            delay += 1000;
+        }
+    });
+    if (missingChord) {
+        setTimeout(() => {
+            piano.playChord(missingChord);
+        }, delay);
+    }
+}
+
 
 function identifyChord() {
     const pressedNotes = piano.getPressedNotes().sort();
@@ -220,10 +268,14 @@ function identifyChord() {
 function checkChord() {
     const pressedNotes = piano.getPressedNotes();
     if (assistantMode) handleAssistantMode(pressedNotes);
-    if (pressedNotes.length >= 3) {
+    if (pressedNotes.length < 3) return;
+    if (selectedMinigame === "chords_GM"){
         if (arraysEqual(pressedNotes, previousPressedNotes)) return;
         previousPressedNotes = [...pressedNotes];
         if (arraysEqual(generatedChord, pressedNotes)) handleCorrectGuess();
+    } else if (selectedMinigame === "harmony_GM") {
+        const expectedNotes = missingChord;
+        if (arraysEqual(pressedNotes, expectedNotes)) {handleCorrectGuess();}
     }
 }
 
@@ -242,8 +294,11 @@ function handleCorrectGuess() {
 
 function handleAssistantMode(pressedNotes) {
     const currentColorNotes = new Set(pressedNotes);
-    pressedNotes.forEach(note => {
-        piano.view.setKeyColor(note, generatedChord.includes(note) ? "green" : "red");
+    if (selectedMinigame === "chords_GM") pressedNotes.forEach(note => {
+            piano.view.setKeyColor(note, generatedChord.includes(note) ? "green" : "red");
+        });
+    else if (selectedMinigame === "harmony_GM") pressedNotes.forEach(note => {
+        piano.view.setKeyColor(note, missingChord.includes(note) ? "green" : "red");
     });
     for (let i = firstNote; i <= lastNote; i++) {
         if (!currentColorNotes.has(i)) piano.view.resetKeyColor(i);
@@ -289,6 +344,19 @@ function hintsToShow() {
     }
 }
 
+function updateResult() {
+    let r = ""
+    if (selectedMinigame === "harmony_GM") {
+        let i = 0;
+        do {
+            r += `${progressionData.progressionDetails[i].noteRoot}${progressionData.progressionDetails[i].chordType}`;
+            r += " - ";
+            i++;
+        } while (i < progressionData.progressionDetails.length - 1)
+    }
+    result = r.slice(0, -2);
+}
+
 function updateHints() {
     if (practiceModeFlag) {
         hintDisplay.innerHTML = chordData.noteRoot !== null ? `${chordData.noteRoot}${chordData.chordType} IN ${chordData.inversion}` : "";
@@ -311,15 +379,19 @@ function updateHints() {
             switch (currentHint) {
                 case 1:
                     flagHintsPoint[0] = true;
-                    hintDisplay.textContent = `ROOT ${generatedChordData.noteRoot}`;
+                    if (selectedMinigame === "chords_GM") hintDisplay.textContent = `ROOT ${generatedChordData.noteRoot}`;
+                    else if (selectedMinigame === "harmony_GM") hintDisplay.textContent = `FIRST CHORD: 
+                        ${progressionData.progressionDetails[0].noteRoot}${progressionData.progressionDetails[0].chordType}`; 
                     break;
                 case 2:
                     flagHintsPoint[1] = true;
-                    hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
+                    if (selectedMinigame === "chords_GM") hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
+                    else if (selectedMinigame === "harmony_GM") hintDisplay.textContent = `CHORDS PLAYED: ${result}`; 
                     break;
                 case 3:
                     flagHintsPoint[2] = true;
-                    hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
+                    if (selectedMinigame === "chords_GM") hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
+                    else if (selectedMinigame === "harmony_GM") hintDisplay.textContent = `COMPLETE PROGRESSION: ${result} - ${missingChordDetails.noteRoot}${missingChordDetails.chordType}`; 
                     break;
             }
             hintButton.textContent = "HIDE HINT";
@@ -340,6 +412,12 @@ function updateHints() {
         }
     }
     
+}
+
+function resetHintButton() {
+    hintButton.textContent = "HINT BLOCKED"; // -> DA RIVEDERE
+    hintButton.classList.add('no-hover'); // -> DA RIVEDERE COME SOPRA, TOGLIE HOVER QUANDO BLOCCATO (IN updateHint ovviamente lo rimetto)
+    hintButton.classList.add('notSelectable'); // -> DA RIVEDERE COME SOPRA, PULSANTE  (IN updateHint ovviamente lo rimetto)
 }
 
 function endRound() {

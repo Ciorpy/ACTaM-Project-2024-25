@@ -88,10 +88,10 @@
 .key {
     border-radius: 3px;
     flex: 1; 
-    margin: 0.5px;
+    margin: 1px;
     height: 100%;
-    border: 1px solid black;
-    background: white;
+    border: 1px solid #ccc;
+    background: #f0f0f0;
     color: black;
     position: relative;
     display: flex;
@@ -100,7 +100,6 @@
     font-size: 15px;
     box-sizing: border-box;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.1s ease, background 0.1s ease;
 }
 
 .key.black {
@@ -108,11 +107,12 @@
     position: absolute;
     width: 70%; 
     height: 60%; 
-    background: black;
+    background: #090909;
     color: white;
     z-index: 2;    
     font-size: 15px;
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid black;
 }
 
 .key span {
@@ -127,20 +127,20 @@
     transform-origin: top;
     transform: scale(0.98);
     box-shadow: 
-        0 2px 3px rgba(0, 0, 0, 0.5), /* Ombra esterna */
-        inset -3px -3px 8px rgba(0, 0, 0, 0.4), /* Ombra interna a sinistra */
-        inset 3px -3px 8px rgba(0, 0, 0, 0.4), /* Ombra interna a destra */
-        inset 0 5px 5px rgba(0, 0, 0, 0.3); /* Ombra interna nella parte bassa */
+        0 2px 3px rgba(0, 0, 0, 0.5),
+        inset -3px -3px 8px rgba(0, 0, 0, 0.4),
+        inset 3px -3px 8px rgba(0, 0, 0, 0.4),
+        inset 0 5px 5px rgba(0, 0, 0, 0.3);
 }
 
 .key.black.active {
     transform-origin: top;
     transform: scale(0.98);
     box-shadow: 
-        0 2px 3px rgba(0, 0, 0, 0.5), /* Ombra esterna */
-        inset -3px -3px 8px rgba(0, 0, 0, 0.6), /* Ombra interna a sinistra */
-        inset 3px -3px 8px rgba(0, 0, 0, 0.6), /* Ombra interna a destra */
-        inset 0 5px 5px rgba(0, 0, 0, 0.4); /* Ombra interna nella parte bassa */
+        0 2px 3px rgba(0, 0, 0, 0.5),
+        inset -3px -3px 8px rgba(0, 0, 0, 0.6),
+        inset 3px -3px 8px rgba(0, 0, 0, 0.6),
+        inset 0 5px 5px rgba(0, 0, 0, 0.4);
 }
 
 

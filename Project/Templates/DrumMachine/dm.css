@@ -23,6 +23,7 @@
     background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
     background-clip: text;
     color: transparent;
+    text-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
 }
 
 .drumMachineScreen{
@@ -178,6 +179,7 @@
     background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   }
   
 
@@ -200,6 +202,7 @@
     background: linear-gradient(to top, orange, darkorange);
     background-clip: text;
     color: transparent;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .bpmInput input {
@@ -288,6 +291,7 @@
     background: linear-gradient(to top, orange, darkorange);
     background-clip: text;
     color: transparent;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .currentScore {
@@ -297,6 +301,7 @@
     background: linear-gradient(to top, orange, darkorange);
     background-clip: text;
     color: transparent;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 #practiceMessage{

@@ -13,10 +13,13 @@ let partecipateButton = document.getElementById("partecipate");
 hostButton.style.pointerEvents = "none";
 partecipateButton.style.pointerEvents = "none";
 
+let userCredential = await signInAnonymously(auth);
+let user = userCredential.user;
+
 const signInAnonymouslyUser = async () => {
   try {
-    const userCredential = await signInAnonymously(auth);
-    const user = userCredential.user;
+    userCredential = await signInAnonymously(auth);
+    user = userCredential.user;
     console.log("Signed in anonymously:", user.uid);
 
     localStorage.setItem("userNickname", usernameField.value);
@@ -63,12 +66,12 @@ let handleLobbyMenuLayout = function (role) {
   lobbyMenu.style.display = "block";
   if (role == "player") {
     lobbyTitle.innerHTML = "JOIN LOBBY";
-    createButton.style.display = "block";
-    joinButton.style.display = "none";
-  } else if (role == "host") {
-    lobbyTitle.innerHTML = "CREATE LOBBY";
     createButton.style.display = "none";
     joinButton.style.display = "block";
+  } else if (role == "host") {
+    lobbyTitle.innerHTML = "CREATE LOBBY";
+    createButton.style.display = "block";
+    joinButton.style.display = "none";
   }
 };
 
@@ -111,5 +114,96 @@ pwField.addEventListener("input", () => {
 
     createButton.style.pointerEvents = "none";
     joinButton.style.pointerEvents = "none";
+  }
+});
+
+import {
+  getDatabase,
+  ref,
+  get,
+  set,
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+const db = getDatabase(app);
+
+async function createLobby(lobbyName, password, playerId, playerName) {
+  const hashedPassword = btoa(password); // Simple base64 encoding (use bcrypt for production)
+
+  // Reference to the lobby
+  const lobbyRef = ref(db, `lobbies/${lobbyName}`);
+
+  // Check if the lobby already exists
+  const snapshot = await get(lobbyRef);
+  if (snapshot.exists()) {
+    alert("Lobby with this name already exists!");
+    return;
+  }
+  // Create the player data
+  const playerData = {
+    playerName: playerName,
+    score: 0,
+  };
+
+  const lobbyData = {
+    password: hashedPassword,
+    players: {
+      [playerId]: playerData, // Set playerName as the key for the player
+    },
+    status: "open",
+  };
+
+  // Create the lobby
+  await set(lobbyRef, JSON.parse(JSON.stringify(lobbyData)));
+}
+
+async function joinLobby(lobbyName, password, playerId, playerName) {
+  const dbRef = ref(db, `lobbies/${lobbyName}`);
+  const snapshot = await get(dbRef);
+
+  if (!snapshot.exists()) {
+    throw new Error("Lobby does not exist.");
+  }
+
+  const lobbyData = snapshot.val();
+  if (!checkPassword(password, lobbyData.password)) {
+    throw new Error("Incorrect password.");
+  }
+
+  const playersRef = ref(db, `lobbies/${lobbyName}/players/${playerId}`);
+  await set(playersRef, {
+    name: playerName,
+    score: 0,
+  });
+
+  console.log("Joined the lobby successfully.");
+}
+
+createButton.addEventListener("click", async () => {
+  try {
+    await createLobby(
+      nameField.value,
+      pwField.value,
+      user.uid,
+      localStorage.getItem("userNickname")
+    );
+    alert("Lobby created successfully!");
+  } catch (error) {
+    console.error("Error creating lobby:", error);
+    alert(error.message);
+  }
+});
+
+joinButton.addEventListener("click", async () => {
+  try {
+    await joinLobby(
+      nameField.value,
+      pwField.value,
+      user.uid,
+      localStorage.getItem("userNickname")
+    );
+    alert("Successfully joined the lobby!");
+  } catch (error) {
+    console.error("Error joining lobby:", error);
+    alert(error.message);
   }
 });

@@ -5,11 +5,11 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: rgb(9, 33, 65);
+    background: url('/Project/Images/ep_naturalblack.webp') repeat;
 }
 
 .body{
-    background-color: rgb(9, 33, 65);
+    background: transparent;
 }
 
 .title {
@@ -20,21 +20,22 @@
     line-height: 120px;
     font-size: 100px;
     text-align: center;
-    color: cornflowerblue;
-    background-color: rgb(9, 33, 65);
+    background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .drumMachineScreen{
     display: flex;
     flex-direction: row;
-    background-color: rgb(9, 33, 65);
+    background: transparent;
     width: 100%;
     gap: 0px;
     border-bottom: 3px solid orange;
 }
 
 .drumMachineInput {
-    background-color: rgb(9, 33, 65);
+    background: transparent;
     margin: auto;
     left: 0px;
 }
@@ -47,6 +48,7 @@
 }
 
 .drumMachineItem {
+    background: none;
     display: flex;
     gap: 10px;
     padding: 5px;
@@ -109,16 +111,16 @@
     margin-left: 25px;
 }
 
-#BD .active { background-color: #FF0000; }
-#SN .active { background-color: #FF8700; }
-#T1 .active { background-color: #FFD300; }
-#T2 .active { background-color: #DEFF0A; }
-#FT .active { background-color: #A1FF0A; }
-#HH .active { background-color: #0AFF99; }
-#OH .active { background-color: #0AEFFF; }
-#RD .active { background-color: #147DF5; }
-#BR .active { background-color: #580AFF; }
-#CR .active { background-color: #BE0AFF; }
+#BD .active { background: none; background-color: #FF0000; }
+#SN .active { background: none; background-color: #FF8700; }
+#T1 .active { background: none; background-color: #FFD300; }
+#T2 .active { background: none; background-color: #DEFF0A; }
+#FT .active { background: none; background-color: #A1FF0A; }
+#HH .active { background: none; background-color: #0AFF99; }
+#OH .active { background: none; background-color: #0AEFFF; }
+#RD .active { background: none; background-color: #147DF5; }
+#BR .active { background: none; background-color: #580AFF; }
+#CR .active { background: none; background-color: #BE0AFF; }
 
 .highlighted, .highlightedSolution, .correctGuess {
     border: 5px solid white;
@@ -131,8 +133,9 @@
 .correctGuess {
     border-width: 2px;
     border-color: green;
+    background: reset;
+    background: url("../../Images/Green_check.png") center / cover no-repeat !important;
     background-color: white !important;
-    background-image: url("../../Images/Green_check.png");
     cursor: default;
     background-position: center;
     background-size: cover;
@@ -157,20 +160,26 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    background-color: transparent
+    background: transparent;
 }
 
 .userMenu, .subTitle {
     gap: 40px;
-    background-color: rgb(9, 33, 65);
+    background: transparent;
 }
 
 .subTitle{
     margin-right: 30px;
     font-size: 25px;
     text-align: center;
-    color: cornflowerblue;
 }
+
+.subTitle span {
+    background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
 
 .button {
     padding: 30px;
@@ -178,7 +187,7 @@
     width: 300px;
     text-align: center;
     cursor: pointer;
-    background-color: rgb(9, 33, 65);
+    background: transparent;
     color: orange;
 }
 
@@ -188,8 +197,9 @@
     gap: 10px;
     width: 300px;
     margin: auto;
-    color: orange;
-
+    background: linear-gradient(to top, orange, darkorange);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .bpmInput input {
@@ -197,7 +207,8 @@
 }
 
 .button:hover{
-    background-color: rgb(23, 67, 67);
+    transform: scale(90%);
+    background: transparent;
 }
 
 .presets {
@@ -242,6 +253,7 @@
     position: fixed;
     width: 100%;
     height: 100%;
+    background: transparent;
     background-color: rgba(255,255,255,0.8);
     flex-direction: column;
 }
@@ -257,7 +269,7 @@
     gap: 30px;
     text-align: center;
     font-size: 150px;
-    background-color: transparent
+    background: transparent;
 }
 
 .timeOverScreen, .wrongGuessPanel, .endGamePanel {
@@ -273,14 +285,18 @@
     margin: auto;
     text-align: center;
     font-size: 30px;
-    color: orange;
+    background: linear-gradient(to top, orange, darkorange);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .currentScore {
     margin: auto;
     text-align: center;
     font-size: 30px;
-    color: orange;
+    background: linear-gradient(to top, orange, darkorange);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 #practiceMessage{

@@ -5,14 +5,14 @@
     font-family: "Audiowide", serif;
     font-weight: 400;
     font-style: normal;
-    background-color: rgb(9, 33, 65);
+    background: url('/Project/Images/ep_naturalblack.webp') repeat;
 }
 
 .container {
+    background: transparent;
     height: 100%;
     display: flex;
     flex-direction: row;
-    background-color: rgb(9, 33, 65);
     width: 100%;
     gap: 0px;
     border-bottom: 3px solid orange;
@@ -56,7 +56,9 @@
     line-height: 120px;
     font-size: 100px;
     text-align: center;
-    color: cornflowerblue;
+    background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .subTitle {
@@ -66,14 +68,18 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    color: cornflowerblue;
+    background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .text {
     padding: 20px;
     font-size: 30px;
     text-align: center;
-    color: orange;
+    background: linear-gradient(to top, orange, darkorange);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .key {
@@ -121,12 +127,12 @@
     padding: 10px;
     display: flex;
     flex-direction: row;
-    background-color: rgba(0,0,0,0);
+    background: transparent;
     justify-content: space-around;
 }
 
 .userMenu {
-    background-color: rgb(9, 33, 65);
+    background: transparent;
 }
 
 .button {
@@ -135,12 +141,13 @@
     width: 300px;
     text-align: center;
     cursor: pointer;
-    background-color: rgb(9, 33, 65);
+    background: transparent;
     color: orange;
 }
 
 .button:hover{
-    background-color: rgb(23, 67, 67);
+    transform: scale(90%);
+    background: transparent;
 }
 
 .key.correct {
@@ -161,6 +168,7 @@
     z-index: 10;
     width: 100%;
     height: 100%;
+    background: transparent;
     background-color: rgba(255, 255, 255, 0.8);
     flex-direction: column;
 }
@@ -171,6 +179,7 @@
 }
 
 .overlayTitle, .overlayTitleSolution{
+    background: transparent;
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -184,3 +193,14 @@
     margin-top: 70px;
     font-size: 120px;
 }
+
+.no-hover:hover {
+    transform: none;
+}
+
+.notSelectable{
+    border-color: rgb(145, 95, 4);
+    color: rgb(145, 95, 4);
+    cursor: auto;
+}
+ 

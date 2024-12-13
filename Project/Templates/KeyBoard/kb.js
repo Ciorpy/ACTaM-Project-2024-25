@@ -74,6 +74,7 @@ const mainMenuButton = document.getElementById("mainMenu");
 // CONFIGURAZIONE INIZIALE DELLA PAGINA -------------------------------------------------------------------------------
 if(practiceModeFlag){
     handleOverlayDisplay("hide");
+    enableInput();
     startGameButton.style.display = "none";
     playSolutionButton.style.display = "none";
     hintButton.style.display = "none";
@@ -175,6 +176,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("mousedown", (event) =>{
+    if (isInputDisabled) return;
     const pressedNotes = piano.getPressedNotes();
     if (assistantMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red"); 
 })
@@ -185,6 +187,9 @@ function startRound() {
     goodGuessFlag = false;
     isRoundActive = true;
     hintButton.textContent = "HINT BLOCKED" // -> DA RIVEDERE
+    hintButton.classList.add('no-hover'); // -> DA RIVEDERE COME SOPRA, TOGLIE HOVER QUANDO BLOCCATO (IN updateHint ovviamente lo rimetto)
+    hintButton.classList.add('notSelectable'); // -> DA RIVEDERE COME SOPRA, PULSANTE  (IN updateHint ovviamente lo rimetto)
+    hintButton.style.
     activeRoundID++;
     startTimer();
     enableInput();
@@ -272,7 +277,11 @@ function hintsToShow() {
     for (let i = 0; i < flagHints.length; i++) {
         if (hintTimer >= hintInterval * (i + 1) && flagHints[i]) {
             flagHints[i] = false;
-            if (i === 0) hintDisplay.textContent = "1st HINT AVAILABLE";
+            if (i === 0) {
+                hintButton.classList.remove('no-hover'); // Hover riattivato
+                hintButton.classList.remove('notSelectable'); // Hover riattivato
+                hintDisplay.textContent = "1st HINT AVAILABLE";
+            }
             if (i === 1) hintDisplay.textContent = "2nd HINT AVAILABLE";
             if (i === 2) hintDisplay.textContent = "3rd HINT AVAILABLE";
             hintButton.textContent = "SHOW HINT";
@@ -284,6 +293,7 @@ function updateHints() {
     if (practiceModeFlag) {
         hintDisplay.innerHTML = chordData.noteRoot !== null ? `${chordData.noteRoot}${chordData.chordType} IN ${chordData.inversion}` : "";
     } else {
+
         let currentHint = 0;
 
         if (hintTimer >= hintInterval * 3) {

@@ -238,7 +238,6 @@ let roundTimer = function () {
   if (timer <= 0) {
     clearInterval(timerInterval);
     levelIndex = levelIndex + 1;
-    buildSolution()
     timer = maxTimer;
     timeOver("timeOver");
     hasRoundEnded = true;
@@ -564,6 +563,7 @@ let wrongGuess = function () {
 let timeOver = function (overlayType) {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
+  resetDrumMachine();
   clearInterval(timerInterval);
   handleOverlayDisplay(overlayType);
 };
@@ -585,7 +585,7 @@ checkInputButton.addEventListener("click", () => {
 let solutionDiv = document.getElementById("overlaySolution")
 
 let showSolution = function () {
-  buildSolution()
+  buildSolution();
   handleOverlayDisplay("hide")
   solutionDiv.style.display = "flex"
   solutionInterval = setInterval(playSolution, setBpm(bpm))
@@ -598,6 +598,7 @@ hideSolutionButton.addEventListener("click", () => {
 })
 
 let hideSolution = function () {
+  resetDrumMachine();
   if (timeOverFlag) handleOverlayDisplay("timeOver");
   if (goodGuessFlag) handleOverlayDisplay("goodGuess");
   solutionDiv.style.display = "none"

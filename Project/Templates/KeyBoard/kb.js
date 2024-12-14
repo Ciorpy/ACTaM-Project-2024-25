@@ -137,6 +137,7 @@ showSolutionButton.addEventListener("click", () => {
 });
 
 hideSolutionButton.addEventListener("click", () => {
+    handleOverlayDisplay("hide");
     if (timeOverFlag) handleOverlayDisplay("timeOver");
     if (goodGuessFlag) handleOverlayDisplay("goodGuess");
     solutionDiv.style.display = "none";

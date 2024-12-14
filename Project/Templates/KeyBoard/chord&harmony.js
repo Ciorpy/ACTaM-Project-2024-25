@@ -168,8 +168,8 @@ function generateInversions(chordNotes) {
 
 export function generateRandomChord(startNote = 60, difficulty = "easyDiff", type = null, inversion = null) {
   const chordTypesByDifficulty = {
-    easyDiff: ["Maj", "m"],
-    mediumDiff: ["Maj6", "min6", "dim", "aug"],
+    easyDiff: ["", "m"],
+    mediumDiff: ["Maj6", "m6", "dim", "aug"],
     hardDiff: ["Maj7", "mMaj7", "7", "m7", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5"],
   };
   const randomRoot = Math.floor(Math.random() * 12) + startNote;

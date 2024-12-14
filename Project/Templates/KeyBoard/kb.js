@@ -1,15 +1,15 @@
 // IMPORTAZIONI E CONFIGURAZIONE INIZIALE -----------------------------------------------------------------------------
 import PianoController from "./controller.js";
-import { generateRandomChord } from "./chord.js";
-import { recognizeChordMIDI } from "./chord.js";
-import { generateChordPattern } from "./harmony.js";
+import { generateRandomChord } from "./chord&harmony.js";
+import { recognizeChordMIDI } from "./chord&harmony.js";
+import { generateChordPattern } from "./chord&harmony.js";
 
 // Costanti e configurazione globale
 const firstNote = 48;
 const keysNumber = 25;
 const lastNote = firstNote + keysNumber;
 const deductionInterval = 30; 
-const hintInterval = 10;
+const hintInterval = 30;
 const pointsToDeduct = 25;
 const percAssistant = 50;
 const maxRounds = 3;
@@ -125,7 +125,7 @@ showSolutionButton.addEventListener("click", () => {
             piano.view.setKeyColor(note, "green");
         });
     } else if (selectedMinigame === "harmony_GM") {
-        overlayTitleSolution.innerHTML = "IT'S A " + `${progressionData.name}` + " OF " + `${missingChordDetails.noteRoot}${missingChordDetails.chordType}`;
+        overlayTitleSolution.innerHTML = "IT'S A " + `${progressionData.name}` + " IN " + `${missingChordDetails.noteRoot}${missingChordDetails.chordType}`;
         overlaySubtitleSolution.innerHTML = `${result} - ${missingChordDetails.noteRoot}${missingChordDetails.chordType}`;
         playProgression(progressionData, missingChord);
         setTimeout(() => {
@@ -473,6 +473,10 @@ function handleOverlayDisplay(overlayType) {
     
     switch(overlayType) {
       case "startGame":
+        overlayPanel.style.display = "flex";
+        overlayTitle.style.display = "flex";
+        overlaySubtitle.style.display = "flex";
+        scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "PRESS START WHEN YOU ARE READY";
         overlaySubtitle.innerHTML = "";
         startGameButton.style.display = "block"
@@ -480,14 +484,22 @@ function handleOverlayDisplay(overlayType) {
       case "timeOver":
         disableInput();
         timeOverFlag = true;
+        overlayPanel.style.display = "flex";
+        overlayTitle.style.display = "flex";
+        overlaySubtitle.style.display = "flex";
+        scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "TIME OVER";
-        overlayTitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
+        overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
         showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block"
         break;
       case "goodGuess":
         disableInput();
         goodGuessFlag = true;
+        overlayPanel.style.display = "flex";
+        overlayTitle.style.display = "flex";
+        overlaySubtitle.style.display = "flex";
+        scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "GOOD GUESS";
         overlaySubtitle.innerHTML = "YOU ARE A BOSS!";        
         showSolutionButton.style.display = "block";
@@ -495,15 +507,20 @@ function handleOverlayDisplay(overlayType) {
         break;
       case "gameOver":
         disableInput();
-        overlayTitle.innerHTML = "GAME OVER";
+        overlayPanel.style.display = "flex";
+        overlayTitle.style.display = "flex";
         overlaySubtitle.style.display = "none";
         scoreLabel.style.display = "flex";
+        overlayTitle.innerHTML = "GAME OVER";
         scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
         goNextRoundButton.innerHTML = "MAIN MENU";
         goNextRoundButton.style.display = "block";
         break;
     case "hide":
-        overlayPanel.style.display = "none"
+        overlayPanel.style.display = "none";
+        overlayTitle.style.display = "none";
+        overlaySubtitle.style.display = "none";
+        scoreLabel.style.display = "none";
         break;    
     default: console.log("Error: overlayType '" + overlayType + "' does not exist.")
     }

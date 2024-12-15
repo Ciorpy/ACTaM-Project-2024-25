@@ -165,16 +165,18 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
     throw new Error("Lobby does not exist.");
   }
 
-  const lobbyData = snapshot.val();
+  /*const lobbyData = snapshot.val();
   if (!checkPassword(password, lobbyData.password)) {
     throw new Error("Incorrect password.");
-  }
+  }*/
 
   // Reference to the players node in the lobby
   const playersRef = ref(db, `lobbies/${lobbyName}/players`);
 
   // Fetch the players data to count how many players are in the lobby
   const playersSnapshot = await get(playersRef);
+
+  console.log(typeof playersSnapshot);
 
   let playersCount = 0;
 
@@ -186,12 +188,8 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
   // Log the number of players in the lobby
   console.log(`There are ${playersCount} players in the lobby.`);
 
-  // If you want to proceed with joining the lobby, continue with your logic
-  // Push the new player to the lobby
-  const newPlayerRef = push(playersRef); // Create a new unique key for the player
-
   // Add the player data
-  await set(newPlayerRef, {
+  await set(playersRef, {
     playerId: playerId,
     playerName: playerName,
     score: 0,
@@ -229,7 +227,7 @@ joinButton.addEventListener("click", async () => {
     alert("Successfully joined the lobby!");
     localStorage.setItem("lobbyName", nameField.value);
     localStorage.setItem("lobbyPw", pwField.value);
-    window.location.href = "../../gameTitleScreen.html";
+    window.location.href = "./Templates/Multiplayer/lobby.html";
   } catch (error) {
     console.error("Error joining lobby:", error);
     alert(error.message);

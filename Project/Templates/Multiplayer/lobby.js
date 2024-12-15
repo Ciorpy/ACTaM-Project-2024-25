@@ -42,6 +42,8 @@ let updateLobby = async function () {
   if (playersSnapshot.exists()) {
     playersCount = Object.keys(playersSnapshot.val()).length;
   }
+
+  console.log(playersCount);
 };
 
 updateLobbyInterval = setInterval(updateLobby, 500);

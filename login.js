@@ -54,6 +54,7 @@ partecipateButton.addEventListener("click", () => {
   handleLobbyMenuLayout("player");
 });
 
+/** CODICE DA SPOSTARE (GESTIONE LOBBY) ---------------------------------------------------------------------------------------------------------------- */
 let multiPlayerMenu = document.getElementById("multiPlayerMenu");
 let lobbyMenu = document.getElementById("lobbySelector");
 let lobbyTitle = document.getElementById("lobbyTitle");
@@ -135,7 +136,7 @@ async function createLobby(lobbyName, password, playerId, playerName) {
   // Check if the lobby already exists
   const snapshot = await get(lobbyRef);
   if (snapshot.exists()) {
-    alert("Lobby with this name already exists!");
+    error("Lobby with this name already exists!");
     return;
   }
   // Create the player data
@@ -153,7 +154,7 @@ async function createLobby(lobbyName, password, playerId, playerName) {
   };
 
   // Create the lobby
-  await set(lobbyRef, JSON.parse(JSON.stringify(lobbyData)));
+  await set(lobbyRef, lobbyData);
 }
 
 async function joinLobby(lobbyName, password, playerId, playerName) {
@@ -169,9 +170,30 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
     throw new Error("Incorrect password.");
   }
 
-  const playersRef = ref(db, `lobbies/${lobbyName}/players/${playerId}`);
-  await set(playersRef, {
-    name: playerName,
+  // Reference to the players node in the lobby
+  const playersRef = ref(db, `lobbies/${lobbyName}/players`);
+
+  // Fetch the players data to count how many players are in the lobby
+  const playersSnapshot = await get(playersRef);
+
+  let playersCount = 0;
+
+  // If players exist, count how many keys there are in the players object
+  if (playersSnapshot.exists()) {
+    playersCount = Object.keys(playersSnapshot.val()).length;
+  }
+
+  // Log the number of players in the lobby
+  console.log(`There are ${playersCount} players in the lobby.`);
+
+  // If you want to proceed with joining the lobby, continue with your logic
+  // Push the new player to the lobby
+  const newPlayerRef = push(playersRef); // Create a new unique key for the player
+
+  // Add the player data
+  await set(newPlayerRef, {
+    playerId: playerId,
+    playerName: playerName,
     score: 0,
   });
 
@@ -187,6 +209,9 @@ createButton.addEventListener("click", async () => {
       localStorage.getItem("userNickname")
     );
     alert("Lobby created successfully!");
+    localStorage.setItem("lobbyName", nameField.value);
+    localStorage.setItem("lobbyPw", pwField.value);
+    window.location.href = "./Templates/Multiplayer/lobby.html";
   } catch (error) {
     console.error("Error creating lobby:", error);
     alert(error.message);
@@ -202,6 +227,9 @@ joinButton.addEventListener("click", async () => {
       localStorage.getItem("userNickname")
     );
     alert("Successfully joined the lobby!");
+    localStorage.setItem("lobbyName", nameField.value);
+    localStorage.setItem("lobbyPw", pwField.value);
+    window.location.href = "../../gameTitleScreen.html";
   } catch (error) {
     console.error("Error joining lobby:", error);
     alert(error.message);

@@ -127,6 +127,34 @@ import {
 
 const db = getDatabase(app);
 
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Random index
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+}
+
+let minigamePages = {
+  chords_GM: "./Templates/KeyBoard/keyBoardInput.html",
+  harmony_GM: "./Templates/KeyBoard/keyBoardInput.html",
+  grooves_GM: "./Templates/DrumMachine/drumMachineInput.html",
+  fills_GM: "./Templates/DrumMachine/drumMachineInput.html",
+};
+
+let gameModes = ["chords_GM", "harmony_GM", "grooves_GM", "fills_GM"];
+let difficulties = ["easyDiff", "mediumDiff", "hardDiff"];
+let numRounds = 2 * 4;
+
+let createMinigamesOrder = function () {
+  let gameModeOrder = shuffleArray(gameModes);
+
+  let levels = [];
+
+  for (i = 0; i < numRounds; i++) {}
+
+  return levels;
+};
+
 async function createLobby(lobbyName, password, playerId, playerName) {
   const hashedPassword = btoa(password); // Simple base64 encoding (use bcrypt for production)
 
@@ -143,6 +171,7 @@ async function createLobby(lobbyName, password, playerId, playerName) {
   const playerData = {
     playerName: playerName,
     score: 0,
+    joinedAt: Date.now(), // Store the timestamp when the player joins
   };
 
   const lobbyData = {
@@ -151,6 +180,7 @@ async function createLobby(lobbyName, password, playerId, playerName) {
       [playerId]: playerData, // Set playerName as the key for the player
     },
     status: "open",
+    minigamesOrder: createMinigamesOrder(),
   };
 
   // Create the lobby
@@ -158,46 +188,50 @@ async function createLobby(lobbyName, password, playerId, playerName) {
 }
 
 async function joinLobby(lobbyName, password, playerId, playerName) {
-  const dbRef = ref(db, `lobbies/${lobbyName}`);
-  const snapshot = await get(dbRef);
+  // Get a reference to the lobby
+  const lobbyRef = ref(db, `lobbies/${lobbyName}`);
+  const snapshot = await get(lobbyRef);
 
   if (!snapshot.exists()) {
     throw new Error("Lobby does not exist.");
   }
 
-  /*const lobbyData = snapshot.val();
-  if (!checkPassword(password, lobbyData.password)) {
+  // Validate the password
+  const lobbyData = snapshot.val();
+  if (lobbyData.password !== btoa(password)) {
     throw new Error("Incorrect password.");
-  }*/
-
-  // Reference to the players node in the lobby
-  const playersRef = ref(db, `lobbies/${lobbyName}/players`);
-
-  // Fetch the players data to count how many players are in the lobby
-  const playersSnapshot = await get(playersRef);
-
-  console.log(typeof playersSnapshot);
-
-  let playersArray = [];
-  let playersCount = 0;
-
-  // If players exist, count how many keys there are in the players object
-  if (playersSnapshot.exists()) {
-    playersCount = Object.keys(playersSnapshot.val()).length;
-    playersArray = Object.values(playersSnapshot);
   }
 
-  // Log the number of players in the lobby
-  console.log(`There are ${playersCount} players in the lobby.`);
+  // Get a reference to the players node
+  const playersRef = ref(db, `lobbies/${lobbyName}/players`);
+  const playersSnapshot = await get(playersRef);
 
-  // Add the new player data to the array
-  const newPlayer = {
-    playerId: playerId,
+  // Initialize players object
+  let players = {};
+  if (playersSnapshot.exists()) {
+    players = playersSnapshot.val();
+  }
+
+  // Debug: Log existing players
+  console.log("Existing players:", players);
+
+  // Check if the player already exists
+  if (players[playerId]) {
+    throw new Error("Player already exists in the lobby.");
+  }
+
+  // Add the new player to the players object
+  players[playerId] = {
     playerName: playerName,
     score: 0,
+    joinedAt: Date.now(), // Store the timestamp when the player joins
   };
-  playersArray.push(newPlayer);
-  await set(playersRef, playersArray);
+
+  // Debug: Log updated players
+  console.log("Updated players object:", players);
+
+  // Update the players node with the new player
+  await set(playersRef, players);
 
   console.log("Joined the lobby successfully.");
 }

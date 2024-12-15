@@ -22,6 +22,8 @@ lobbyNameLabel.innerHTML = lobbyName;
 let updateLobbyInterval = null;
 let playersArray = null;
 
+const playersDivs = document.getElementsByClassName("playerTag");
+
 let updateLobby = async function () {
   const dbRef = ref(db, `lobbies/${lobbyName}`);
   const snapshot = await get(dbRef);
@@ -48,6 +50,16 @@ let updateLobby = async function () {
 
   // Sort players by joinTime (ascending order)
   playersArray.sort((a, b) => a.joinedAt - b.joinedAt); // Sorting by joinTime
+
+  Array.from(playersDivs).forEach((item, index) => {
+    if (playersArray[index]) {
+      item.classList.toggle("emptySlot", false);
+      item.innerHTML = playersArray[index].playerName;
+    } else {
+      item.classList.toggle("emptySlot", true);
+      item.innerHTML = "";
+    }
+  });
 
   console.log(playersArray);
   console.log(playersCount);

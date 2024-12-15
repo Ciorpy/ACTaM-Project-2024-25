@@ -1,5 +1,6 @@
 body{ 
   background: url('/Project/Images/ep_naturalblack.webp') repeat;
+  font-family: "Audiowide", serif;
 }
 
 .lobbyBackground{
@@ -11,7 +12,7 @@ body{
 .lobbyMenu {
   width: 900px;
   height: 500px;
-  background-color: darkblue;
+  background-color: transparent;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -45,7 +46,14 @@ body{
 .playerTag {
   width: 240px;
   height: 90px;
-  border: 3px solid red;
-
+  border: 3px solid green;
+  line-height: 90px;
+  text-align: center;
+  font-size: 30px;
+  color: white;
   border-radius: 4px
+}
+
+.emptySlot{
+  border-color: red;
 }

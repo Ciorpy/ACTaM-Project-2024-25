@@ -150,7 +150,7 @@ let createMinigamesOrder = function () {
 
   let levels = [];
 
-  for (i = 0; i < numRounds; i++) {}
+  for (let i = 0; i < numRounds; i++) {}
 
   return levels;
 };

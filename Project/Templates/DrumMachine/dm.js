@@ -66,10 +66,10 @@ let selectedMinigame = localStorage.getItem("Gamemode"); // Gets from localStora
 let difficultyLevel = localStorage.getItem("Difficulty"); // Gets from localStorage the selected Difficulty Level
 let practiceModeFlag = localStorage.getItem("Practice"); // Gets from localStorage the selected mode (Game / Practice)
 
-let gamemodeDisplay =  document.getElementById("title")
+let gamemodeDisplay = document.getElementById("title");
 let roundDisplay = document.getElementById("roundDisplay");
 let difficultyDisplay = document.getElementById("difficultyDisplay");
-let practiceMessage = document.getElementById("practiceMessage")
+let practiceMessage = document.getElementById("practiceMessage");
 
 let userLegend = {
   grooves_GM: "GROOVES",
@@ -80,23 +80,22 @@ let userLegend = {
 };
 
 if (practiceModeFlag == "false") {
-  gamemodeDisplay.innerHTML = userLegend[selectedMinigame]
-  roundDisplay.innerHTML = "ROUND: 1"
+  gamemodeDisplay.innerHTML = userLegend[selectedMinigame];
+  roundDisplay.innerHTML = "ROUND: 1";
   difficultyDisplay.innerHTML = "DIFFICULTY: " + userLegend[difficultyLevel];
-  practiceMessage.style.display = "none"
+  practiceMessage.style.display = "none";
 } else {
   roundDisplay.style.display = "none";
   difficultyDisplay.style.display = "none";
 }
 
-let mainMenuButton = document.getElementById("mainMenuButton")
+let mainMenuButton = document.getElementById("mainMenuButton");
 
-if(practiceModeFlag == "true")
-  mainMenuButton.style.display = "block"
+if (practiceModeFlag == "true") mainMenuButton.style.display = "block";
 
 mainMenuButton.addEventListener("click", () => {
   window.location.href = "../../gameTitleScreen.html";
-})
+});
 
 // Dictionary of dictionaries used to access the correct array based on specified gamemode and difficulty level
 let minigamePresets = {
@@ -139,7 +138,7 @@ startGameButton.addEventListener("click", () => {
 });
 
 showSolutionButton.addEventListener("click", () => {
-  showSolution()
+  showSolution();
 });
 
 goNextRoundButton.addEventListener("click", () => {
@@ -149,15 +148,15 @@ goNextRoundButton.addEventListener("click", () => {
     timerInterval = setInterval(roundTimer, 1000);
     handleOverlayDisplay("hide");
     solution = chosenPresets[levelIndex];
-    roundDisplay.innerHTML = "ROUND: " + (levelIndex + 1)
+    roundDisplay.innerHTML = "ROUND: " + (levelIndex + 1);
     solutionInterval = setInterval(playSolution, setBpm(bpm));
     playSolutionButton.innerHTML = "STOP SOLUTION";
     isSolutionPlaying = true;
     hasRoundEnded = false;
     resetDrumMachine();
   } else if (levelIndex == 3) {
-    handleOverlayDisplay("gameOver")
-    levelIndex++
+    handleOverlayDisplay("gameOver");
+    levelIndex++;
   } else {
     window.location.href = "../../gameTitleScreen.html";
   }
@@ -247,7 +246,7 @@ let roundTimer = function () {
     console.log("Punteggio rimanente: " + roundScore);
   }
   timer -= 1;
-  timerDisplay.innerHTML ="REMAINING TIME: " + timer + "s";
+  timerDisplay.innerHTML = "REMAINING TIME: " + timer + "s";
 };
 
 if (practiceModeFlag == "false") {
@@ -536,8 +535,6 @@ if (practiceModeFlag == "true") {
 let goodGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
-  // const endGameAudio = new Audio("../../Sounds/maneskin.wav");
-  // endGameAudio.play();
 
   levelIndex = levelIndex + 1;
   totalScore += roundScore;
@@ -555,8 +552,7 @@ let wrongGuess = function () {
   handleOverlayDisplay("wrongGuess");
 
   setTimeout(() => {
-    if(!hasRoundEnded)
-      handleOverlayDisplay("hide");
+    if (!hasRoundEnded) handleOverlayDisplay("hide");
   }, 2000);
 };
 
@@ -582,37 +578,37 @@ checkInputButton.addEventListener("click", () => {
   resetDrumMachine();
 });
 
-let solutionDiv = document.getElementById("overlaySolution")
+let solutionDiv = document.getElementById("overlaySolution");
 
 let showSolution = function () {
   buildSolution();
-  handleOverlayDisplay("hide")
-  solutionDiv.style.display = "flex"
-  solutionInterval = setInterval(playSolution, setBpm(bpm))
-}
+  handleOverlayDisplay("hide");
+  solutionDiv.style.display = "flex";
+  solutionInterval = setInterval(playSolution, setBpm(bpm));
+};
 
-let hideSolutionButton = document.getElementById("hideSolution")
+let hideSolutionButton = document.getElementById("hideSolution");
 
 hideSolutionButton.addEventListener("click", () => {
-  hideSolution()
-})
+  hideSolution();
+});
 
 let hideSolution = function () {
   resetDrumMachine();
   if (timeOverFlag) handleOverlayDisplay("timeOver");
   if (goodGuessFlag) handleOverlayDisplay("goodGuess");
-  solutionDiv.style.display = "none"
-  clearInterval(solutionInterval)
-}
+  solutionDiv.style.display = "none";
+  clearInterval(solutionInterval);
+};
 
 let buildSolution = function () {
-  drumMachineController = solution
+  drumMachineController = solution;
 
   Array.from(drumMachineItems).forEach((item, index) => {
-    for(i = 0; i < semicrome; i++){
+    for (i = 0; i < semicrome; i++) {
       item
         .getElementsByClassName("semicroma")
         [i].classList.toggle("active", drumMachineController[index][i]);
     }
   });
-}
+};

@@ -37,12 +37,19 @@ let updateLobby = async function () {
   const playersSnapshot = await get(playersArray);
 
   let playersCount = 0;
+  let players = null;
 
   // If players exist, count how many keys there are in the players object
   if (playersSnapshot.exists()) {
-    playersCount = Object.keys(playersSnapshot.val()).length;
+    players = playersSnapshot.val(); // This is the players object
+    playersArray = Object.values(players); // Convert the object to an array
+    playersCount = playersArray.length; // Count how many players are in the lobby
   }
 
+  // Sort players by joinTime (ascending order)
+  playersArray.sort((a, b) => a.joinedAt - b.joinedAt); // Sorting by joinTime
+
+  console.log(playersArray);
   console.log(playersCount);
 };
 

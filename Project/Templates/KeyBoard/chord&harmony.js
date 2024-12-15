@@ -68,10 +68,10 @@ function generateChordsMIDI(rootMIDI) {
 // Database delle progressioni armoniche organizzato per difficoltà
 const chordPatterns = {
   easyDiff: [
-    { name: "4-5-1", degrees: [4, 5, 1], progression: ["Maj", "7", "Maj"] },
-    { name: "2-5-1", degrees: [2, 5, 1], progression: ["m", "7", "Maj"] },
-    { name: "6-4-1", degrees: [6, 4, 1], progression: ["m", "Maj", "Maj"] },
-    { name: "5-6-1", degrees: [5, 6, 1], progression: ["7", "m", "Maj"] },  
+    { name: "4-5-1", degrees: [4, 5, 1], progression: ["", "7", ""] },
+    { name: "2-5-1", degrees: [2, 5, 1], progression: ["m", "7", ""] },
+    { name: "6-4-1", degrees: [6, 4, 1], progression: ["m", "", ""] },
+    { name: "5-6-1", degrees: [5, 6, 1], progression: ["7", "m", ""] },  
   ],
 
   mediumDiff: [
@@ -80,7 +80,7 @@ const chordPatterns = {
     { name: "3-6-2-5-1", degrees: [3, 6, 2, 5, 1], progression: ["m", "m", "m7", "7", "Maj7"] },
     { name: "Minor Cadence", degrees: [4, 5, 1], progression: ["m", "7", "m"]  },
     { name: "2-5-1 with Extensions", degrees: [2, 5, 1], progression: ["m7", "7#5", "Maj7"] },
-    { name: "Circle Progression", degrees: [5, 4, 5, 1], progression: ["7", "Maj7", "7", "Maj"] },
+    { name: "Circle Progression", degrees: [5, 4, 5, 1], progression: ["7", "Maj7", "7", ""] },
     { name: "Minor 2-5-1", degrees: [2, 5, 1], progression: ["m7b5", "altb9", "mMaj7"] },
     { name: "Suspended Movement", degrees: [4, 5, 1], progression: ["sus4", "7", "Maj7"] }
   ],

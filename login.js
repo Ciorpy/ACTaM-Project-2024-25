@@ -178,22 +178,26 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
 
   console.log(typeof playersSnapshot);
 
+  let playersArray = [];
   let playersCount = 0;
 
   // If players exist, count how many keys there are in the players object
   if (playersSnapshot.exists()) {
     playersCount = Object.keys(playersSnapshot.val()).length;
+    playersArray = Object.values(playersObject);
   }
 
   // Log the number of players in the lobby
   console.log(`There are ${playersCount} players in the lobby.`);
 
-  // Add the player data
-  await set(playersRef, {
+  // Add the new player data to the array
+  const newPlayer = {
     playerId: playerId,
     playerName: playerName,
     score: 0,
-  });
+  };
+  playersArray.push(newPlayer);
+  await set(playersRef, playersArray);
 
   console.log("Joined the lobby successfully.");
 }

@@ -10,7 +10,7 @@ body{
 }
 
 .lobbyMenu {
-  width: 900px;
+  width: 1500px;
   height: 500px;
   background-color: transparent;
   margin: auto;
@@ -44,7 +44,7 @@ body{
 }
 
 .playerTag {
-  width: 240px;
+  width: 400px;
   height: 90px;
   border: 3px solid green;
   line-height: 90px;

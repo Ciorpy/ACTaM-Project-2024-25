@@ -184,7 +184,7 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
   // If players exist, count how many keys there are in the players object
   if (playersSnapshot.exists()) {
     playersCount = Object.keys(playersSnapshot.val()).length;
-    playersArray = Object.values(playersObject);
+    playersArray = Object.values(playersSnapshot);
   }
 
   // Log the number of players in the lobby

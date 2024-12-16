@@ -15,6 +15,9 @@ partecipateButton.style.pointerEvents = "none";
 
 let userCredential = await signInAnonymously(auth);
 let user = userCredential.user;
+localStorage.setItem("userID", user.uid)
+
+let maxPlayers = 6;
 
 const signInAnonymouslyUser = async () => {
   try {
@@ -215,6 +218,12 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
   // Debug: Log existing players
   console.log("Existing players:", players);
 
+  
+  let playersArray = Object.values(players); // Convert the object to an array
+
+  if (playersArray.length >= maxPlayers)
+    throw new Error("Lobby is full.");
+
   // Check if the player already exists
   if (players[playerId]) {
     throw new Error("Player already exists in the lobby.");
@@ -247,6 +256,7 @@ createButton.addEventListener("click", async () => {
     alert("Lobby created successfully!");
     localStorage.setItem("lobbyName", nameField.value);
     localStorage.setItem("lobbyPw", pwField.value);
+    localStorage.setItem("isHost", true)
     window.location.href = "./Templates/Multiplayer/lobby.html";
   } catch (error) {
     console.error("Error creating lobby:", error);
@@ -265,6 +275,7 @@ joinButton.addEventListener("click", async () => {
     alert("Successfully joined the lobby!");
     localStorage.setItem("lobbyName", nameField.value);
     localStorage.setItem("lobbyPw", pwField.value);
+    localStorage.setItem("isHost", false)
     window.location.href = "./Templates/Multiplayer/lobby.html";
   } catch (error) {
     console.error("Error joining lobby:", error);

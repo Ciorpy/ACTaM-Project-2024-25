@@ -6,7 +6,7 @@ import {
   getDatabase,
   ref,
   get,
-  set,
+  remove,
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
 import { app } from "../../../firebase.js";
@@ -29,7 +29,7 @@ let updateLobby = async function () {
   const snapshot = await get(dbRef);
 
   if (!snapshot.exists()) {
-    throw new Error("Lobby does not exist.");
+    window.location.href = "../../gameTitleScreen.html";
   }
 
   // Reference to the players node in the lobby
@@ -46,23 +46,35 @@ let updateLobby = async function () {
     players = playersSnapshot.val(); // This is the players object
     playersArray = Object.values(players); // Convert the object to an array
     playersCount = playersArray.length; // Count how many players are in the lobby
+
+    // Sort players by joinTime (ascending order)
+    playersArray.sort((a, b) => a.joinedAt - b.joinedAt); // Sorting by joinTime
+
+    Array.from(playersDivs).forEach((item, index) => {
+      if (playersArray[index]) {
+        item.classList.toggle("emptySlot", false);
+        item.innerHTML = playersArray[index].playerName;
+      } else {
+        item.classList.toggle("emptySlot", true);
+        item.innerHTML = "";
+      }
+    });
   }
 
-  // Sort players by joinTime (ascending order)
-  playersArray.sort((a, b) => a.joinedAt - b.joinedAt); // Sorting by joinTime
 
-  Array.from(playersDivs).forEach((item, index) => {
-    if (playersArray[index]) {
-      item.classList.toggle("emptySlot", false);
-      item.innerHTML = playersArray[index].playerName;
-    } else {
-      item.classList.toggle("emptySlot", true);
-      item.innerHTML = "";
-    }
-  });
-
-  console.log(playersArray);
-  console.log(playersCount);
 };
 
 updateLobbyInterval = setInterval(updateLobby, 100);
+
+let backToMainMenuButton = document.getElementById("exitMP")
+
+backToMainMenuButton.addEventListener("click", async () => {
+  const playerRef = ref(db, `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}`);
+
+  await remove(playerRef)
+
+  if(localStorage.getItem("isHost") == "true")
+    await remove (ref(db, `lobbies/${lobbyName}`))
+
+ window.location.href = "../../gameTitleScreen.html";
+})

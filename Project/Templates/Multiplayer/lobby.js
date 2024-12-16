@@ -6,12 +6,23 @@ import {
   getDatabase,
   ref,
   get,
+  set,
   remove,
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
 import { app } from "../../../firebase.js";
+
+import {generateRandomChord} from "../KeyBoard/chord&harmony.js"
+
 const auth = getAuth(app);
 const db = getDatabase(app);
+
+let minigamePages = {
+  chords_GM: "../KeyBoard/keyBoardInput.html",
+  harmony_GM: "../KeyBoard/keyBoardInput.html",
+  grooves_GM: "../DrumMachine/drumMachineInput.html",
+  fills_GM: "../DrumMachine/drumMachineInput.html",
+};
 
 const lobbyName = localStorage.getItem("lobbyName");
 const lobbyPW = localStorage.getItem("lobbyPW");
@@ -19,6 +30,7 @@ const lobbyPW = localStorage.getItem("lobbyPW");
 let lobbyNameLabel = document.getElementById("lobbyName");
 lobbyNameLabel.innerHTML = lobbyName;
 
+let startGameButton = document.getElementById("startGame")
 let updateLobbyInterval = null;
 let playersArray = null;
 
@@ -42,14 +54,30 @@ let updateLobby = async function () {
   let playersCount = 0;
   let players = null;
 
-  // If players exist, count how many keys there are in the players object
-  if (playersSnapshot.exists()) {
-    players = playersSnapshot.val(); // This is the players object
-    playersArray = Object.values(players); // Convert the object to an array
-    playersCount = playersArray.length; // Count how many players are in the lobby
+  let matchStructRef = ref(db, `lobbies/${lobbyName}/matchStruct`)
+  const matchStructSnapshot = await get(matchStructRef)
 
-    // Sort players by joinTime (ascending order)
-    playersArray.sort((a, b) => a.joinedAt - b.joinedAt); // Sorting by joinTime
+  if(matchStructSnapshot.exists()){
+   localStorage.setItem("difficulty", matchStructSnapshot.val().difficulty)
+   localStorage.setItem("gamemode", matchStructSnapshot.val().gamemode)
+   localStorage.setItem("Practice", false)
+
+   window.location.href = minigamePages[matchStructSnapshot.val().gamemode]
+  }
+
+  console.log(matchStructSnapshot)
+
+  if (playersSnapshot.exists()) {
+    players = playersSnapshot.val();
+    playersArray = Object.values(players);
+    playersCount = playersArray.length;
+
+    if(playersCount > 1)
+      startGameButton.classList.toggle("disabled", false)
+    else
+      startGameButton.classList.toggle("disabled", true)
+
+    playersArray.sort((a, b) => a.joinedAt - b.joinedAt);
 
     Array.from(playersDivs).forEach((item, index) => {
       if (playersArray[index]) {
@@ -61,11 +89,21 @@ let updateLobby = async function () {
       }
     });
   }
-
-
 };
 
 updateLobbyInterval = setInterval(updateLobby, 100);
+
+startGameButton.addEventListener("click", async () => {
+  let matchDict = {
+    difficulty: document.getElementById("difficulty").value,
+    gamemode: document.getElementById("gamemode").value
+  }
+  
+  await set(ref(db, `lobbies/${lobbyName}/matchStruct`), matchDict)
+  await set(ref(db, `lobbies/${lobbyName}/status`), "start")
+})
+
+
 
 let backToMainMenuButton = document.getElementById("exitMP")
 

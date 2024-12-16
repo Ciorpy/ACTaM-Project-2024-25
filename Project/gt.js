@@ -27,6 +27,7 @@ let creditsKey = document.getElementById("C_Key");
 
 singplePlayerKey.addEventListener("click", () => {
   loadGamemodeSelector();
+  localStorage.setItem("multiplayerFlag", false)
 });
 
 multiPlayerKey.addEventListener("click", () => {
@@ -35,6 +36,7 @@ multiPlayerKey.addEventListener("click", () => {
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   creditsMenu.style.display = "none";
+  localStorage.setItem("multiplayerFlag", true)
 });
 
 settingsKey.addEventListener("click", () => {

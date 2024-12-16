@@ -1,6 +1,12 @@
 import PianoModel from "./model.js";
 import PianoView from "./view.js";
 
+// Volume
+let defaultVolume = 0.5;
+let loadedVolume = parseFloat(localStorage.getItem("gameVolume"));
+let linearVolume = !isNaN(loadedVolume) ? loadedVolume : defaultVolume;
+let vol = linearVolume > 0 ? 20 * Math.log10(linearVolume) : -Infinity;
+
 // Inizializza il Sampler con i campioni di piano
 const pianoSampler = new Tone.Sampler({
     urls: {
@@ -36,8 +42,10 @@ const pianoSampler = new Tone.Sampler({
         "C8": "C8.mp3"
     },
     release: 1.5,
-    baseUrl: "../../Sounds/Piano Samples/" // URL dei sample di pianoforte
+    volume: vol,
+    baseUrl: "../../Sounds/Piano Samples/"
 }).toDestination();
+
 
 // Aggiungi un listener per sapere quando i sample sono pronti
 pianoSampler.onload = () => {

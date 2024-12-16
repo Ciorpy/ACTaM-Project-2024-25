@@ -3,8 +3,8 @@ const notesInOctave = 12;
 function generateChordsMIDI(rootMIDI) {
   return {
     // Triadi
-    "": [rootMIDI, rootMIDI + 4, rootMIDI + 7],      // Maggiore: T-4-7
-    "m": [rootMIDI, rootMIDI + 3, rootMIDI + 7],      // Minore: T-3-7
+    "Maj": [rootMIDI, rootMIDI + 4, rootMIDI + 7],      // Maggiore: T-4-7
+    "min": [rootMIDI, rootMIDI + 3, rootMIDI + 7],      // Minore: T-3-7
     "dim": [rootMIDI, rootMIDI + 3, rootMIDI + 6],      // Diminuita: T-3-6
     "aug": [rootMIDI, rootMIDI + 4, rootMIDI + 8],      // Aumentata: T-4-8
 
@@ -68,19 +68,19 @@ function generateChordsMIDI(rootMIDI) {
 // Database delle progressioni armoniche organizzato per difficoltà
 const chordPatterns = {
   easyDiff: [
-    { name: "4-5-1", degrees: [4, 5, 1], progression: ["", "7", ""] },
-    { name: "2-5-1", degrees: [2, 5, 1], progression: ["m", "7", ""] },
-    { name: "6-4-1", degrees: [6, 4, 1], progression: ["m", "", ""] },
-    { name: "5-6-1", degrees: [5, 6, 1], progression: ["7", "m", ""] },  
+    { name: "4-5-1", degrees: [4, 5, 1], progression: ["Maj", "7", "Maj"] },
+    { name: "2-5-1", degrees: [2, 5, 1], progression: ["min", "7", "Maj"] },
+    { name: "6-4-1", degrees: [6, 4, 1], progression: ["min", "Maj", "Maj"] },
+    { name: "5-6-1", degrees: [5, 6, 1], progression: ["7", "min", "Maj"] },  
   ],
 
   mediumDiff: [
     { name: "6-2-5-1", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "7", "Maj7"] },
     { name: "Descending Chromatic", degrees: [7, 6, 5, 1], progression: ["7", "m7", "7", "Maj7"] },
-    { name: "3-6-2-5-1", degrees: [3, 6, 2, 5, 1], progression: ["m", "m", "m7", "7", "Maj7"] },
-    { name: "Minor Cadence", degrees: [4, 5, 1], progression: ["m", "7", "m"]  },
+    { name: "3-6-2-5-1", degrees: [3, 6, 2, 5, 1], progression: ["min", "min", "m7", "7", "Maj7"] },
+    { name: "Minor Cadence", degrees: [4, 5, 1], progression: ["min", "7", "min"]  },
     { name: "2-5-1 with Extensions", degrees: [2, 5, 1], progression: ["m7", "7#5", "Maj7"] },
-    { name: "Circle Progression", degrees: [5, 4, 5, 1], progression: ["7", "Maj7", "7", ""] },
+    { name: "Circle Progression", degrees: [5, 4, 5, 1], progression: ["7", "Maj7", "7", "Maj"] },
     { name: "Minor 2-5-1", degrees: [2, 5, 1], progression: ["m7b5", "altb9", "mMaj7"] },
     { name: "Suspended Movement", degrees: [4, 5, 1], progression: ["sus4", "7", "Maj7"] }
   ],
@@ -88,12 +88,12 @@ const chordPatterns = {
   hardDiff: [
     { name: "2-5-1 Extended", degrees: [2, 5, 1], progression: ["m7b5", "7", "Maj7"] },
     { name: "Altered Cadence", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "alt#9", "Maj7"] },
-    { name: "Chromatic Extended", degrees: [7, 3, 6, 2, 5, 1], progression: ["dim7", "m", "m7", "m7b5", "7", "Maj7"] },
+    { name: "Chromatic Extended", degrees: [7, 3, 6, 2, 5, 1], progression: ["dim7", "min", "m7", "m7b5", "7", "Maj7"] },
     { name: "Complex Jazz", degrees: [2, 4, 6, 5, 1], progression: ["m7", "Maj7", "m7", "7", "Maj7"] },
     { name: "Advanced Circle", degrees: [7, 3, 6, 2, 5, 1], progression: ["dim7", "m7", "m7", "m7", "7", "Maj7"] },
-    { name: "Minor Extended", degrees: [2, 5, 1, 4], progression: ["m7b5", "altb9", "mMaj7", "m"] },
+    { name: "Minor Extended", degrees: [2, 5, 1, 4], progression: ["m7b5", "altb9", "mMaj7", "min"] },
     { name: "Altered 5-Step", degrees: [5, 4, 6, 2, 1], progression: ["7b9", "Maj7", "m7", "m7b5", "mMaj7"] },
-    { name: "Dynamic Alteration", degrees: [6, 2, 5, 1, 3], progression: ["m7", "m7b5", "7#9", "Maj7", "m"] }
+    { name: "Dynamic Alteration", degrees: [6, 2, 5, 1, 3], progression: ["m7", "m7b5", "7#9", "Maj7", "min"] }
   ]
 };
 
@@ -166,15 +166,30 @@ function generateInversions(chordNotes) {
   return inversions;
 }
 
-export function generateRandomChord(startNote = 60, difficulty = "easyDiff", type = null, inversion = null) {
+export function generateRandomChord(startNote = 60, difficulty = "easyDiff", type = null) {
   const chordTypesByDifficulty = {
-    easyDiff: ["", "m"],
-    mediumDiff: ["Maj6", "m6", "dim", "aug"],
-    hardDiff: ["Maj7", "mMaj7", "7", "m7", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5"],
+    easyDiff: [
+      "Maj", "min", 
+      //"dim", "aug"
+    ],
+    mediumDiff: [
+      "Maj6", "min6", "dim", "aug", 
+      //"Maj7", "mMaj7", "7", "m7", 
+      //"sus2", "sus4", 
+      //"m7b5", "dim7", "Maj7#5", "7#5", "m7#5"
+    ],
+    hardDiff: [
+      //"Maj", "m", "dim", "aug",
+      //"Maj6", "min6", "dim6", 
+      "Maj7", "mMaj7", "7", "m7", 
+      //"sus2", "sus4", 
+      "m7b5", "dim7", "Maj7#5", "7#5", "m7#5",
+      //"9", "m9", "Maj9", "7b9", "7#9", "6b9", "6#9", "6(9)"
+    ],
   };
   const randomRoot = Math.floor(Math.random() * 12) + startNote;
   const chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
-  const randomChordType = type ?? chordTypes[Math.floor(Math.random() * chordTypes.length)];
+  let randomChordType = type ?? chordTypes[Math.floor(Math.random() * chordTypes.length)];
   const chords = generateChordsMIDI(randomRoot);
   if (!chords[randomChordType]) {
     console.error(`Chord type ${randomChordType} not found for root ${randomRoot}`);
@@ -182,23 +197,9 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff", typ
   }
   const chord = chords[randomChordType];
   const inversions = generateInversions(chord);
-  let selectedInversion = inversions[0];
-  let selectedInversionIndex = 0;
-  if (inversion !== null) {
-    const inversionIndex = inversions.findIndex((inv) => inv.every((note, i) => note === inversion[i]));
-    if (inversionIndex !== -1) {
-      selectedInversion = inversion;
-      selectedInversionIndex = inversionIndex;
-    } else {
-      console.error("Specified inversion is invalid. Using a random inversion.");
-      selectedInversionIndex = Math.floor(Math.random() * inversions.length);
-      selectedInversion = inversions[selectedInversionIndex];
-    }
-  } else {
-    selectedInversionIndex = Math.floor(Math.random() * inversions.length);
-    selectedInversion = inversions[selectedInversionIndex];
-  }
-  const updatedRoot = selectedInversion[0];
+  const selectedInversionIndex = Math.floor(Math.random() * inversions.length);
+  let selectedInversion = inversions[selectedInversionIndex];
+  const updatedRoot = selectedInversionIndex === 0 ? selectedInversion[0] : selectedInversion[selectedInversion.length - selectedInversionIndex];
   const inversionType = selectedInversionIndex === 0 ? "ROOT POSITION" : `${selectedInversionIndex}° INVERSION`;
   return {
     midiRoot: updatedRoot,
@@ -225,7 +226,7 @@ export function generateChordPattern(firstNote = 48, difficulty = "easyDiff") {
       const degree = selectedPattern.degrees[index];
       const degrees = rootNote + calculateDegree(rootNote, degree);
       const chordType = selectedPattern.progression[index];
-      const chordData = generateRandomChord(degrees, difficulty, chordType, 0);
+      const chordData = generateRandomChord(degrees, difficulty, chordType);
       if (!chordData || !chordData.midiNotes) {
         console.warn(`generateRandomChord failed for degree ${degree} with type ${chordType}`);
         return null;

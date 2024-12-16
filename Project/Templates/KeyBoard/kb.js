@@ -12,7 +12,9 @@ const deductionInterval = 30;
 const hintInterval = 30;
 const pointsToDeduct = 25;
 const percAssistant = 50;
-const maxRounds = 3;
+let defaultRounds = 3; // Defaul value for max number of rounds
+let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); // Loaded value
+let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
 
 // Variabili globali
 let piano = new PianoController("piano", keysNumber, firstNote);

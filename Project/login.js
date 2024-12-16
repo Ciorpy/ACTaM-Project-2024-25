@@ -69,11 +69,11 @@ let handleLobbyMenuLayout = function (role) {
   multiPlayerMenu.style.display = "none";
   lobbyMenu.style.display = "block";
   if (role == "player") {
-    lobbyTitle.innerHTML = "JOIN LOBBY";
+    lobbyTitle.innerHTML = "Join Lobby";
     createButton.style.display = "none";
     joinButton.style.display = "block";
   } else if (role == "host") {
-    lobbyTitle.innerHTML = "CREATE LOBBY";
+    lobbyTitle.innerHTML = "Create Lobby";
     createButton.style.display = "block";
     joinButton.style.display = "none";
   }

@@ -2,8 +2,8 @@
 
 // Volume
 let defaultVolume = 0.5; // Default value for volume
-let loadedVolume = localStorage.getItem("mainVolume"); // Try to loads the stored value from the local storage
-let volume = loadedVolume ? loadedVolume : defaultVolume; // If the loaded volume exists then assigns it to the volume variable, otherwise use default
+let loadedVolume = parseFloat(localStorage.getItem("gameVolume")); // Try to loads the stored value from the local storage
+let vol = !isNaN(loadedVolume) ? loadedVolume : defaultVolume; // If the loaded volume exists then assigns it to the volume variable, otherwise use default
 
 // Drum machine dims
 let semicrome = 16; // Number of semicromes to fill
@@ -50,6 +50,9 @@ let solutionInterval = null; // Variable that stores the interval of the solutio
 
 // Level succession
 let levelIndex = 0; // Stores the index associated to the actual level
+let defaultRounds = 3; // Defaul value for max number of rounds
+let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); // Loaded value
+let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
 
 // Score
 let maxScore = 125; // Max score that the user can get (the actual Maximum score is 100, we add 125 to avoid a problem in the logic)
@@ -142,7 +145,7 @@ showSolutionButton.addEventListener("click", () => {
 });
 
 goNextRoundButton.addEventListener("click", () => {
-  if (levelIndex < 3) {
+  if (levelIndex < maxRounds) {
     timeOverFlag = false;
     goodGuessFlag = false;
     timerInterval = setInterval(roundTimer, 1000);
@@ -154,7 +157,7 @@ goNextRoundButton.addEventListener("click", () => {
     isSolutionPlaying = true;
     hasRoundEnded = false;
     resetDrumMachine();
-  } else if (levelIndex == 3) {
+  } else if (levelIndex == maxRounds) {
     handleOverlayDisplay("gameOver");
     levelIndex++;
   } else {
@@ -305,6 +308,7 @@ Array.from(drumMachineItems).forEach((item, index) => {
 
 audioFiles.forEach((file, index) => {
   const audio = new Audio(file);
+  audio.volume = vol;
   preloadedSounds[index] = audio;
 });
 

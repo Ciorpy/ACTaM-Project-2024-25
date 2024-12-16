@@ -61,14 +61,30 @@ creditsKey.addEventListener("click", () => {
   creditsMenu.style.display = "block";
 });
 
-// Volume Handler
+// Menu Volume Handler
 let volumeSlider = document.getElementById("mainVolumeSlider");
-volumeSlider.value = localStorage.getItem("mainVolume")
-  ? localStorage.getItem("mainVolume")
-  : 0.3;
+
+volumeSlider.value = localStorage.getItem("mainVolume") ? localStorage.getItem("mainVolume") : 0.3;
 
 volumeSlider.addEventListener("input", () => {
   localStorage.setItem("mainVolume", volumeSlider.value);
+});
+
+// inGame Volume Handler
+let inGameVolumeSlider = document.getElementById("gameVolumeSlider");
+
+inGameVolumeSlider.value = localStorage.getItem("gameVolume") ? localStorage.getItem("gameVolume") : 0.5;
+
+inGameVolumeSlider.addEventListener("input", () => {
+  localStorage.setItem("gameVolume", inGameVolumeSlider.value);
+});
+
+let numberOfRounds = document.getElementById("numberRounds");
+
+numberOfRounds.value = localStorage.getItem("numberOfRounds") ? localStorage.getItem("numberOfRounds") : 3;
+
+numberOfRounds.addEventListener("input", () => {
+  localStorage.setItem("numberOfRounds", numberOfRounds.value);
 });
 
 let loadGamemodeSelector = function () {
@@ -209,4 +225,36 @@ backButtonC.addEventListener("click", () => {
   creditsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "none";
+});
+
+// AUDIO MENU
+   
+// Elenco dei file audio
+const audioFiles = [
+  "/Project/Sounds/Music Background/Weird fishes sonicpi.mp3",
+  "/Project/Sounds/Music Background/Pjano tonejs.mp3"
+];
+      
+// Seleziona casualmente un file audio
+const randomIndex = Math.floor(Math.random() * audioFiles.length);
+const selectedAudio = audioFiles[randomIndex];
+      
+// Imposta il file selezionato come sorgente dell'audio
+const audio = document.getElementById("background-music");
+audio.src = selectedAudio;
+
+// Imposta il volume iniziale dell'audio in base allo slider
+audio.volume = parseFloat(volumeSlider.value);
+
+volumeSlider.addEventListener("input", () => {
+  audio.volume = parseFloat(volumeSlider.value); // Converte il valore dello slider in un numero
+  console.log(`Volume attuale: ${audio.volume}`); // Debug
+});
+    
+// Fallback se l'autoplay non funziona
+audio.addEventListener("error", () => {
+  console.log("Autoplay bloccato. Richiesta interazione utente.");
+  document.body.addEventListener("click", () => {
+    audio.play();
+  }, { once: true }); // Avvia solo al primo clic
 });

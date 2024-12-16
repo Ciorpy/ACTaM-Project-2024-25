@@ -29,6 +29,7 @@ let updateLobby = async function () {
   const snapshot = await get(dbRef);
 
   if (!snapshot.exists()) {
+    alert("Lobby was closed by host. Click ok to return to Main Menu")
     window.location.href = "../../gameTitleScreen.html";
   }
 

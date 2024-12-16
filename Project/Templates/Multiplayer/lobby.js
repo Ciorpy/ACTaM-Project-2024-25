@@ -51,6 +51,7 @@ let updateLobby = async function () {
 
   let playersCount = 0;
   let players = null;
+  let playerKeys;
 
   let matchStructRef = ref(db, `lobbies/${lobbyName}/matchStruct`);
   const matchStructSnapshot = await get(matchStructRef);
@@ -65,14 +66,16 @@ let updateLobby = async function () {
 
   if (playersSnapshot.exists()) {
     players = playersSnapshot.val();
-    playersArray = Object.values(players);
-    playersCount = playersArray.length;
-    let playerKeys = Object.keys(players);
+    let playerEntries = Object.entries(players); // Convert to [key, value] pairs
+    playersCount = playerEntries.length;
+
+    playerEntries.sort((a, b) => a[1].joinedAt - b[1].joinedAt);
+
+    playerKeys = playerEntries.map((entry) => entry[0]); // Extract sorted keys
+    playersArray = playerEntries.map((entry) => entry[1]); // Extract sorted values
 
     if (playersCount > 1) startGameButton.classList.toggle("disabled", false);
     else startGameButton.classList.toggle("disabled", true);
-
-    playersArray.sort((a, b) => a.joinedAt - b.joinedAt);
 
     Array.from(playersDivs).forEach((item, index) => {
       if (playersArray[index]) {
@@ -95,13 +98,16 @@ let updateLobby = async function () {
       for (let i = 1; i < playersCount; i++) {
         let iPlayerRef = ref(
           db,
-          `lobbies/${lobbyName}/players${playerKeys[i]}`
+          `lobbies/${lobbyName}/players/${playerKeys[i]}`
         );
         if (Date.now() - playersArray[i].lastPing > 2000) {
           await remove(iPlayerRef);
         }
       }
     } else {
+      if (Date.now() - playersArray[0].lastPing > 2000) {
+        await remove(dbRef);
+      }
     }
   }
 };

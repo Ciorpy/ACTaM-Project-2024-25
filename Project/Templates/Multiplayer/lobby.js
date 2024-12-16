@@ -60,6 +60,7 @@ let updateLobby = async function () {
   if(matchStructSnapshot.exists()){
    localStorage.setItem("difficulty", matchStructSnapshot.val().difficulty)
    localStorage.setItem("gamemode", matchStructSnapshot.val().gamemode)
+   localStorage.setItem("Practice", false)
 
    window.location.href = minigamePages[matchStructSnapshot.val().gamemode]
   }

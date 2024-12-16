@@ -65,4 +65,4 @@ let updateLobby = async function () {
   console.log(playersCount);
 };
 
-updateLobbyInterval = setInterval(updateLobby, 500);
+updateLobbyInterval = setInterval(updateLobby, 100);

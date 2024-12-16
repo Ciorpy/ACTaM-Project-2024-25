@@ -12,7 +12,7 @@ import {
 
 import { app } from "../../../firebase.js";
 
-import {generateRandomChord} from "../KeyBoard/chord&harmony.js"
+import { generateRandomChord } from "../KeyBoard/chord&harmony.js";
 
 const auth = getAuth(app);
 const db = getDatabase(app);
@@ -30,7 +30,7 @@ const lobbyPW = localStorage.getItem("lobbyPW");
 let lobbyNameLabel = document.getElementById("lobbyName");
 lobbyNameLabel.innerHTML = lobbyName;
 
-let startGameButton = document.getElementById("startGame")
+let startGameButton = document.getElementById("startGame");
 let updateLobbyInterval = null;
 let playersArray = null;
 
@@ -41,41 +41,36 @@ let updateLobby = async function () {
   const snapshot = await get(dbRef);
 
   if (!snapshot.exists()) {
-    alert("Lobby was closed by host. Click ok to return to Main Menu")
+    alert("Lobby was closed by host. Click ok to return to Main Menu");
     window.location.href = "../../gameTitleScreen.html";
   }
 
-  // Reference to the players node in the lobby
   playersArray = ref(db, `lobbies/${lobbyName}/players`);
 
-  // Fetch the players data to count how many players are in the lobby
   const playersSnapshot = await get(playersArray);
 
   let playersCount = 0;
   let players = null;
 
-  let matchStructRef = ref(db, `lobbies/${lobbyName}/matchStruct`)
-  const matchStructSnapshot = await get(matchStructRef)
+  let matchStructRef = ref(db, `lobbies/${lobbyName}/matchStruct`);
+  const matchStructSnapshot = await get(matchStructRef);
 
-  if(matchStructSnapshot.exists()){
-   localStorage.setItem("difficulty", matchStructSnapshot.val().difficulty)
-   localStorage.setItem("gamemode", matchStructSnapshot.val().gamemode)
-   localStorage.setItem("Practice", false)
+  if (matchStructSnapshot.exists()) {
+    localStorage.setItem("difficulty", matchStructSnapshot.val().difficulty);
+    localStorage.setItem("gamemode", matchStructSnapshot.val().gamemode);
+    localStorage.setItem("Practice", false);
 
-   window.location.href = minigamePages[matchStructSnapshot.val().gamemode]
+    window.location.href = minigamePages[matchStructSnapshot.val().gamemode];
   }
-
-  console.log(matchStructSnapshot)
 
   if (playersSnapshot.exists()) {
     players = playersSnapshot.val();
     playersArray = Object.values(players);
     playersCount = playersArray.length;
+    let playerKeys = Object.keys(players);
 
-    if(playersCount > 1)
-      startGameButton.classList.toggle("disabled", false)
-    else
-      startGameButton.classList.toggle("disabled", true)
+    if (playersCount > 1) startGameButton.classList.toggle("disabled", false);
+    else startGameButton.classList.toggle("disabled", true);
 
     playersArray.sort((a, b) => a.joinedAt - b.joinedAt);
 
@@ -88,6 +83,26 @@ let updateLobby = async function () {
         item.innerHTML = "";
       }
     });
+
+    let currentPlayerRef = ref(
+      db,
+      `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/lastPing`
+    );
+
+    await set(currentPlayerRef, Date.now());
+
+    if (localStorage.getItem("isHost") == "true") {
+      for (let i = 1; i < playersCount; i++) {
+        let iPlayerRef = ref(
+          db,
+          `lobbies/${lobbyName}/players${playerKeys[i]}`
+        );
+        if (Date.now() - playersArray[i].lastPing > 2000) {
+          await remove(iPlayerRef);
+        }
+      }
+    } else {
+    }
   }
 };
 
@@ -96,24 +111,25 @@ updateLobbyInterval = setInterval(updateLobby, 100);
 startGameButton.addEventListener("click", async () => {
   let matchDict = {
     difficulty: document.getElementById("difficulty").value,
-    gamemode: document.getElementById("gamemode").value
-  }
-  
-  await set(ref(db, `lobbies/${lobbyName}/matchStruct`), matchDict)
-  await set(ref(db, `lobbies/${lobbyName}/status`), "start")
-})
+    gamemode: document.getElementById("gamemode").value,
+  };
 
+  await set(ref(db, `lobbies/${lobbyName}/matchStruct`), matchDict);
+  await set(ref(db, `lobbies/${lobbyName}/status`), "start");
+});
 
-
-let backToMainMenuButton = document.getElementById("exitMP")
+let backToMainMenuButton = document.getElementById("exitMP");
 
 backToMainMenuButton.addEventListener("click", async () => {
-  const playerRef = ref(db, `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}`);
+  const playerRef = ref(
+    db,
+    `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}`
+  );
 
-  await remove(playerRef)
+  await remove(playerRef);
 
-  if(localStorage.getItem("isHost") == "true")
-    await remove (ref(db, `lobbies/${lobbyName}`))
+  if (localStorage.getItem("isHost") == "true")
+    await remove(ref(db, `lobbies/${lobbyName}`));
 
- window.location.href = "../../gameTitleScreen.html";
-})
+  window.location.href = "../../gameTitleScreen.html";
+});

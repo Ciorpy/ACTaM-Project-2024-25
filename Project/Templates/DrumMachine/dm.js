@@ -315,13 +315,16 @@ if (
   maxRounds = localStorage.getItem("numberRoundsMP");
   let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
   if (localStorage.getItem("isHost") == "true") {
+    chosenPresets = getRandomDrumPatterns(selectedPresets);
     await set(gameStructureRef, chosenPresets);
+    console.log(chosenPresets);
   } else {
     do {
       snapshot = await get(gameStructureRef);
 
       if (snapshot.exists()) {
         chosenPresets = snapshot.val();
+        console.log(chosenPresets);
       }
     } while (!snapshot.exists());
   }

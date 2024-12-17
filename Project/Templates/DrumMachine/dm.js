@@ -307,11 +307,46 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 const lobbyName = localStorage.getItem("lobbyName");
 let snapshot;
+let placementDisplay = document.getElementById("currentPlacement");
+let updateRankingInterval = null;
+
+let playersRef;
+let playerScoreRef;
+
+let updateRanking = async function () {
+  await set(playerScoreRef, totalScore);
+  let playersSnapshot = await get(playersRef);
+
+  let playersArray = Object.entries(playersSnapshot.val()).map(
+    ([id, data]) => ({
+      id,
+      score: data.score,
+    })
+  );
+
+  // Ordina l'array in base allo score in ordine decrescente
+  playersArray.sort((a, b) => b.score - a.score);
+
+  // Trova l'indice del giocatore basandosi sull'id
+  let playerIndex = playersArray.findIndex(
+    (player) => player.id === localStorage.getItem("userID")
+  );
+
+  placementDisplay.innerHTML = `PLACEMENT: ${playerIndex}°`;
+};
 
 if (
   localStorage.getItem("multiplayerFlag") == "true" &&
   practiceModeFlag != "true"
 ) {
+  playersRef = ref(db, `lobbies/${lobbyName}/players`);
+  playerScoreRef = ref(
+    db,
+    `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`
+  );
+  updateRankingInterval = setInterval(updateRanking, 100);
+
+  placementDisplay.style.display = "block";
   maxRounds = localStorage.getItem("numberRoundsMP");
   let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
   if (localStorage.getItem("isHost") == "true") {

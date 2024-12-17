@@ -151,6 +151,7 @@ let startGameButton = document.getElementById("startGame");
 let showSolutionButton = document.getElementById("showSolution");
 let goNextRoundButton = document.getElementById("goNextRound");
 let scoreDivisionLabel = document.getElementById("scoreDivisionLabel");
+let rankingTable = document.getElementById("rankingTable");
 
 let timeOverFlag;
 let goodGuessFlag;
@@ -228,6 +229,10 @@ let handleOverlayDisplay = function (overlayType) {
       overlaySubtitle.style.display = "none";
       scoreLabel.style.display = "flex";
       scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
+      if (localStorage.getItem("multiplayerFlag") == "true") {
+        scoreLabel.style.display = "none";
+        rankingTable.style.display = "flex";
+      }
       goNextRoundButton.innerHTML = "MAIN MENU";
       goNextRoundButton.style.display = "block";
       break;
@@ -321,6 +326,7 @@ let updateRanking = async function () {
     ([id, data]) => ({
       id,
       score: data.score,
+      playerName: data.playerName,
     })
   );
 
@@ -331,6 +337,17 @@ let updateRanking = async function () {
   let playerIndex = playersArray.findIndex(
     (player) => player.id === localStorage.getItem("userID")
   );
+
+  rankingTable.innerHTML = "";
+
+  playersArray.forEach((item, index) => {
+    let newPlayerRanking = document.createElement("div");
+    newPlayerRanking.classList.add("playerRanking");
+    newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${
+      item.score
+    } points`;
+    rankingTable.append(newPlayerRanking);
+  });
 
   placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
 };

@@ -72,6 +72,17 @@ volumeSlider.addEventListener("input", () => {
   localStorage.setItem("mainVolume", volumeSlider.value);
 });
 
+console.log(volumeSlider.value)
+
+// Effects Volume Handler
+let effectsVolSlider = document.getElementById("effectsVolumeSlider");
+
+effectsVolSlider.value = localStorage.getItem("effectsVolume") ? localStorage.getItem("effectsVolume") : 0.5;
+
+effectsVolSlider.addEventListener("input", () => {
+  localStorage.setItem("effectsVolume", effectsVolSlider.value);
+});
+
 // inGame Volume Handler
 let inGameVolumeSlider = document.getElementById("gameVolumeSlider");
 

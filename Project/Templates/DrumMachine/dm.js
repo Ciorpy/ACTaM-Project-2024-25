@@ -30,6 +30,27 @@ const audioFiles = [
   "../../Sounds/New Drum Samples/Crash K 18.wav", // Crash
 ];
 
+// Effects
+let preloadedEffects = [];
+const effectsFiles = [
+  "/Project/Sounds/Effects/game-start.mp3",
+  "/Project/Sounds/Effects/game-bonus.mp3",
+  "/Project/Sounds/Effects/game-over.mp3",
+  "/Project/Sounds/Effects/fail.mp3",
+  "/Project/Sounds/Effects/game-finished.mp3"
+];
+
+let defaultEffectsVolume = 0.5;
+let loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
+let effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
+effectsvol = Math.min(Math.max(effectsvol, 0), 1); // Clamp tra 0 e 1
+
+effectsFiles.forEach((file, index) => {
+  const effect = new Audio(file);
+  effect.volume = effectsvol;
+  preloadedEffects[index] = effect;
+});
+
 // BPM values
 let defaultBpm = 100; // Default value of the BPM slider
 let bpm = defaultBpm; // Sets actual BPM to default value
@@ -160,6 +181,7 @@ goNextRoundButton.addEventListener("click", () => {
   } else if (levelIndex == maxRounds) {
     handleOverlayDisplay("gameOver");
     levelIndex++;
+    preloadedEffects[4].play();
   } else {
     window.location.href = "../../gameTitleScreen.html";
   }
@@ -257,6 +279,7 @@ if (practiceModeFlag == "false") {
   chosenPresets = getRandomDrumPatterns(selectedPresets);
   solution = chosenPresets[levelIndex];
   handleOverlayDisplay("startGame");
+  preloadedEffects[0].play();
 } else {
   selectedPresets = null;
   solution = null;
@@ -548,12 +571,15 @@ let goodGuess = function () {
   handleOverlayDisplay("goodGuess");
   roundScore = maxScore;
   timer = maxTimer;
+  preloadedEffects[1].play();
 };
 
 let wrongGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
   handleOverlayDisplay("wrongGuess");
+  preloadedEffects[3].play();
+  
 
   setTimeout(() => {
     if (!hasRoundEnded) handleOverlayDisplay("hide");
@@ -566,6 +592,7 @@ let timeOver = function (overlayType) {
   resetDrumMachine();
   clearInterval(timerInterval);
   handleOverlayDisplay(overlayType);
+  preloadedEffects[2].play();
 };
 
 let checkInputButton = document.getElementById("checkInputButton");

@@ -1,4 +1,0 @@
-Harmony games.
-
-Idea: al posto della tastiera viedeo di pentagrammi che suonano presi da musescore direttamente dalla cattura schermo.
-Il database associa ai video i gradi che l'utente dovrà invinare. Tramite un sistema di tasti o menù a tendina sotto ad ogni accordo che verrà suonato

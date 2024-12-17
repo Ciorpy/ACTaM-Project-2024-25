@@ -12,11 +12,11 @@ const deductionInterval = 30;
 const hintInterval = 30;
 const pointsToDeduct = 25;
 const percAssistant = 50;
+
+// Variabili globali
 let defaultRounds = 3; // Defaul value for max number of rounds
 let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); // Loaded value
 let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
-
-// Variabili globali
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
 let totalScore = 0;
@@ -55,6 +55,29 @@ let userLegend = {
     hardDiff: "HARD",
 };
 
+// Effects
+let preloadedEffects = [];
+const effectsFiles = [
+    "/Project/Sounds/Effects/game-start.mp3",
+    "/Project/Sounds/Effects/game-bonus.mp3",
+    "/Project/Sounds/Effects/game-over.mp3",
+    "/Project/Sounds/Effects/fail.mp3",
+    "/Project/Sounds/Effects/game-finished.mp3"
+];
+
+let defaultEffectsVolume = 0.5;
+let loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
+let effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
+effectsvol = Math.min(Math.max(effectsvol, 0), 1); // Clamp tra 0 e 1
+
+console.log(effectsvol);
+
+effectsFiles.forEach((file, index) => {
+    const effect = new Audio(file);
+    effect.volume = effectsvol;
+    preloadedEffects[index] = effect;
+});
+
 // Elementi DOM principali
 const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
@@ -80,7 +103,16 @@ const hideSolutionButton = document.getElementById("hideSolution");
 const mainMenuButton = document.getElementById("mainMenu"); 
 
 // CONFIGURAZIONE INIZIALE DELLA PAGINA -------------------------------------------------------------------------------
-if(practiceModeFlag){
+if(!practiceModeFlag){
+    mainMenuButton.style.display = "none";
+    handleOverlayDisplay("startGame");
+    updateScoreDisplay();
+    updateTimerDisplay();
+    updateLevelDisplay();
+    updateModeDisplay();
+    updateRoundDisplay();
+    preloadedEffects[0].play();
+} else {
     handleOverlayDisplay("hide");
     enableInput();
     startGameButton.style.display = "none";
@@ -99,13 +131,6 @@ if(practiceModeFlag){
     levelDisplay.style.marginBottom = "0px";
     levelDisplay.innerHTML = "JUST HAVE FUN! CHORDS PLAYED WILL BE RECOGNIZED"
     piano.init();
-} else {
-    mainMenuButton.style.display = "none";
-    updateScoreDisplay();
-    updateTimerDisplay();
-    updateLevelDisplay();
-    updateModeDisplay();
-    updateRoundDisplay();
 }
 
 // EVENT LISTENERS ----------------------------------------------------------------------------------------------------
@@ -164,6 +189,7 @@ goNextRoundButton.addEventListener("click", () => {
     }else if (activeRoundID == maxRounds) {
         handleOverlayDisplay("gameOver");
         activeRoundID++;
+        preloadedEffects[4].play();
     } else {
         window.location.href = "../../gameTitleScreen.html";
     }
@@ -199,7 +225,7 @@ document.addEventListener("keydown", (event) => {
     else if (note !== undefined && practiceModeFlag) identifyChord();
 });
 
-document.addEventListener("click", () =>{
+document.addEventListener("click", () => {
     if (isInputDisabled) return;
     const pressedNotes = piano.getPressedNotes();
     if (selectedMinigame === "chords_GM" && assistantMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red");
@@ -283,6 +309,7 @@ function checkChord() {
 }
 
 function handleCorrectGuess() {
+    handleOverlayDisplay("goodGuess");
     clearInterval(timerInterval);
     if (assistantFlag) currentScore *= (1 - percAssistant / 100);
     if (flagHintsPoint[2]) currentScore -= 12;
@@ -292,7 +319,7 @@ function handleCorrectGuess() {
     else totalScore += 0;
     updateScoreDisplay();
     isRoundActive = false;
-    handleOverlayDisplay("goodGuess");
+    preloadedEffects[1].play();
 }
 
 function handleAssistantMode(pressedNotes) {
@@ -427,6 +454,7 @@ function endRound() {
     handleOverlayDisplay("timeOver");
     clearInterval(timerInterval);
     isRoundActive = false;
+    preloadedEffects[2].play();
 }
 
 function disableInput() {
@@ -482,7 +510,7 @@ function handleOverlayDisplay(overlayType) {
         scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "PRESS START WHEN YOU ARE READY";
         overlaySubtitle.innerHTML = "";
-        startGameButton.style.display = "block"
+        startGameButton.style.display = "block";
         break;
       case "timeOver":
         disableInput();
@@ -494,7 +522,7 @@ function handleOverlayDisplay(overlayType) {
         overlayTitle.innerHTML = "TIME OVER";
         overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
         showSolutionButton.style.display = "block";
-        goNextRoundButton.style.display = "block"
+        goNextRoundButton.style.display = "block";
         break;
       case "goodGuess":
         disableInput();
@@ -506,7 +534,7 @@ function handleOverlayDisplay(overlayType) {
         overlayTitle.innerHTML = "GOOD GUESS";
         overlaySubtitle.innerHTML = "YOU ARE A BOSS!";        
         showSolutionButton.style.display = "block";
-        goNextRoundButton.style.display = "block"
+        goNextRoundButton.style.display = "block";
         break;
       case "gameOver":
         disableInput();
@@ -525,7 +553,7 @@ function handleOverlayDisplay(overlayType) {
         overlaySubtitle.style.display = "none";
         scoreLabel.style.display = "none";
         break;    
-    default: console.log("Error: overlayType '" + overlayType + "' does not exist.")
+    default: console.log("Error: overlayType '" + overlayType + "' does not exist.");
     }
   }
 

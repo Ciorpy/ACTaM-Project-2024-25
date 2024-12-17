@@ -15,7 +15,7 @@ partecipateButton.style.pointerEvents = "none";
 
 let userCredential = await signInAnonymously(auth);
 let user = userCredential.user;
-localStorage.setItem("userID", user.uid)
+localStorage.setItem("userID", user.uid);
 
 let maxPlayers = 6;
 
@@ -175,6 +175,7 @@ async function createLobby(lobbyName, password, playerId, playerName) {
     playerName: playerName,
     score: 0,
     joinedAt: Date.now(), // Store the timestamp when the player joins
+    lastPing: Date.now(),
   };
 
   const lobbyData = {
@@ -218,11 +219,9 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
   // Debug: Log existing players
   console.log("Existing players:", players);
 
-  
   let playersArray = Object.values(players); // Convert the object to an array
 
-  if (playersArray.length >= maxPlayers)
-    throw new Error("Lobby is full.");
+  if (playersArray.length >= maxPlayers) throw new Error("Lobby is full.");
 
   // Check if the player already exists
   if (players[playerId]) {
@@ -234,6 +233,7 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
     playerName: playerName,
     score: 0,
     joinedAt: Date.now(), // Store the timestamp when the player joins
+    lastPing: Date.now(),
   };
 
   // Debug: Log updated players
@@ -256,7 +256,7 @@ createButton.addEventListener("click", async () => {
     alert("Lobby created successfully!");
     localStorage.setItem("lobbyName", nameField.value);
     localStorage.setItem("lobbyPw", pwField.value);
-    localStorage.setItem("isHost", true)
+    localStorage.setItem("isHost", true);
     window.location.href = "./Templates/Multiplayer/lobby.html";
   } catch (error) {
     console.error("Error creating lobby:", error);
@@ -275,7 +275,7 @@ joinButton.addEventListener("click", async () => {
     alert("Successfully joined the lobby!");
     localStorage.setItem("lobbyName", nameField.value);
     localStorage.setItem("lobbyPw", pwField.value);
-    localStorage.setItem("isHost", false)
+    localStorage.setItem("isHost", false);
     window.location.href = "./Templates/Multiplayer/lobby.html";
   } catch (error) {
     console.error("Error joining lobby:", error);

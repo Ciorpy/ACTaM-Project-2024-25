@@ -31,9 +31,11 @@ let lobbyNameLabel = document.getElementById("lobbyName");
 lobbyNameLabel.innerHTML = lobbyName;
 
 let startGameButton = document.getElementById("startGame");
+let hostMenu = document.getElementById("hostMenu");
 
 if (localStorage.getItem("isHost") == "false") {
   startGameButton.style.display = "none";
+  hostMenu.style.display = "none";
 }
 
 let updateLobbyInterval = null;
@@ -66,7 +68,10 @@ let updateLobby = async function () {
   if (matchStructSnapshot.exists() && !flagClosed) {
     localStorage.setItem("Difficulty", matchStructSnapshot.val().difficulty);
     localStorage.setItem("Gamemode", matchStructSnapshot.val().gamemode);
-    localStorage.setItem("numberRounds", matchStructSnapshot.val().numberRounds);
+    localStorage.setItem(
+      "numberRounds",
+      matchStructSnapshot.val().numberRounds
+    );
     localStorage.setItem("Practice", false);
 
     window.location.href = minigamePages[matchStructSnapshot.val().gamemode];

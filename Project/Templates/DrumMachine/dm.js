@@ -321,7 +321,7 @@ if (
       snapshot = await get(gameStructureRef);
 
       if (snapshot.exists()) {
-        checkSolution = snapshot.val();
+        chosenPresets = snapshot.val();
       }
     } while (!snapshot.exists());
   }

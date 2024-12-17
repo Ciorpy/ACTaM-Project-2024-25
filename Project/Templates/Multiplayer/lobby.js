@@ -31,11 +31,17 @@ let lobbyNameLabel = document.getElementById("lobbyName");
 lobbyNameLabel.innerHTML = lobbyName;
 
 let startGameButton = document.getElementById("startGame");
+
+if (localStorage.getItem("isHost") != "true") {
+  startGameButton.style.display = false;
+}
+
 let updateLobbyInterval = null;
 let playersArray = null;
 
 const playersDivs = document.getElementsByClassName("playerTag");
 let flagClosed = false;
+
 let updateLobby = async function () {
   const dbRef = ref(db, `lobbies/${lobbyName}`);
   const snapshot = await get(dbRef);
@@ -75,8 +81,13 @@ let updateLobby = async function () {
     playerKeys = playerEntries.map((entry) => entry[0]); // Extract sorted keys
     playersArray = playerEntries.map((entry) => entry[1]); // Extract sorted values
 
-    if (playersCount > 1) startGameButton.classList.toggle("disabled", false);
-    else startGameButton.classList.toggle("disabled", true);
+    if (playersCount > 1) {
+      startGameButton.classList.toggle("disabled", false);
+      startGameButton.innerHTML = "Start game";
+    } else {
+      startGameButton.classList.toggle("disabled", true);
+      startGameButton.innerHTML = "Waiting for other players";
+    }
 
     Array.from(playersDivs).forEach((item, index) => {
       if (playersArray[index]) {

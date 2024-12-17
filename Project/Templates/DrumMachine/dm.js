@@ -37,12 +37,14 @@ const effectsFiles = [
   "/Project/Sounds/Effects/game-bonus.mp3",
   "/Project/Sounds/Effects/game-over.mp3",
   "/Project/Sounds/Effects/fail.mp3",
-  "/Project/Sounds/Effects/game-finished.mp3"
+  "/Project/Sounds/Effects/game-finished.mp3",
 ];
 
 let defaultEffectsVolume = 0.5;
 let loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
-let effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
+let effectsvol = !isNaN(loadedEffectsVolume)
+  ? loadedEffectsVolume
+  : defaultEffectsVolume;
 effectsvol = Math.min(Math.max(effectsvol, 0), 1); // Clamp tra 0 e 1
 
 effectsFiles.forEach((file, index) => {
@@ -285,6 +287,47 @@ if (practiceModeFlag == "false") {
   solution = null;
   chosenPresets = null;
 }
+
+// MULTIPLAYER SETTINGS
+import {
+  getAuth,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import {
+  getDatabase,
+  ref,
+  get,
+  set,
+  remove,
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+import { app } from "../../../firebase.js";
+
+const auth = getAuth(app);
+const db = getDatabase(app);
+const lobbyName = localStorage.getItem("lobbyName");
+let snapshot;
+
+if (
+  localStorage.getItem("multiplayerFlag") == "true" &&
+  practiceModeFlag != "true"
+) {
+  maxRounds = localStorage.getItem("numberRoundsMP");
+  let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
+  if (localStorage.getItem("isHost") == "true") {
+    await set(gameStructureRef, chosenPresets);
+  } else {
+    do {
+      snapshot = await get(gameStructureRef);
+
+      if (snapshot.exists()) {
+        checkSolution = snapshot.val();
+      }
+    } while (!snapshot.exists());
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------------ */
 
 // DYNAMIC HTML LAYOUT GENERATION ---------------------------------------------------------------------------------------------------------------------
 let drumMachineItems = document.getElementsByClassName("drumMachineItem"); // Gets HTML elements that will contain the DM (one for each sample)
@@ -579,7 +622,6 @@ let wrongGuess = function () {
   if (isPlaying) stopMetronome();
   handleOverlayDisplay("wrongGuess");
   preloadedEffects[3].play();
-  
 
   setTimeout(() => {
     if (!hasRoundEnded) handleOverlayDisplay("hide");

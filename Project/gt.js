@@ -27,7 +27,7 @@ let creditsKey = document.getElementById("C_Key");
 
 singplePlayerKey.addEventListener("click", () => {
   loadGamemodeSelector();
-  localStorage.setItem("multiplayerFlag", false)
+  localStorage.setItem("multiplayerFlag", false);
 });
 
 multiPlayerKey.addEventListener("click", () => {
@@ -36,7 +36,8 @@ multiPlayerKey.addEventListener("click", () => {
   settingsMenu.style.display = "none";
   practiceMenu.style.display = "none";
   creditsMenu.style.display = "none";
-  localStorage.setItem("multiplayerFlag", true)
+  localStorage.setItem("multiplayerFlag", true);
+  localStorage.setItem("Practice", false);
 });
 
 settingsKey.addEventListener("click", () => {
@@ -66,18 +67,22 @@ creditsKey.addEventListener("click", () => {
 // Menu Volume Handler
 let volumeSlider = document.getElementById("mainVolumeSlider");
 
-volumeSlider.value = localStorage.getItem("mainVolume") ? localStorage.getItem("mainVolume") : 0.3;
+volumeSlider.value = localStorage.getItem("mainVolume")
+  ? localStorage.getItem("mainVolume")
+  : 0.3;
 
 volumeSlider.addEventListener("input", () => {
   localStorage.setItem("mainVolume", volumeSlider.value);
 });
 
-console.log(volumeSlider.value)
+console.log(volumeSlider.value);
 
 // Effects Volume Handler
 let effectsVolSlider = document.getElementById("effectsVolumeSlider");
 
-effectsVolSlider.value = localStorage.getItem("effectsVolume") ? localStorage.getItem("effectsVolume") : 0.5;
+effectsVolSlider.value = localStorage.getItem("effectsVolume")
+  ? localStorage.getItem("effectsVolume")
+  : 0.5;
 
 effectsVolSlider.addEventListener("input", () => {
   localStorage.setItem("effectsVolume", effectsVolSlider.value);
@@ -86,7 +91,9 @@ effectsVolSlider.addEventListener("input", () => {
 // inGame Volume Handler
 let inGameVolumeSlider = document.getElementById("gameVolumeSlider");
 
-inGameVolumeSlider.value = localStorage.getItem("gameVolume") ? localStorage.getItem("gameVolume") : 0.5;
+inGameVolumeSlider.value = localStorage.getItem("gameVolume")
+  ? localStorage.getItem("gameVolume")
+  : 0.5;
 
 inGameVolumeSlider.addEventListener("input", () => {
   localStorage.setItem("gameVolume", inGameVolumeSlider.value);
@@ -94,7 +101,9 @@ inGameVolumeSlider.addEventListener("input", () => {
 
 let numberOfRounds = document.getElementById("numberRounds");
 
-numberOfRounds.value = localStorage.getItem("numberOfRounds") ? localStorage.getItem("numberOfRounds") : 3;
+numberOfRounds.value = localStorage.getItem("numberOfRounds")
+  ? localStorage.getItem("numberOfRounds")
+  : 3;
 
 numberOfRounds.addEventListener("input", () => {
   localStorage.setItem("numberOfRounds", numberOfRounds.value);
@@ -241,17 +250,17 @@ backButtonC.addEventListener("click", () => {
 });
 
 // AUDIO MENU
-   
+
 // Elenco dei file audio
 const audioFiles = [
   "/Project/Sounds/Music Background/Weird fishes sonicpi.mp3",
-  "/Project/Sounds/Music Background/Pjano tonejs.mp3"
+  "/Project/Sounds/Music Background/Pjano tonejs.mp3",
 ];
-      
+
 // Seleziona casualmente un file audio
 const randomIndex = Math.floor(Math.random() * audioFiles.length);
 const selectedAudio = audioFiles[randomIndex];
-      
+
 // Imposta il file selezionato come sorgente dell'audio
 const audio = document.getElementById("background-music");
 audio.src = selectedAudio;
@@ -262,11 +271,15 @@ audio.volume = parseFloat(volumeSlider.value);
 volumeSlider.addEventListener("input", () => {
   audio.volume = parseFloat(volumeSlider.value);
 });
-    
+
 // Fallback se l'autoplay non funziona
 audio.addEventListener("error", () => {
   console.log("Autoplay bloccato. Richiesta interazione utente.");
-  document.body.addEventListener("click", () => {
-    audio.play();
-  }, { once: true }); // Avvia solo al primo clic
+  document.body.addEventListener(
+    "click",
+    () => {
+      audio.play();
+    },
+    { once: true }
+  ); // Avvia solo al primo clic
 });

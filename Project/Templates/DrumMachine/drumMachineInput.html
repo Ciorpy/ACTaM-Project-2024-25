@@ -59,9 +59,7 @@
           <span id="roundDisplay"></span>
           <span id="practiceMessage">LET'S GROOVE!</span>
         </div>
-        <div class="timer" id="timer">
-          REMAINING TIME: 120 s
-        </div>
+        <div class="timer" id="timer">REMAINING TIME: 120 s</div>
         <div class="currentScore" id="currentScore">CURRENT SCORE: 0</div>
         <div class="drumMachineImgFrame">
           <img src="../../Images/Drum Shape.png" />
@@ -77,7 +75,9 @@
       </div>
       <div class="button" id="resetButton">RESET</div>
       <div class="button" id="checkInputButton">CHECK</div>
-      <div class="button" id="mainMenuButton" style="display: none">BACK TO MENU</div>
+      <div class="button" id="mainMenuButton" style="display: none">
+        BACK TO MENU
+      </div>
     </div>
 
     <div class="debugArea">
@@ -99,15 +99,39 @@
         <div class="levelScore" id="level3"></div>
       </div>
       <div class="overlayMenu">
-        <div class="button" id="startGame" style="background: url('/Project/Images/ep_naturalblack.webp') repeat;">START</div>
-        <div class="button" id="showSolution" style="background: url('/Project/Images/ep_naturalblack.webp') repeat;">SHOW SOLUTION</div>
-        <div class="button" id="goNextRound" style="background: url('/Project/Images/ep_naturalblack.webp') repeat;">NEXT LEVEL</div>
+        <div
+          class="button"
+          id="startGame"
+          style="background: url('/Project/Images/ep_naturalblack.webp') repeat"
+        >
+          START
+        </div>
+        <div
+          class="button"
+          id="showSolution"
+          style="background: url('/Project/Images/ep_naturalblack.webp') repeat"
+        >
+          SHOW SOLUTION
+        </div>
+        <div
+          class="button"
+          id="goNextRound"
+          style="background: url('/Project/Images/ep_naturalblack.webp') repeat"
+        >
+          NEXT LEVEL
+        </div>
       </div>
     </div>
 
     <div class="overlaySolution" id="overlaySolution">
       <div class="overlayMenu">
-        <div class="button" id="hideSolution" style="background: url('/Project/Images/ep_naturalblack.webp') repeat;">HIDE SOLUTION</div>
+        <div
+          class="button"
+          id="hideSolution"
+          style="background: url('/Project/Images/ep_naturalblack.webp') repeat"
+        >
+          HIDE SOLUTION
+        </div>
       </div>
     </div>
 
@@ -119,6 +143,6 @@
     <script src="./Drum Fills/mediumFills.js"></script>
     <script src="./Drum Fills/hardFills.js"></script>
     <script src="./presetsLoad_debug.js"></script>
-    <script src="dm.js"></script>
+    <script type="module" src="dm.js"></script>
   </body>
 </html>

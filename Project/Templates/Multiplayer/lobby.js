@@ -12,8 +12,6 @@ import {
 
 import { app } from "../../../firebase.js";
 
-import { generateRandomChord } from "../KeyBoard/chord&harmony.js";
-
 const auth = getAuth(app);
 const db = getDatabase(app);
 
@@ -69,7 +67,7 @@ let updateLobby = async function () {
     localStorage.setItem("Difficulty", matchStructSnapshot.val().difficulty);
     localStorage.setItem("Gamemode", matchStructSnapshot.val().gamemode);
     localStorage.setItem(
-      "numberRounds",
+      "numberRoundsMP",
       matchStructSnapshot.val().numberRounds
     );
     localStorage.setItem("Practice", false);

@@ -32,7 +32,7 @@ lobbyNameLabel.innerHTML = lobbyName;
 
 let startGameButton = document.getElementById("startGame");
 
-if (localStorage.getItem("isHost") != "true") {
+if (localStorage.getItem("isHost") == "false") {
   startGameButton.style.display = false;
 }
 

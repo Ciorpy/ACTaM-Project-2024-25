@@ -20,43 +20,65 @@
   </head>
   <body>
     <audio id="background-music" src="/Project/Sounds/Music Background/waiting in lobby.mp3" autoplay loop></audio>
-    <div class="lobbyBackground">
-      <div class="lobbyMenu">
-        <div class="lobbyTitle" id="lobbyName"></div>
-        <div class="playersDisplay">
-          <div class="playerTag emptySlot"></div>
-          <div class="playerTag emptySlot"></div>
-          <div class="playerTag emptySlot"></div>
-          <div class="playerTag emptySlot"></div>
-          <div class="playerTag emptySlot"></div>
-          <div class="playerTag emptySlot"></div>
-        </div>
-        <div class="hostMenu" id="hostMenu">
-          <select class="hostMenuElement" id="gamemode"> 
-            <option value="chords_GM">Chords</option>
-            <option value="harmony_GM">Harmony</option>
-            <option value="fills_GM">Fills</option>
-            <option value="grooves_GM">Grooves</option>
-          </select>
-          <select class="hostMenuElement" id="difficulty">
-            <option value="easyDiff">Easy</option>
-            <option value="mediumDiff">Medium</option>
-            <option value="hardDiff">Hard</option>
-          </select>
-          <select class="hostMenuElement" id="numberRounds">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3" selected>3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-        </div>
-        <div class="button disabled" id="startGame">
-          Waiting for other players
-        </div>
-        <div class="button backButton" id="exitMP">BACK TO MAIN MENU</div>
+    
+    <div class="lobbyMenu">
+
+      <div class="lobbyTitle" id="lobbyName"></div>
+
+      <div class="playersDisplay">
+        <div class="playerTag emptySlot"></div>
+        <div class="playerTag emptySlot"></div>
+        <div class="playerTag emptySlot"></div>
+        <div class="playerTag emptySlot"></div>
+        <div class="playerTag emptySlot"></div>
+        <div class="playerTag emptySlot"></div>
       </div>
+      
+      <div class="hostMenu" id="hostMenu">
+
+        <div class="menu">
+          <div class="hostMenuElementTitle">GAMEMODE</div>
+          <div class="hostMenuElement">
+            <select id="gamemode"> 
+              <option value="chords_GM">Chords</option>
+              <option value="harmony_GM">Harmony</option>
+              <option value="fills_GM">Fills</option>
+              <option value="grooves_GM">Grooves</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="menu">
+          <div class="hostMenuElementTitle">DIFFICULTY</div>
+          <div class="hostMenuElement">
+            <select id="difficulty">
+              <option value="easyDiff">Easy</option>
+              <option value="mediumDiff">Medium</option>
+              <option value="hardDiff">Hard</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="menu">
+          <div class="hostMenuElementTitle">ROUNDS</div>
+          <div class="hostMenuElement">
+            <select id="numberRounds">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="button disabled" id="startGame">Waiting for other players</div>
+      <div class="button backButton" id="exitMP">BACK TO MAIN MENU</div>
+    
     </div>
+
     <script type="module" src="./lobby.js"></script>
   </body>
 </html>

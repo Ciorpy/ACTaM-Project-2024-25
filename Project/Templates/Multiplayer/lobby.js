@@ -35,12 +35,13 @@ let updateLobbyInterval = null;
 let playersArray = null;
 
 const playersDivs = document.getElementsByClassName("playerTag");
-
+let flagClosed = false;
 let updateLobby = async function () {
   const dbRef = ref(db, `lobbies/${lobbyName}`);
   const snapshot = await get(dbRef);
 
   if (!snapshot.exists()) {
+    flagClosed = true;
     alert("Lobby was closed by host. Click ok to return to Main Menu");
     window.location.href = "../../gameTitleScreen.html";
   }
@@ -56,7 +57,7 @@ let updateLobby = async function () {
   let matchStructRef = ref(db, `lobbies/${lobbyName}/matchStruct`);
   const matchStructSnapshot = await get(matchStructRef);
 
-  if (matchStructSnapshot.exists()) {
+  if (matchStructSnapshot.exists() && !flagClosed) {
     localStorage.setItem("difficulty", matchStructSnapshot.val().difficulty);
     localStorage.setItem("gamemode", matchStructSnapshot.val().gamemode);
     localStorage.setItem("Practice", false);
@@ -64,7 +65,7 @@ let updateLobby = async function () {
     window.location.href = minigamePages[matchStructSnapshot.val().gamemode];
   }
 
-  if (playersSnapshot.exists()) {
+  if (playersSnapshot.exists() && !flagClosed) {
     players = playersSnapshot.val();
     let playerEntries = Object.entries(players); // Convert to [key, value] pairs
     playersCount = playerEntries.length;

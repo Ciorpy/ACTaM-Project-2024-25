@@ -260,8 +260,7 @@ audio.src = selectedAudio;
 audio.volume = parseFloat(volumeSlider.value);
 
 volumeSlider.addEventListener("input", () => {
-  audio.volume = parseFloat(volumeSlider.value); // Converte il valore dello slider in un numero
-  console.log(`Volume attuale: ${audio.volume}`); // Debug
+  audio.volume = parseFloat(volumeSlider.value);
 });
     
 // Fallback se l'autoplay non funziona

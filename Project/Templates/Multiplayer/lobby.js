@@ -151,3 +151,11 @@ backToMainMenuButton.addEventListener("click", async () => {
 
   window.location.href = "../../gameTitleScreen.html";
 });
+
+// AUDIO LOBBY
+const audio = document.getElementById("background-music");
+let defaultVolume = 0.5;
+let loadedVolume = parseFloat(localStorage.getItem("mainVolume"));
+let vol = !isNaN(loadedVolume) ? loadedVolume : defaultVolume;
+vol = Math.min(Math.max(vol, 0), 1); // Clamp tra 0 e 1
+audio.volume = vol;

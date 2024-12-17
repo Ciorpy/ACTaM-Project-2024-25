@@ -681,7 +681,7 @@ let buildSolution = function () {
   drumMachineController = solution;
 
   Array.from(drumMachineItems).forEach((item, index) => {
-    for (i = 0; i < semicrome; i++) {
+    for (let i = 0; i < semicrome; i++) {
       item
         .getElementsByClassName("semicroma")
         [i].classList.toggle("active", drumMachineController[index][i]);

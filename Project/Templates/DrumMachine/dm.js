@@ -249,7 +249,7 @@ function getRandomDrumPatterns(array) {
   }
 
   // Return the first 3 elements of the shuffled array
-  return array.slice(0, 3);
+  return array.slice(0, maxRounds);
 }
 
 let timerDisplay = document.getElementById("timer");

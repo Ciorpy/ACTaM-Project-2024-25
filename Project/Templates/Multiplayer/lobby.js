@@ -33,7 +33,7 @@ lobbyNameLabel.innerHTML = lobbyName;
 let startGameButton = document.getElementById("startGame");
 
 if (localStorage.getItem("isHost") == "false") {
-  startGameButton.style.display = false;
+  startGameButton.style.display = "none";
 }
 
 let updateLobbyInterval = null;

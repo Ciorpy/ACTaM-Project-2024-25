@@ -332,7 +332,7 @@ let updateRanking = async function () {
     (player) => player.id === localStorage.getItem("userID")
   );
 
-  placementDisplay.innerHTML = `PLACEMENT: ${playerIndex}°`;
+  placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
 };
 
 if (

@@ -100,12 +100,12 @@ let updateLobby = async function () {
           db,
           `lobbies/${lobbyName}/players/${playerKeys[i]}`
         );
-        if (Date.now() - playersArray[i].lastPing > 2000) {
+        if (Date.now() - playersArray[i].lastPing > 10000) {
           await remove(iPlayerRef);
         }
       }
     } else {
-      if (Date.now() - playersArray[0].lastPing > 2000) {
+      if (Date.now() - playersArray[0].lastPing > 10000) {
         await remove(dbRef);
       }
     }

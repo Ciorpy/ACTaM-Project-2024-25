@@ -112,3 +112,10 @@ body{
 .disabled:hover{
   transform: none;
 }
+
+.hostMenuElement {
+  display: inline;
+  margin-top: 20px;
+  margin-left: 40px;
+  width: 100px;
+}

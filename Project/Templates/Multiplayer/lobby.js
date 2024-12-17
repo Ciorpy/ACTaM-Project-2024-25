@@ -66,6 +66,7 @@ let updateLobby = async function () {
   if (matchStructSnapshot.exists() && !flagClosed) {
     localStorage.setItem("Difficulty", matchStructSnapshot.val().difficulty);
     localStorage.setItem("Gamemode", matchStructSnapshot.val().gamemode);
+    localStorage.setItem("numberRounds", matchStructSnapshot.val().numberRounds);
     localStorage.setItem("Practice", false);
 
     window.location.href = minigamePages[matchStructSnapshot.val().gamemode];
@@ -130,6 +131,7 @@ startGameButton.addEventListener("click", async () => {
   let matchDict = {
     difficulty: document.getElementById("difficulty").value,
     gamemode: document.getElementById("gamemode").value,
+    numberRounds: document.getElementById("numberRounds").value,
   };
 
   await set(ref(db, `lobbies/${lobbyName}/matchStruct`), matchDict);

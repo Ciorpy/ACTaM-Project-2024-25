@@ -32,16 +32,23 @@
           <div class="playerTag emptySlot"></div>
         </div>
         <div class="hostMenu" id="hostMenu">
-          <select id="gamemode">
+          <select class="hostMenuElement" id="gamemode"> 
             <option value="chords_GM">Chords</option>
             <option value="harmony_GM">Harmony</option>
             <option value="fills_GM">Fills</option>
             <option value="grooves_GM">Grooves</option>
           </select>
-          <select id="difficulty">
+          <select class="hostMenuElement" id="difficulty">
             <option value="easyDiff">Easy</option>
             <option value="mediumDiff">Medium</option>
             <option value="hardDiff">Hard</option>
+          </select>
+          <select class="hostMenuElement" id="numberRounds">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
           </select>
         </div>
         <div class="button disabled" id="startGame">

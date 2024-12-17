@@ -128,8 +128,8 @@ updateLobbyInterval = setInterval(updateLobby, 100);
 
 startGameButton.addEventListener("click", async () => {
   let matchDict = {
-    difficulty: document.getElementById("difficulty").value,
-    gamemode: document.getElementById("gamemode").value,
+    difficulty: document.getElementById("Difficulty").value,
+    gamemode: document.getElementById("Gamemode").value,
   };
 
   await set(ref(db, `lobbies/${lobbyName}/matchStruct`), matchDict);

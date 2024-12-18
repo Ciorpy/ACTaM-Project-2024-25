@@ -173,7 +173,7 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff", typ
       //"dim", "aug"
     ],
     mediumDiff: [
-      "Maj6", "min6", "dim", "aug", 
+      "6", "m6", "dim", "aug", 
       //"Maj7", "mMaj7", "7", "m7", 
       //"sus2", "sus4", 
       //"m7b5", "dim7", "Maj7#5", "7#5", "m7#5"

@@ -14,9 +14,14 @@ const pointsToDeduct = 25;
 const percAssistant = 50;
 
 // Variabili globali
+let multiplayerflag = false //localStorage.getItem("multiplayerflag");
+let userID = localStorage.getItem("userID");
+let isHost = true //localStorage.getItem("isHost")
 let defaultRounds = 3; // Defaul value for max number of rounds
 let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); // Loaded value
 let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
+let generatedChords = []
+
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
 let totalScore = 0;
@@ -68,7 +73,7 @@ const effectsFiles = [
 let defaultEffectsVolume = 0.5;
 let loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
 let effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
-effectsvol = Math.min(Math.max(effectsvol, 0), 1); // Clamp tra 0 e 1
+effectsvol = Math.min(Math.max(effectsvol, 0), 1); // Clamp tra 0 e 1 -> COS'è STA ROBA
 
 console.log(effectsvol);
 
@@ -241,12 +246,21 @@ function startRound() {
     result = "";
     delay = 0;
     activeRoundID++;
-    resetHintButton();  // -> DA RIVEDERE, SE NON TI PIACE, COSì MI SEMBRA PIù ELEGANTE
+    resetHintButton();  // -> DA RIVEDERE -> SE NON TI PIACE, COSì MI SEMBRA PIù ELEGANTE -> HA ANCORA MENO SENSO
     startTimer();
     enableInput();
     piano.init();
-    if (selectedMinigame === "chords_GM") generateNewChord();
-    else if (selectedMinigame === "harmony_GM") generateNewProgression(), updateResult(); // -> DA IMPLEMENTARE
+    if (selectedMinigame === "chords_GM") {
+        if (multiplayerflag) { // --> multiplayer
+            console.log("Multiplayer true")
+            if (isHost === "true") {
+                generateChordsForRounds();
+            }
+            startMultiplayerRound();
+        } else {
+            generateNewChord();
+        }; 
+    } else if (selectedMinigame === "harmony_GM") generateNewProgression(), updateResult(); // -> DA IMPLEMENTARE
 }
 
 function generateNewChord() {
@@ -318,6 +332,7 @@ function handleCorrectGuess() {
     if (currentScore >= 0) totalScore += Math.floor(currentScore);
     else totalScore += 0;
     updateScoreDisplay();
+    if (multiplayerflag) updateScoreInDatabase(userID, totalScore); // --> multiplayer (total or current?)
     isRoundActive = false;
     preloadedEffects[1].play();
 }
@@ -554,7 +569,62 @@ function handleOverlayDisplay(overlayType) {
         scoreLabel.style.display = "none";
         break;    
     default: console.log("Error: overlayType '" + overlayType + "' does not exist.");
+}
+}
+
+// FUNZIONI MULTIPLAYER -----------------------------------------------------------------------------------------------
+
+
+
+function generateChordsForRounds() {
+    console.log("entrato nella funzione") // togliere
+    for (let i = 0; i < maxRounds; i++) {
+        console.log("entrato nel ciclo 1, iterazione:",i) // togliere
+        do {
+            generatedChordData = generateRandomChord(firstNote, selectedLevel);
+            generatedChord = generatedChordData.midiNotes.sort();
+        } while(generatedChord[generatedChord.length - 1] >= lastNote);
+        console.log(generatedChord) // togliere
+        generatedChords.push(generatedChord);
     }
-  }
+    console.log(generatedChords)
+}
+
+function startMultiplayerRound() {
+    if (!generatedChords || generatedChords.length === 0) {
+        console.error("Accordi non trovati per la modalità multiplayer!");
+        return;
+    }
+
+    if (activeRoundID < maxRounds) {
+        generatedChord = generatedChords[activeRoundID];
+        piano.playChord(generatedChord);
+    } else {
+        endMultiplayerGame();
+    }
+}
+
+function updateScoreInDatabase(userID, totalScore) {
+    const db = firebase.firestore();
+    const userRef = db.collection("players").doc(userID);
+
+    userRef
+        .update({ score: totalScore }) //da verificare
+        .then(() => {
+            console.log("Punteggio aggiornato nel database.");
+        })
+        .catch((error) => {
+            console.error("Errore nell'aggiornamento del punteggio:", error);
+        });
+}
+
+function endMultiplayerGame() { // -> da rivedere per integrare classifica
+    handleOverlayDisplay("gameOver");
+    preloadedEffects[4].play();
+    console.log("Gioco multiplayer terminato.");
+}
+
+
+
 
 export { isInputDisabled };

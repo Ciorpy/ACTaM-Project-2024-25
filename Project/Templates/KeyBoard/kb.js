@@ -74,9 +74,7 @@ const effectsFiles = [
 let defaultEffectsVolume = 0.5;
 let loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
 let effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
-effectsvol = Math.min(Math.max(effectsvol, 0), 1); // Clamp tra 0 e 1 -> COS'è STA ROBA
-
-console.log(effectsvol);
+effectsvol = Math.min(Math.max(effectsvol, 0), 1);
 
 effectsFiles.forEach((file, index) => {
     const effect = new Audio(file);
@@ -261,7 +259,7 @@ function startRound() {
         } else {
             generateNewChord();
         }; 
-    } else if (selectedMinigame === "harmony_GM") generateNewProgression(), updateResult(); // -> DA IMPLEMENTARE
+    } else if (selectedMinigame === "harmony_GM") generateNewProgression(), updateResult();
 }
 
 function generateNewChord() {
@@ -297,7 +295,6 @@ function playProgression(progressionData, missingChord = null) {
         }, delay);
     }
 }
-
 
 function identifyChord() {
     const pressedNotes = piano.getPressedNotes().sort();
@@ -574,9 +571,6 @@ function handleOverlayDisplay(overlayType) {
 }
 
 // FUNZIONI MULTIPLAYER -----------------------------------------------------------------------------------------------
-
-
-
 function generateChordsForRounds() {
     console.log("entrato nella funzione") // togliere
     for (let i = 0; i < maxRounds; i++) {
@@ -626,8 +620,5 @@ function endMultiplayerGame() { // -> da rivedere per integrare classifica
     preloadedEffects[4].play();
     console.log("Gioco multiplayer terminato.");
 }
-
-
-
 
 export { isInputDisabled };

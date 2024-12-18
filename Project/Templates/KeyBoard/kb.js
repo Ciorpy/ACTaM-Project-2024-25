@@ -21,6 +21,7 @@ let defaultRounds = 3; // Defaul value for max number of rounds
 let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); // Loaded value
 let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
 let generatedChords = []
+let generatedChordsData = {};
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
@@ -586,6 +587,7 @@ function generateChordsForRounds() {
         } while(generatedChord[generatedChord.length - 1] >= lastNote);
         console.log(generatedChord) // togliere
         generatedChords.push(generatedChord);
+        generatedChordsData.push(generatedChordData);
     }
     console.log(generatedChords)
 }
@@ -598,6 +600,7 @@ function startMultiplayerRound() {
 
     if (activeRoundID < maxRounds) {
         generatedChord = generatedChords[activeRoundID];
+        generatedChordData = generatedChordsData[activeRoundID];
         piano.playChord(generatedChord);
     } else {
         endMultiplayerGame();

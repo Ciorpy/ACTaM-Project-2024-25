@@ -68,25 +68,25 @@ function generateChordsMIDI(rootMIDI) {
 // Database delle progressioni armoniche organizzato per difficoltà
 const chordPatterns = {
   easyDiff: [
-    { name: "4-5-1", degrees: [4, 5, 1], progression: ["Maj", "7", "Maj"] },
-    { name: "2-5-1", degrees: [2, 5, 1], progression: ["min", "7", "Maj"] },
-    { name: "6-4-1", degrees: [6, 4, 1], progression: ["min", "Maj", "Maj"] },
-    { name: "5-6-1", degrees: [5, 6, 1], progression: ["7", "min", "Maj"] },  
+    { name: "IV-V-I", degrees: [4, 5, 1], progression: ["Maj", "7", "Maj"] },
+    { name: "II-V-I", degrees: [2, 5, 1], progression: ["min", "7", "Maj"] },
+    { name: "VI-IV-I", degrees: [6, 4, 1], progression: ["min", "Maj", "Maj"] },
+    { name: "V-VI-I", degrees: [5, 6, 1], progression: ["7", "min", "Maj"] },  
   ],
 
   mediumDiff: [
-    { name: "6-2-5-1", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "7", "Maj7"] },
+    { name: "VI-II-V-I", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "7", "Maj7"] },
     { name: "Descending Chromatic", degrees: [7, 6, 5, 1], progression: ["7", "m7", "7", "Maj7"] },
-    { name: "3-6-2-5-1", degrees: [3, 6, 2, 5, 1], progression: ["min", "min", "m7", "7", "Maj7"] },
+    { name: "III-VI-II-V-I", degrees: [3, 6, 2, 5, 1], progression: ["min", "min", "m7", "7", "Maj7"] },
     { name: "Minor Cadence", degrees: [4, 5, 1], progression: ["min", "7", "min"]  },
-    { name: "2-5-1 with Extensions", degrees: [2, 5, 1], progression: ["m7", "7#5", "Maj7"] },
+    { name: "II-V-I with Extensions", degrees: [2, 5, 1], progression: ["m7", "7#5", "Maj7"] },
     { name: "Circle Progression", degrees: [5, 4, 5, 1], progression: ["7", "Maj7", "7", "Maj"] },
-    { name: "Minor 2-5-1", degrees: [2, 5, 1], progression: ["m7b5", "altb9", "mMaj7"] },
+    { name: "II-V-I Minor", degrees: [2, 5, 1], progression: ["m7b5", "altb9", "mMaj7"] },
     { name: "Suspended Movement", degrees: [4, 5, 1], progression: ["sus4", "7", "Maj7"] }
   ],
 
   hardDiff: [
-    { name: "2-5-1 Extended", degrees: [2, 5, 1], progression: ["m7b5", "7", "Maj7"] },
+    { name: "II-V-I Extended", degrees: [2, 5, 1], progression: ["m7b5", "7", "Maj7"] },
     { name: "Altered Cadence", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "alt#9", "Maj7"] },
     { name: "Chromatic Extended", degrees: [7, 3, 6, 2, 5, 1], progression: ["dim7", "min", "m7", "m7b5", "7", "Maj7"] },
     { name: "Complex Jazz", degrees: [2, 4, 6, 5, 1], progression: ["m7", "Maj7", "m7", "7", "Maj7"] },
@@ -226,7 +226,7 @@ export function generateChordPattern(firstNote = 48, difficulty = "easyDiff") {
       const degree = selectedPattern.degrees[index];
       const degrees = rootNote + calculateDegree(rootNote, degree);
       const chordType = selectedPattern.progression[index];
-      const chordData = generateRandomChord(degrees, difficulty, degrees, chordType);
+      const chordData = generateRandomChord(firstNote, difficulty, degrees, chordType);
       if (!chordData || !chordData.midiNotes) {
         console.warn(`generateRandomChord failed for degree ${degree} with type ${chordType}`);
         return null;

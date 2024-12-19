@@ -1,3 +1,17 @@
+import {
+    getAuth,
+    onAuthStateChanged,
+  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+  import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    remove,
+  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+  
+import { app } from "../../../firebase.js";
+
 // IMPORTAZIONI E CONFIGURAZIONE INIZIALE -----------------------------------------------------------------------------
 import PianoController from "./controller.js";
 import { generateRandomChord } from "./chord&harmony.js";
@@ -14,14 +28,29 @@ const pointsToDeduct = 25;
 const percAssistant = 50;
 
 // Variabili globali
-let multiplayerflag = false //localStorage.getItem("multiplayerflag");
-let userID = localStorage.getItem("userID");
-let isHost = true //localStorage.getItem("isHost")
-let defaultRounds = 3; // Defaul value for max number of rounds
-let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); // Loaded value
-let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
-let generatedChords = []
-let generatedChordsData = {};
+
+let multiplayerflag = true //localStorage.getItem("multiplayerflag");
+
+let generatedChords = [] // -> settarli da db
+let generatedChordsData = []; // -> settarli da db
+
+
+if (multiplayerflag) {
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    let playersRef = ref(db, `lobbies/${lobbyName}/players`);
+    let playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`);
+    let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
+    maxRounds = localStorage.getItem("numberRoundsMP"); //da mettere dopo l'altro maxrounds 
+    let userID = localStorage.getItem("userID");
+    let isHost = true //localStorage.getItem("isHost")
+    let lobbyName = localStorage.getItem("lobbyName");
+    let snapshot;
+    let updateRankingInterval = setInterval(updateRanking, 100);
+    const rankingTable = document.getElementById("rankingTable");
+    const placementDisplay = document.getElementById("currentPlacement"); 
+    placementDisplay.style.display = "block"; // da vedere meglio dove metterlo
+}
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
@@ -52,6 +81,9 @@ let missingChordDetails = null;
 let progressionData = null;
 let result = "";
 let delay = 0;
+let defaultRounds = 3; 
+let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); 
+let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
 
 let userLegend = {
     chords_GM: "CHORDS",
@@ -252,7 +284,7 @@ function startRound() {
     if (selectedMinigame === "chords_GM") {
         if (multiplayerflag) { // --> multiplayer
             console.log("Multiplayer true")
-            if (isHost === "true") {
+            if (isHost && (!generatedChords.length)) {
                 generateChordsForRounds();
             }
             startMultiplayerRound();
@@ -330,7 +362,7 @@ function handleCorrectGuess() {
     if (currentScore >= 0) totalScore += Math.floor(currentScore);
     else totalScore += 0;
     updateScoreDisplay();
-    if (multiplayerflag) updateScoreInDatabase(userID, totalScore); // --> multiplayer (total or current?)
+    if (multiplayerflag) updateScoreInDatabase(); // --> multiplayer 
     isRoundActive = false;
     preloadedEffects[1].play();
 }
@@ -536,6 +568,7 @@ function handleOverlayDisplay(overlayType) {
         overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
         showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block";
+        //if {multiplayerflag} displayRanking();
         break;
       case "goodGuess":
         disableInput();
@@ -559,6 +592,10 @@ function handleOverlayDisplay(overlayType) {
         scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
         goNextRoundButton.innerHTML = "MAIN MENU";
         goNextRoundButton.style.display = "block";
+        if (multiplayerflag) {
+            scoreLabel.style.display = "none"; //ordine
+            rankingTable.style.display = "flex";
+          }
         break;
     case "hide":
         overlayPanel.style.display = "none";
@@ -571,7 +608,7 @@ function handleOverlayDisplay(overlayType) {
 }
 
 // FUNZIONI MULTIPLAYER -----------------------------------------------------------------------------------------------
-function generateChordsForRounds() {
+async function generateChordsForRounds() {
     console.log("entrato nella funzione") // togliere
     for (let i = 0; i < maxRounds; i++) {
         console.log("entrato nel ciclo 1, iterazione:",i) // togliere
@@ -580,45 +617,78 @@ function generateChordsForRounds() {
             generatedChord = generatedChordData.midiNotes.sort();
         } while(generatedChord[generatedChord.length - 1] >= lastNote);
         console.log(generatedChord) // togliere
-        generatedChords.push(generatedChord);
-        generatedChordsData.push(generatedChordData);
+        generatedChords.push(generatedChord); //solo per host
+        generatedChordsData.push(generatedChordData); //solo per host
     }
-    console.log(generatedChords)
+    await set(gameStructureRef, generatedChordsData); 
+    console.log(generatedChordsData) //togliere
 }
 
-function startMultiplayerRound() {
-    if (!generatedChords || generatedChords.length === 0) {
+async function startMultiplayerRound() {
+    
+    if (!isHost) {generatedChords = await get(gameStructureRef).val(); console.log(generatedChords)}
+
+    if (!generatedChords) {
         console.error("Accordi non trovati per la modalità multiplayer!");
         return;
     }
 
-    if (activeRoundID < maxRounds) {
-        generatedChord = generatedChords[activeRoundID];
-        generatedChordData = generatedChordsData[activeRoundID];
+    if (activeRoundID <= maxRounds) {
+        generatedChord = generatedChords[activeRoundID-1];
+        generatedChordData = generatedChordsData[activeRoundID-1];
+        console.log(activeRoundID, generatedChord, generatedChordData) //togliere
         piano.playChord(generatedChord);
     } else {
         endMultiplayerGame();
     }
 }
 
-function updateScoreInDatabase(userID, totalScore) {
-    const db = firebase.firestore();
-    const userRef = db.collection("players").doc(userID);
-
-    userRef
-        .update({ score: totalScore }) //da verificare
-        .then(() => {
-            console.log("Punteggio aggiornato nel database.");
-        })
-        .catch((error) => {
-            console.error("Errore nell'aggiornamento del punteggio:", error);
-        });
+async function updateScoreInDatabase() {
+    await set(playerScoreRef, totalScore);
+    console.log("punteggio db aggiornato"); //togliere
 }
 
-function endMultiplayerGame() { // -> da rivedere per integrare classifica
+async function endMultiplayerGame() { // -> da rivedere per integrare classifica
+    generatedChords = []
+    generatedChordsData = [];
+    await set(gameStructureRef, generatedChordsData); 
     handleOverlayDisplay("gameOver");
     preloadedEffects[4].play();
-    console.log("Gioco multiplayer terminato.");
+    console.log("Gioco multiplayer terminato."); //togliere
 }
+
+
+let updateRanking = async function () {
+  let playersSnapshot = await get(playersRef);
+
+  let playersArray = Object.entries(playersSnapshot.val()).map( //oppure await get(playersRef).val() direttamente
+    ([id, data]) => ({
+      id,
+      score: data.score,
+      playerName: data.playerName,
+    })
+  );
+
+  playersArray.sort((a, b) => b.score - a.score);
+
+  let playerIndex = playersArray.findIndex(
+    (player) => player.id === userID
+  );
+
+  rankingTable.innerHTML = "";
+
+  playersArray.forEach((item, index) => {
+    let newPlayerRanking = document.createElement("div");
+    newPlayerRanking.classList.add("playerRanking");
+    newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${
+      item.score
+    } points`;
+    rankingTable.append(newPlayerRanking);
+  });
+
+  placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
+};
+
+
 
 export { isInputDisabled };

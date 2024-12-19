@@ -550,8 +550,9 @@ function handleOverlayDisplay(overlayType) {
         overlayTitle.style.display = "flex";
         overlaySubtitle.style.display = "flex";
         scoreLabel.style.display = "none";
-        overlayTitle.innerHTML = "PRESS START WHEN YOU ARE READY";
-        overlaySubtitle.innerHTML = "";
+        if (selectedMinigame === "chords_GM") overlayTitle.innerHTML = "RECOGNIZE CHORD & PLAY IT";
+        else if (selectedMinigame === "harmony_GM") overlayTitle.innerHTML = "RESOLVE CHORD PROGRESSIONS PLAYING MUTED LAST CHORD";
+        overlaySubtitle.innerHTML = "PRESS START";
         startGameButton.style.display = "block";
         break;
       case "timeOver":
@@ -562,7 +563,7 @@ function handleOverlayDisplay(overlayType) {
         overlaySubtitle.style.display = "flex";
         scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "TIME OVER";
-        overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
+        overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT!";
         showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block";
         //if {multiplayerflag} displayRanking();

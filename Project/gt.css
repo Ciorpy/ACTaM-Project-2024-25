@@ -4,6 +4,7 @@
   font-style: normal;
   box-sizing: border-box;
   background: url('/Project/Images/ep_naturalblack.webp') repeat;
+  user-select: none;
 }
 
 body {

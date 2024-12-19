@@ -202,8 +202,9 @@ let handleOverlayDisplay = function (overlayType) {
 
   switch (overlayType) {
     case "startGame":
-      overlayTitle.innerHTML = "PRESS START WHEN YOU ARE READY";
-      overlaySubtitle.innerHTML = "";
+      if (selectedMinigame === "grooves_GM") overlayTitle.innerHTML = "RECOGNIZE GROOVES & FILL THE DRUM MACHINE WITH IT";
+      else if (selectedMinigame === "fills_GM") overlayTitle.innerHTML = "RECOGNIZE FILLS & FILL THE DRUM MACHINE WITH IT";
+      overlaySubtitle.innerHTML = "PRESS START";
       startGameButton.style.display = "block";
       break;
     case "wrongGuess":
@@ -220,7 +221,7 @@ let handleOverlayDisplay = function (overlayType) {
     case "timeOver":
       timeOverFlag = true;
       overlayTitle.innerHTML = "TIME OVER";
-      overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT IN TIME!";
+      overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT!";
       showSolutionButton.style.display = "block";
       goNextRoundButton.style.display = "block";
       break;

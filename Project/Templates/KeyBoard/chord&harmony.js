@@ -71,14 +71,14 @@ const chordPatterns = {
     { name: "IV-V-I", degrees: [4, 5, 1], progression: ["Maj", "7", "Maj"] },
     { name: "II-V-I", degrees: [2, 5, 1], progression: ["min", "7", "Maj"] },
     { name: "VI-IV-I", degrees: [6, 4, 1], progression: ["min", "Maj", "Maj"] },
-    { name: "V-VI-I", degrees: [5, 6, 1], progression: ["7", "min", "Maj"] },  
+    { name: "VI-V-I", degrees: [6, 5, 1], progression: ["min", "7", "Maj"] },  
   ],
 
   mediumDiff: [
     { name: "VI-II-V-I", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "7", "Maj7"] },
-    { name: "Descending Chromatic", degrees: [7, 6, 5, 1], progression: ["7", "m7", "7", "Maj7"] },
+    { name: "VII-VI-V-I", degrees: [7, 6, 5, 1], progression: ["7", "m7", "7", "Maj7"] },
     { name: "III-VI-II-V-I", degrees: [3, 6, 2, 5, 1], progression: ["min", "min", "m7", "7", "Maj7"] },
-    { name: "Minor Cadence", degrees: [4, 5, 1], progression: ["min", "7", "min"]  },
+    { name: "IV-V-I Minor", degrees: [4, 5, 1], progression: ["min", "7", "min"]  },
     { name: "II-V-I with Extensions", degrees: [2, 5, 1], progression: ["m7", "7#5", "Maj7"] },
     { name: "Circle Progression", degrees: [5, 4, 5, 1], progression: ["7", "Maj7", "7", "Maj"] },
     { name: "II-V-I Minor", degrees: [2, 5, 1], progression: ["m7b5", "altb9", "mMaj7"] },
@@ -87,13 +87,13 @@ const chordPatterns = {
 
   hardDiff: [
     { name: "II-V-I Extended", degrees: [2, 5, 1], progression: ["m7b5", "7", "Maj7"] },
-    { name: "Altered Cadence", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "alt#9", "Maj7"] },
-    { name: "Chromatic Extended", degrees: [7, 3, 6, 2, 5, 1], progression: ["dim7", "min", "m7", "m7b5", "7", "Maj7"] },
-    { name: "Complex Jazz", degrees: [2, 4, 6, 5, 1], progression: ["m7", "Maj7", "m7", "7", "Maj7"] },
+    { name: "VI-II-V-I Altered", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "alt#9", "Maj7"] },
+    { name: "VII-VI-V-I Extended", degrees: [7, 3, 6, 2, 5, 1], progression: ["dim7", "min", "m7", "m7b5", "7", "Maj7"] },
+    //{ name: "Complex Jazz", degrees: [2, 4, 6, 5, 1], progression: ["m7", "Maj7", "m7", "7", "Maj7"] },
     { name: "Advanced Circle", degrees: [7, 3, 6, 2, 5, 1], progression: ["dim7", "m7", "m7", "m7", "7", "Maj7"] },
-    { name: "Minor Extended", degrees: [2, 5, 1, 4], progression: ["m7b5", "altb9", "mMaj7", "min"] },
+    { name: "II-V-I Minor Extended", degrees: [4, 2, 5, 1], progression: ["min", "m7b5", "altb9", "mMaj7"] },
     { name: "Altered 5-Step", degrees: [5, 4, 6, 2, 1], progression: ["7b9", "Maj7", "m7", "m7b5", "mMaj7"] },
-    { name: "Dynamic Alteration", degrees: [6, 2, 5, 1, 3], progression: ["m7", "m7b5", "7#9", "Maj7", "min"] }
+    { name: "Dynamic Alteration", degrees: [3, 6, 2, 5, 1], progression: ["min", "m7", "m7b5", "7#9", "Maj7"] }
   ]
 };
 
@@ -169,7 +169,7 @@ function generateInversions(chordNotes) {
 export function generateRandomChord(startNote = 60, difficulty = "easyDiff", root = null, type = null) {
   const chordTypesByDifficulty = {
     easyDiff: [
-      "Maj", "m", 
+      "Maj", "min", 
       //"dim", "aug"
     ],
     mediumDiff: [
@@ -191,10 +191,6 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff", roo
   let chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
   let randomChordType = type ?? chordTypes[Math.floor(Math.random() * chordTypes.length)];
   const chords = generateChordsMIDI(randomRoot);
-  if (!chords[randomChordType]) {
-    console.error(`Chord type ${randomChordType} not found for root ${randomRoot}`);
-    return null;
-  }
   const chord = chords[randomChordType];
   const inversions = generateInversions(chord);
   const selectedInversionIndex = Math.floor(Math.random() * inversions.length);
@@ -227,10 +223,6 @@ export function generateChordPattern(firstNote = 48, difficulty = "easyDiff") {
       const degrees = rootNote + calculateDegree(rootNote, degree);
       const chordType = selectedPattern.progression[index];
       const chordData = generateRandomChord(firstNote, difficulty, degrees, chordType);
-      if (!chordData || !chordData.midiNotes) {
-        console.warn(`generateRandomChord failed for degree ${degree} with type ${chordType}`);
-        return null;
-      }
       const chordDetails = {
         midiRoot: chordData.midiRoot,
         noteRoot: chordData.noteRoot,

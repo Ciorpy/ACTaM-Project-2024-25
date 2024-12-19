@@ -6,6 +6,7 @@
     font-weight: 400;
     font-style: normal;
     background: url('/Project/Images/ep_naturalblack.webp') repeat;
+    user-select: none;
 }
 
 .container {
@@ -211,7 +212,7 @@
     flex-direction: column;
     gap: 30px;
     text-align: center;
-    font-size: 150px;
+    font-size: 125px;
     background-color: rgba(0,0,0,0);
 }
 

@@ -6,6 +6,7 @@
     margin: 0;
     padding: 0;
     background: url('/Project/Images/ep_naturalblack.webp') repeat;
+    user-select: none;
 }
 
 .body{
@@ -274,7 +275,7 @@
     flex-direction: column;
     gap: 30px;
     text-align: center;
-    font-size: 150px;
+    font-size: 125px;
     background: transparent;
 }
 

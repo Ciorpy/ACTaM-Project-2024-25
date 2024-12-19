@@ -166,14 +166,14 @@ function generateInversions(chordNotes) {
   return inversions;
 }
 
-export function generateRandomChord(startNote = 60, difficulty = "easyDiff", type = null) {
+export function generateRandomChord(startNote = 60, difficulty = "easyDiff", root = null, type = null) {
   const chordTypesByDifficulty = {
     easyDiff: [
-      "Maj", "min", 
+      "Maj", "m", 
       //"dim", "aug"
     ],
     mediumDiff: [
-      "6", "m6", "dim", "aug", 
+      "Maj6", "min6", "dim", "aug", 
       //"Maj7", "mMaj7", "7", "m7", 
       //"sus2", "sus4", 
       //"m7b5", "dim7", "Maj7#5", "7#5", "m7#5"
@@ -187,8 +187,8 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff", typ
       //"9", "m9", "Maj9", "7b9", "7#9", "6b9", "6#9", "6(9)"
     ],
   };
-  const randomRoot = Math.floor(Math.random() * 12) + startNote;
-  const chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
+  let randomRoot = root ?? Math.floor(Math.random() * 12) + startNote;
+  let chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
   let randomChordType = type ?? chordTypes[Math.floor(Math.random() * chordTypes.length)];
   const chords = generateChordsMIDI(randomRoot);
   if (!chords[randomChordType]) {
@@ -198,7 +198,7 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff", typ
   const chord = chords[randomChordType];
   const inversions = generateInversions(chord);
   const selectedInversionIndex = Math.floor(Math.random() * inversions.length);
-  let selectedInversion = inversions[selectedInversionIndex];
+  const selectedInversion = inversions[selectedInversionIndex];
   const updatedRoot = selectedInversionIndex === 0 ? selectedInversion[0] : selectedInversion[selectedInversion.length - selectedInversionIndex];
   const inversionType = selectedInversionIndex === 0 ? "ROOT POSITION" : `${selectedInversionIndex}° INVERSION`;
   return {
@@ -207,7 +207,7 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff", typ
     chordType: randomChordType,
     inversion: inversionType,
     midiNotes: selectedInversion,
-    notes: selectedInversion.map(midiToNoteName),
+    notes: selectedInversion.map(midiToNoteName)
   };
 }
 
@@ -226,7 +226,7 @@ export function generateChordPattern(firstNote = 48, difficulty = "easyDiff") {
       const degree = selectedPattern.degrees[index];
       const degrees = rootNote + calculateDegree(rootNote, degree);
       const chordType = selectedPattern.progression[index];
-      const chordData = generateRandomChord(degrees, difficulty, chordType);
+      const chordData = generateRandomChord(degrees, difficulty, degrees, chordType);
       if (!chordData || !chordData.midiNotes) {
         console.warn(`generateRandomChord failed for degree ${degree} with type ${chordType}`);
         return null;

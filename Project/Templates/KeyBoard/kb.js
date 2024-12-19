@@ -28,24 +28,23 @@ const pointsToDeduct = 25;
 const percAssistant = 50;
 
 // Variabili globali
+let defaultRounds = 3; 
+let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); 
+let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
 
-let multiplayerflag = true //localStorage.getItem("multiplayerflag");
-
-let generatedChords = [] // -> settarli da db
-let generatedChordsData = []; // -> settarli da db
-
+let multiplayerflag = localStorage.getItem("multiplayerflag");
 
 if (multiplayerflag) {
     const auth = getAuth(app);
     const db = getDatabase(app);
-    let playersRef = ref(db, `lobbies/${lobbyName}/players`);
-    let playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`);
-    let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
-    maxRounds = localStorage.getItem("numberRoundsMP"); //da mettere dopo l'altro maxrounds 
+    let generatedChordsData = []; 
+    maxRounds = localStorage.getItem("numberRoundsMP"); 
     let userID = localStorage.getItem("userID");
-    let isHost = true //localStorage.getItem("isHost")
+    let isHost = localStorage.getItem("isHost")
     let lobbyName = localStorage.getItem("lobbyName");
-    let snapshot;
+    let playersRef = ref(db, `lobbies/${lobbyName}/players`);
+    let playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${userID}/score`);
+    let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
     let updateRankingInterval = setInterval(updateRanking, 100);
     const rankingTable = document.getElementById("rankingTable");
     const placementDisplay = document.getElementById("currentPlacement"); 
@@ -66,7 +65,6 @@ let selectedMinigame = localStorage.getItem("Gamemode");
 let practiceModeFlag = localStorage.getItem("Practice") == "true" ? true : false;
 let generatedChordData = {};
 let chordData = {};
-let generatedChord = [];
 let hintTimer;
 let flagHints; 
 let isShowingHint;
@@ -81,9 +79,7 @@ let missingChordDetails = null;
 let progressionData = null;
 let result = "";
 let delay = 0;
-let defaultRounds = 3; 
-let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); 
-let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
+
 
 let userLegend = {
     chords_GM: "CHORDS",
@@ -183,8 +179,8 @@ showSolutionButton.addEventListener("click", () => {
     if (selectedMinigame === "chords_GM") {
         overlayTitleSolution.innerHTML = "IT'S A " + `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
         overlaySubtitleSolution.innerHTML = "";
-        piano.playChord(generatedChord);
-        generatedChord.forEach(note => {
+        piano.playChord(generatedChordData.midiNotes);
+        generatedChordData.midiNotes.forEach(note => {
             piano.view.setKeyColor(note, "green");
         });
     } else if (selectedMinigame === "harmony_GM") {
@@ -204,7 +200,7 @@ hideSolutionButton.addEventListener("click", () => {
     if (timeOverFlag) handleOverlayDisplay("timeOver");
     if (goodGuessFlag) handleOverlayDisplay("goodGuess");
     solutionDiv.style.display = "none";
-    if (selectedMinigame === "chords_GM") generatedChord.forEach(note => {
+    if (selectedMinigame === "chords_GM") generatedChordData.midiNotes.forEach(note => {
         piano.view.resetKeyColor(note)
     });
     else if (selectedMinigame === "harmony_GM") missingChord.forEach(note => {
@@ -233,7 +229,7 @@ goNextRoundButton.addEventListener("click", () => {
 
 // Riproduzione della soluzione
 playSolutionButton.addEventListener("click", () => {
-    if (selectedMinigame === "chords_GM") piano.playChord(generatedChord);
+    if (selectedMinigame === "chords_GM") piano.playChord(generatedChordData.midiNotes);
     else if (selectedMinigame === "harmony_GM") playProgression(progressionData);
 });
 
@@ -264,7 +260,7 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("click", () => {
     if (isInputDisabled) return;
     const pressedNotes = piano.getPressedNotes();
-    if (selectedMinigame === "chords_GM" && assistantMode) piano.view.setKeyColor(pressedNotes, generatedChord.includes(pressedNotes[0]) ? "green" : "red");
+    if (selectedMinigame === "chords_GM" && assistantMode) piano.view.setKeyColor(pressedNotes, generatedChordData.midiNotes.includes(pressedNotes[0]) ? "green" : "red");
     else if (selectedMinigame === "harmony_GM" && assistantMode) piano.view.setKeyColor(pressedNotes, missingChord.includes(pressedNotes[0]) ? "green" : "red");
 })
 
@@ -284,7 +280,7 @@ function startRound() {
     if (selectedMinigame === "chords_GM") {
         if (multiplayerflag) { // --> multiplayer
             console.log("Multiplayer true")
-            if (isHost && (!generatedChords.length)) {
+            if (isHost && (!generatedChordsData.length)) {
                 generateChordsForRounds();
             }
             startMultiplayerRound();
@@ -295,11 +291,12 @@ function startRound() {
 }
 
 function generateNewChord() {
+    let sortedGeneratedChord;
     do {
         generatedChordData = generateRandomChord(firstNote, selectedLevel);
-        generatedChord = generatedChordData.midiNotes.sort();
-    } while(generatedChord[generatedChord.length - 1] >= lastNote);
-    piano.playChord(generatedChord);
+        sortedGeneratedChord = generatedChordData.midiNotes.sort();
+    } while(sortedGeneratedChord[sortedGeneratedChord.length - 1] >= lastNote);
+    piano.playChord(generatedChordData.midiNotes);
 }
 
 function generateNewProgression() {
@@ -345,7 +342,7 @@ function checkChord() {
     if (selectedMinigame === "chords_GM"){
         if (arraysEqual(pressedNotes, previousPressedNotes)) return;
         previousPressedNotes = [...pressedNotes];
-        if (arraysEqual(generatedChord, pressedNotes)) handleCorrectGuess();
+        if (arraysEqual(generatedChordData.midiNotes, pressedNotes)) handleCorrectGuess();
     } else if (selectedMinigame === "harmony_GM") {
         const expectedNotes = missingChord;
         if (arraysEqual(pressedNotes, expectedNotes)) {handleCorrectGuess();}
@@ -370,7 +367,7 @@ function handleCorrectGuess() {
 function handleAssistantMode(pressedNotes) {
     const currentColorNotes = new Set(pressedNotes);
     if (selectedMinigame === "chords_GM") pressedNotes.forEach(note => {
-            piano.view.setKeyColor(note, generatedChord.includes(note) ? "green" : "red");
+            piano.view.setKeyColor(note, generatedChordData.midiNotes.includes(note) ? "green" : "red");
         });
     else if (selectedMinigame === "harmony_GM") pressedNotes.forEach(note => {
         piano.view.setKeyColor(note, missingChord.includes(note) ? "green" : "red");
@@ -581,6 +578,10 @@ function handleOverlayDisplay(overlayType) {
         overlaySubtitle.innerHTML = "YOU ARE A BOSS!";        
         showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block";
+        if (multiplayerflag) { // multiplayer
+            scoreLabel.style.display = "none"; //ordine
+            rankingTable.style.display = "flex";
+          }
         break;
       case "gameOver":
         disableInput();
@@ -592,7 +593,7 @@ function handleOverlayDisplay(overlayType) {
         scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
         goNextRoundButton.innerHTML = "MAIN MENU";
         goNextRoundButton.style.display = "block";
-        if (multiplayerflag) {
+        if (multiplayerflag) { // multiplayer
             scoreLabel.style.display = "none"; //ordine
             rankingTable.style.display = "flex";
           }
@@ -609,16 +610,16 @@ function handleOverlayDisplay(overlayType) {
 
 // FUNZIONI MULTIPLAYER -----------------------------------------------------------------------------------------------
 async function generateChordsForRounds() {
+    let sortedGeneratedChord;
     console.log("entrato nella funzione") // togliere
     for (let i = 0; i < maxRounds; i++) {
-        console.log("entrato nel ciclo 1, iterazione:",i) // togliere
+        console.log("entrato nel ciclo, iterazione:",i) // togliere
         do {
             generatedChordData = generateRandomChord(firstNote, selectedLevel);
-            generatedChord = generatedChordData.midiNotes.sort();
-        } while(generatedChord[generatedChord.length - 1] >= lastNote);
-        console.log(generatedChord) // togliere
-        generatedChords.push(generatedChord); //solo per host
-        generatedChordsData.push(generatedChordData); //solo per host
+            sortedGeneratedChord = generatedChordData.midiNotes.sort();
+        } while(sortedGeneratedChord[sortedGeneratedChord.length - 1] >= lastNote);
+        console.log(generatedChordData.midiNotes) // togliere
+        generatedChordsData.push(generatedChordData);
     }
     await set(gameStructureRef, generatedChordsData); 
     console.log(generatedChordsData) //togliere
@@ -626,21 +627,17 @@ async function generateChordsForRounds() {
 
 async function startMultiplayerRound() {
     
-    if (!isHost) {generatedChords = await get(gameStructureRef).val(); console.log(generatedChords)}
+    if (!isHost) {generatedChordsData = await get(gameStructureRef).val(); console.log(generatedChordsData)} //togliere il log
 
-    if (!generatedChords) {
+    if (!generatedChordsData) {
         console.error("Accordi non trovati per la modalità multiplayer!");
         return;
     }
 
-    if (activeRoundID <= maxRounds) {
-        generatedChord = generatedChords[activeRoundID-1];
-        generatedChordData = generatedChordsData[activeRoundID-1];
-        console.log(activeRoundID, generatedChord, generatedChordData) //togliere
-        piano.playChord(generatedChord);
-    } else {
-        endMultiplayerGame();
-    }
+    generatedChordData = generatedChordsData[activeRoundID-1];
+    console.log(activeRoundID, generatedChordData) //togliere
+    piano.playChord(generatedChordData.midiNotes);
+
 }
 
 async function updateScoreInDatabase() {
@@ -648,17 +645,7 @@ async function updateScoreInDatabase() {
     console.log("punteggio db aggiornato"); //togliere
 }
 
-async function endMultiplayerGame() { // -> da rivedere per integrare classifica
-    generatedChords = []
-    generatedChordsData = [];
-    await set(gameStructureRef, generatedChordsData); 
-    handleOverlayDisplay("gameOver");
-    preloadedEffects[4].play();
-    console.log("Gioco multiplayer terminato."); //togliere
-}
-
-
-let updateRanking = async function () {
+async function updateRanking () {
   let playersSnapshot = await get(playersRef);
 
   let playersArray = Object.entries(playersSnapshot.val()).map( //oppure await get(playersRef).val() direttamente

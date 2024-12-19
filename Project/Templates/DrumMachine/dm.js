@@ -18,16 +18,16 @@ let drumMachineController = Array.from({ length: drumSamples }, () =>
 let preloadedSounds = []; // Array that will store the audio obj generates via function
 const audioFiles = [
   // Function that stores the paths associated to the various samples
-  "../../Sounds/New Drum Samples/Kick 22.wav", // Kick
-  "../../Sounds/New Drum Samples/Snare Ludwig Acrolite.wav", // Snare
-  "../../Sounds/New Drum Samples/Tom 10.wav", // Tom 1
-  "../../Sounds/New Drum Samples/Tom 12.wav", // Tom 2
-  "../../Sounds/New Drum Samples/Floor Tom 16.wav", // Floor Tom
-  "../../Sounds/New Drum Samples/Hi Hat Close Sabian HHX 14.wav", // Closed Hi Hat
-  "../../Sounds/New Drum Samples/Hi Hat Open Sabian HHX 14.wav", // Opened Hi Hat
-  "../../Sounds/Drum Samples/RD.wav", // Ride
-  "../../Sounds/New Drum Samples/Clap Stack.wav", // Bell's Ride
-  "../../Sounds/New Drum Samples/Crash K 18.wav", // Crash
+  "../../Sounds/Drum Samples/Kick BD.wav", // Kick
+  "../../Sounds/Drum Samples/Snare SN.wav", // Snare
+  "../../Sounds/Drum Samples/Tom T1.wav", // Tom 1
+  "../../Sounds/Drum Samples/Tom T2.wav", // Tom 2
+  "../../Sounds/Drum Samples/Floor Tom FT.wav", // Floor Tom
+  "../../Sounds/Drum Samples/Hi Hat Close HH.wav", // Closed Hi Hat
+  "../../Sounds/Drum Samples/Hi Hat Open HO.wav", // Opened Hi Hat
+  "../../Sounds/Drum Samples/Ride RD.wav", // Ride
+  "../../Sounds/Drum Samples/Bell Ride BR.wav", // Bell's Ride
+  "../../Sounds/Drum Samples/Crash CR.wav", // Crash
 ];
 
 // Effects

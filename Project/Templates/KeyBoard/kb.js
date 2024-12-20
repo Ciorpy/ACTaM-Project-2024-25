@@ -40,7 +40,7 @@ let generatedChordsData;
 let generatedCadencesData; 
 let missingChordsDetails;
 let missingChords;
-maxRounds = localStorage.getItem("numberRoundsMP"); 
+if (multiplayerflag) maxRounds = localStorage.getItem("numberRoundsMP"); 
 let userID = localStorage.getItem("userID");
 let isHost = localStorage.getItem("isHost")
 let lobbyName = localStorage.getItem("lobbyName");
@@ -50,7 +50,7 @@ let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
 let updateRankingInterval = setInterval(updateRanking, 100);
 const rankingTable = document.getElementById("rankingTable");
 const placementDisplay = document.getElementById("currentPlacement"); 
-placementDisplay.style.display = "block"; // da vedere meglio dove metterlo
+if (multiplayerflag) placementDisplay.style.display = "block"; // da vedere meglio dove metterlo
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];

@@ -32,24 +32,25 @@ let defaultRounds = 3;
 let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); 
 let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
 
-let multiplayerflag = localStorage.getItem("multiplayerflag");
+let multiplayerflag = localStorage.getItem("multiplayerflag") == "true" ? true : false;
 
-if (multiplayerflag) {
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-    let generatedChordsData = []; 
-    maxRounds = localStorage.getItem("numberRoundsMP"); 
-    let userID = localStorage.getItem("userID");
-    let isHost = localStorage.getItem("isHost")
-    let lobbyName = localStorage.getItem("lobbyName");
-    let playersRef = ref(db, `lobbies/${lobbyName}/players`);
-    let playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${userID}/score`);
-    let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
-    let updateRankingInterval = setInterval(updateRanking, 100);
-    const rankingTable = document.getElementById("rankingTable");
-    const placementDisplay = document.getElementById("currentPlacement"); 
-    placementDisplay.style.display = "block"; // da vedere meglio dove metterlo
-}
+const auth = getAuth(app);
+const db = getDatabase(app);
+let generatedChordsData;
+let generatedCadencesData; 
+let missingChordsDetails;
+let missingChords;
+maxRounds = localStorage.getItem("numberRoundsMP"); 
+let userID = localStorage.getItem("userID");
+let isHost = localStorage.getItem("isHost")
+let lobbyName = localStorage.getItem("lobbyName");
+let playersRef = ref(db, `lobbies/${lobbyName}/players`);
+let playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${userID}/score`);
+let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
+let updateRankingInterval = setInterval(updateRanking, 100);
+const rankingTable = document.getElementById("rankingTable");
+const placementDisplay = document.getElementById("currentPlacement"); 
+placementDisplay.style.display = "block"; // da vedere meglio dove metterlo
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
@@ -284,14 +285,16 @@ function startRound() {
     if (selectedMinigame === "chords_GM") {
         if (multiplayerflag) { // --> multiplayer
             console.log("Multiplayer true")
-            if (isHost && (!generatedChordsData.length)) {
-                generateChordsForRounds();
-            }
+            if (isHost && (!generatedChordsData.length)) generateChordsForRounds();
             startMultiplayerRound();
-        } else {
-            generateNewChord();
-        }; 
-    } else if (selectedMinigame === "harmony_GM") generateNewProgression();
+        } else generateNewChord(); 
+    } else if (selectedMinigame === "harmony_GM") {
+        if (multiplayerflag) { // --> multiplayer
+            console.log("Multiplayer true")
+            if (isHost && (!generatedCadencesData.length)) generateCadencesForRounds();
+            startMultiplayerRound();
+        } else generateNewProgression();
+    }
 }
 
 function generateNewChord() {
@@ -613,27 +616,39 @@ async function generateChordsForRounds() {
     console.log("entrato nella funzione") // togliere
     for (let i = 0; i < maxRounds; i++) {
         console.log("entrato nel ciclo, iterazione:",i) // togliere
-        generatedChordData = generateRandomChord(firstNote, lastNote, selectedLevel);
-        console.log(generatedChordData.midiNotes) // togliere
-        generatedChordData.push(generatedChordData);
+        generatedChordsData.push(generateRandomChord(firstNote, lastNote, selectedLevel));
     }
     await set(gameStructureRef, generatedChordsData); 
     console.log(generatedChordsData) //togliere
 }
 
-async function startMultiplayerRound() {
-    
-    if (!isHost) {generatedChordsData = await get(gameStructureRef).val(); console.log(generatedChordsData)} //togliere il log
+async function generateCadencesForRounds() {
+    console.log("entrato nella funzione") // togliere
+    for (let i = 0; i < maxRounds; i++) {
+        console.log("entrato nel ciclo, iterazione:",i) // togliere
+        progressionData = generateChordPattern(firstNote, lastNote, selectedLevel);
+        generatedCadencesData.push(progressionData);
+    }
+    await set(gameStructureRef, generatedCadencesData); 
+    console.log(generatedCadencesData) //togliere
+}
 
+async function startMultiplayerRound() {
+    if (!isHost) {generatedChordsData = await get(gameStructureRef).val(); console.log(generatedChordsData)} //togliere il log
     if (!generatedChordsData) {
         console.error("Accordi non trovati per la modalità multiplayer!");
         return;
     }
-
-    generatedChordData = generatedChordsData[activeRoundID-1];
-    console.log(activeRoundID, generatedChordData) //togliere
-    piano.playChord(generatedChordData.midiNotes);
-
+    if (selectedMinigame === "chords_GM") {
+        generatedChordData = generatedChordsData[activeRoundID-1];
+        console.log(activeRoundID, generatedChordData) //togliere
+        piano.playChord(generatedChordData.midiNotes);
+    } else if (selectedMinigame === "harmony_GM") {
+        progressionData = generatedCadencesData[activeRoundID-1];
+        missingChordDetails = progressionData.missingChordData;
+        missingChord = missingChordDetails.midiNotes
+        playProgression(progressionData);
+    }
 }
 
 async function updateScoreInDatabase() {

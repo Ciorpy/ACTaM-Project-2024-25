@@ -123,7 +123,7 @@
 #CR .active { background: none; background-color: #BE0AFF; }
 
 .highlighted, .highlightedSolution, .correctGuess {
-    border: 0.6 vh solid white;
+    border: 0.6vh solid white;
 }
 
 .highlightedSolution {

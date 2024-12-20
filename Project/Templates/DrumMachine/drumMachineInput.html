@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>DrumMachine</title>
     <link rel="stylesheet" href="dm.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,7 +19,9 @@
     />
   </head>
   <body>
+
     <div class="title" id="title">Drum Machine</div>
+
     <div class="drumMachineScreen">
       <div class="drumMachineInput">
         <div class="drumMachineItem" id="BD">
@@ -59,9 +61,9 @@
           <span id="roundDisplay"></span>
           <span id="practiceMessage">LET'S GROOVE!</span>
         </div>
-        <div class="timer" id="timer">REMAINING TIME: 120 s</div>
-        <div class="currentScore" id="currentScore">CURRENT SCORE: 0</div>
-        <div class="currentPlacement" id="currentPlacement">PLACEMENT: 1°</div>
+        <div class="text" id="timer">REMAINING TIME: 120s</div>
+        <div class="text" id="currentScore">CURRENT SCORE: 0</div>
+        <div class="text" id="currentPlacement" style="display: none">PLACEMENT: 1°</div>
         <div class="drumMachineImgFrame">
           <img src="../../Images/Drum Shape.png" />
         </div>
@@ -87,12 +89,10 @@
       <div id="presetsHard" class="presets"></div>
     </div>
 
-    <div class="overlayBG" id="overlayDiv">
-      <div class="overlayTitle" id="overlayTitle">SAMPLE TEXT</div>
-      <div class="overlayTitle" id="overlaySubtitle">
-        SAMPLE DESCRIPTION, COOL!
-      </div>
-      <div class="overlayTitle" id="scoreLabel">YOUR TOTAL SCORE IS:</div>
+    <div class="overlayBG" id="overlayDiv" style="display: none">
+      <div class="overlayTitle" id="overlayTitle"></div>
+      <div class="overlayTitle" id="overlaySubtitle"></div>
+      <div class="overlayTitle" id="scoreLabel"></div>
       <div class="rankingTable" id="rankingTable"></div>
       <div id="overlayImg"></div>
       <div class="overlayMenu" id="scoreDivisionLabel">
@@ -101,39 +101,15 @@
         <div class="levelScore" id="level3"></div>
       </div>
       <div class="overlayMenu">
-        <div
-          class="button"
-          id="startGame"
-          style="background: url('/Project/Images/ep_naturalblack.webp') repeat"
-        >
-          START
-        </div>
-        <div
-          class="button"
-          id="showSolution"
-          style="background: url('/Project/Images/ep_naturalblack.webp') repeat"
-        >
-          SHOW SOLUTION
-        </div>
-        <div
-          class="button"
-          id="goNextRound"
-          style="background: url('/Project/Images/ep_naturalblack.webp') repeat"
-        >
-          NEXT LEVEL
-        </div>
+        <div class="button overlay" id="startGame" style="background: url('/Project/Images/ep_naturalblack.webp') repeat">START</div>
+        <div class="button overlay" id="showSolution" style="background: url('/Project/Images/ep_naturalblack.webp') repeat">SHOW SOLUTION</div>
+        <div class="button overlay" id="goNextRound" style="background: url('/Project/Images/ep_naturalblack.webp') repeat">NEXT LEVEL</div>
       </div>
     </div>
 
     <div class="overlaySolution" id="overlaySolution">
       <div class="overlayMenu">
-        <div
-          class="button"
-          id="hideSolution"
-          style="background: url('/Project/Images/ep_naturalblack.webp') repeat"
-        >
-          HIDE SOLUTION
-        </div>
+        <div class="button overlay hide" id="hideSolution" style="background: url('/Project/Images/ep_naturalblack.webp') repeat">HIDE SOLUTION</div>
       </div>
     </div>
 

@@ -1,9 +1,6 @@
 *{
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
     font-family: "Audiowide", serif;
-    font-weight: 400;
     font-style: normal;
     background: url('/Project/Images/ep_naturalblack.webp') repeat;
     user-select: none;
@@ -15,26 +12,25 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    gap: 0px;
-    border-bottom: 3px solid orange;
+    border-bottom: 0.4vh solid orange;
+    margin: 0 0 auto;
 }
 
 .pianoContainer {
-    height: 750px;
+    margin: 0 0 auto;
+    height: 72vh;
     width: 70%;
     display: flex;
     flex-direction: row;
-    gap: 0px;
 }
 
 .info {
+    margin: auto;
     width: 30%;
     display: flex;
     text-align: center;
     flex-direction: column;
     justify-content: center;
-    gap: 15px;
-    margin-top: 30px;
     color: orange;
 }
 
@@ -42,8 +38,8 @@
     display: flex;
     flex-direction: row;
     position: relative;
-    height: 450px;
-    width: 1200px;
+    height: 55vh;
+    width: 90%;
     user-select: none;
     justify-content: center;
     margin: auto;
@@ -53,67 +49,72 @@
     font-family: "Slackey", sans-serif;
     font-weight: 700;
     width: 100%;
-    height: 120px;
-    line-height: 120px;
-    font-size: 100px;
+    line-height: 1.2;
+    font-size: 5.5vw;
     text-align: center;
     background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
     background-clip: text;
     color: transparent;
-    text-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
+    text-shadow: 3vh 3vh 10vh rgba(0, 0, 0, 0.5);
+    margin: 0 0 auto;
 }
 
 .subTitle {
-    font-size: 25px;
-    margin-bottom: 70px;
-    padding: 10px;
+    font-size: 1.39vw;
+    padding: 0 2vw;
+    margin: 0 0 auto;
+    margin-bottom: 7vh;
     display: flex;
     flex-direction: row;
+    text-align: center;
     justify-content: space-around;
     background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
     background-clip: text;
     color: transparent;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
 }
 
 .text {
-    padding: 20px;
-    font-size: 30px;
+    font-size: 1.39vw;
+    margin: 0 0 auto;
+    padding: 1vw;
+    display: flex;
+    flex-direction: column;
     text-align: center;
+    justify-content: space-around;
     background: linear-gradient(to top, orange, darkorange);
     background-clip: text;
     color: transparent;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
 }
 
 .key {
-    border-radius: 3px;
+    border-radius: 0.25vw;
     flex: 1; 
-    margin: 1px;
+    margin: 0.04%;
     height: 100%;
-    border: 1px solid #ccc;
     background: #f0f0f0;
     color: black;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    font-size: 15px;
+    font-size: 1vw;
     box-sizing: border-box;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1vw 2vw rgba(0, 0, 0, 0.2);
 }
 
 .key.black {
-    border-radius: 3px;
+    border-top-right-radius: 0.17vw;
+    border-top-left-radius: 0.17vw;
     position: absolute;
     width: 70%; 
     height: 60%; 
     background: #090909;
     color: white;
-    z-index: 2;    
-    font-size: 15px;
-    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
-    border: 1px solid black;
+    z-index: 2;  
+    font-size: 1vw;
+    box-shadow: 0 1vw 2vw rgba(128, 128, 128, 0.2);
 }
 
 .key span {
@@ -128,48 +129,45 @@
     transform-origin: top;
     transform: scale(0.98);
     box-shadow: 
-        0 2px 3px rgba(0, 0, 0, 0.5),
-        inset -3px -3px 8px rgba(0, 0, 0, 0.4),
-        inset 3px -3px 8px rgba(0, 0, 0, 0.4),
-        inset 0 5px 5px rgba(0, 0, 0, 0.3);
+        0 0.2vw 0.3vw rgba(0, 0, 0, 0.5),
+        inset -0.1vw -0.1vw 0.6vw rgba(0, 0, 0, 0.4),
+        inset 0.1vw -0.1vw 0.6vw rgba(0, 0, 0, 0.4),
+        inset 0 0.3vw 0.3vw rgba(0, 0, 0, 0.3);
 }
 
 .key.black.active {
     transform-origin: top;
     transform: scale(0.98);
     box-shadow: 
-        0 2px 3px rgba(0, 0, 0, 0.5),
-        inset -3px -3px 8px rgba(0, 0, 0, 0.6),
-        inset 3px -3px 8px rgba(0, 0, 0, 0.6),
-        inset 0 5px 5px rgba(0, 0, 0, 0.4);
+        0 0.2vw 0.3vw rgba(0, 0, 0, 0.5),
+        inset -0.1vw -0.1vw 0.6vw rgba(0, 0, 0, 0.4),
+        inset 0.1vw -0.1vw 0.6vw rgba(0, 0, 0, 0.4),
+        inset 0 0.3vw 0.3vw rgba(0, 0, 0, 0.3);
 }
 
-
 .userMenu, .overlayMenu {
-    margin-bottom: 70px;
-    padding: 10px;
+    padding: 1vh;
     display: flex;
     flex-direction: row;
     background: transparent;
     justify-content: space-around;
 }
 
-.userMenu {
-    background: transparent;
-}
-
 .button {
-    border-radius: 3px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-    padding: 30px;
-    border: 2px solid orange;
-    width: 300px;
+    font-size: 1.7vh;
+    border-radius: 0.2vw;
+    border: 0.15vw solid orange;
+    padding: 3.5vh 0;
+    width: 32vh;
     text-align: center;
     cursor: pointer;
     background: transparent;
     color: orange;
+}
+
+.overlay{
+    border-radius: 0.35vw;
+    margin-bottom: 7vh;
 }
 
 .button:hover{
@@ -202,23 +200,22 @@
 
 .overlaySolution {
     display: none;
-    background-color: rgba(255,255,255,0.3);
+    background-color: rgba(255,255,255,0.6);
 }
 
 .overlayTitle, .overlayTitleSolution{
     background: transparent;
-    margin: auto;
+    margin: 10vh 10vw auto;
     display: flex;
     flex-direction: column;
-    gap: 30px;
     text-align: center;
-    font-size: 125px;
+    font-size: 12.5vh;
     background-color: rgba(0,0,0,0);
 }
 
 .overlayTitleSolution {
-    margin-top: 70px;
-    font-size: 120px;
+    margin: 5vh 5vw auto;
+    font-size: 11vh;
 }
 
 .no-hover:hover {
@@ -229,15 +226,4 @@
     border-color: rgb(145, 95, 4);
     color: rgb(145, 95, 4);
     cursor: auto;
-}
- 
-.currentPlacement{
-    display: none;
-    margin: auto;
-    text-align: center;
-    font-size: 30px;
-    background: linear-gradient(to top, orange, darkorange);
-    background-clip: text;
-    color: transparent;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }

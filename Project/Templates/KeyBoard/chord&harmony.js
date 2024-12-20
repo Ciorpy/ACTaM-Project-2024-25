@@ -59,9 +59,6 @@ function generateChordsMIDI(rootMIDI) {
     "m13": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 21],   // Minore con tredicesima
     "Maj13": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14, rootMIDI + 21], // Maggiore con tredicesima
   };
-  return new Proxy(chords, {
-    get: (target, prop) => (prop in target ? target[prop] : null),
-  });
 }
 
 
@@ -166,37 +163,28 @@ function generateInversions(chordNotes) {
   return inversions;
 }
 
-export function generateRandomChord(startNote = 60, difficulty = "easyDiff", root = null, type = null) {
+export function generateRandomChord(startNote, lastNote, difficulty = "easyDiff", root = null, type = null) {
   const chordTypesByDifficulty = {
-    easyDiff: [
-      "Maj", "min", 
-      //"dim", "aug"
-    ],
-    mediumDiff: [
-      "6", "m6", "dim", "aug", 
-      //"Maj7", "mMaj7", "7", "m7", 
-      //"sus2", "sus4", 
-      //"m7b5", "dim7", "Maj7#5", "7#5", "m7#5"
-    ],
-    hardDiff: [
-      //"Maj", "m", "dim", "aug",
-      //"Maj6", "min6", "dim6", 
-      "Maj7", "mMaj7", "7", "m7", 
-      //"sus2", "sus4", 
-      "m7b5", "dim7", "Maj7#5", "7#5", "m7#5",
-      //"9", "m9", "Maj9", "7b9", "7#9", "6b9", "6#9", "6(9)"
-    ],
+    easyDiff: ["Maj", "min"],
+    mediumDiff: ["6", "m6", "dim", "aug"],
+    hardDiff: ["Maj7", "mMaj7", "7", "m7", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5"],
   };
-  let randomRoot = root ?? Math.floor(Math.random() * 12) + startNote;
-  let chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
-  let randomChordType = type ?? chordTypes[Math.floor(Math.random() * chordTypes.length)];
-  const chords = generateChordsMIDI(randomRoot);
-  const chord = chords[randomChordType];
-  const inversions = generateInversions(chord);
-  const selectedInversionIndex = Math.floor(Math.random() * inversions.length);
-  const selectedInversion = inversions[selectedInversionIndex];
-  const updatedRoot = selectedInversionIndex === 0 ? selectedInversion[0] : selectedInversion[selectedInversion.length - selectedInversionIndex];
-  const inversionType = selectedInversionIndex === 0 ? "ROOT POSITION" : `${selectedInversionIndex}° INVERSION`;
+  const numKeys = lastNote - startNote;
+  let updatedRoot, randomChordType, inversionType, selectedInversion;
+  do {
+    let randomRoot = root ?? Math.floor(Math.random() * (numKeys));
+    randomRoot += startNote;
+    let chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
+    randomChordType = type ?? chordTypes[Math.floor(Math.random() * chordTypes.length)];
+    let chords = generateChordsMIDI(randomRoot);
+    let chord = chords[randomChordType];
+    let inversions = generateInversions(chord);
+    let selectedInversionIndex = Math.floor(Math.random() * inversions.length);
+    selectedInversion = inversions[selectedInversionIndex];
+    updatedRoot = selectedInversionIndex === 0 ? selectedInversion[0] : selectedInversion[selectedInversion.length - selectedInversionIndex];
+    inversionType = selectedInversionIndex === 0 ? "ROOT POSITION" : `${selectedInversionIndex}° INVERSION`;
+    selectedInversion = selectedInversion.sort();
+  } while (selectedInversion[selectedInversion.length - 1] >= lastNote);
   return {
     midiRoot: updatedRoot,
     noteRoot: midiToNoteName(updatedRoot),
@@ -207,9 +195,8 @@ export function generateRandomChord(startNote = 60, difficulty = "easyDiff", roo
   };
 }
 
-export function generateChordPattern(firstNote = 48, difficulty = "easyDiff") {
-  const numKeys = 25;
-  const lastNote = firstNote + numKeys;
+export function generateChordPattern(firstNote, lastNote, difficulty = "easyDiff") {
+  const numKeys = lastNote - firstNote;
   const patterns = chordPatterns[difficulty] || chordPatterns["easyDiff"];
   const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
   let rootNote, progressionDetails, missingChordData;
@@ -220,9 +207,9 @@ export function generateChordPattern(firstNote = 48, difficulty = "easyDiff") {
     const missingIndex = selectedPattern.degrees.length - 1;
     for (let index = 0; index < selectedPattern.degrees.length; index++) {
       const degree = selectedPattern.degrees[index];
-      const degrees = rootNote + calculateDegree(rootNote, degree);
+      const degrees = calculateDegree(rootNote, degree);
       const chordType = selectedPattern.progression[index];
-      const chordData = generateRandomChord(firstNote, difficulty, degrees, chordType);
+      const chordData = generateRandomChord(firstNote, lastNote, difficulty, degrees, chordType);
       const chordDetails = {
         midiRoot: chordData.midiRoot,
         noteRoot: chordData.noteRoot,

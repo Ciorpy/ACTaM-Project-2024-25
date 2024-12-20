@@ -1,41 +1,32 @@
 *{
-  font-family: "Audiowide", serif;
-  font-weight: 400;
-  font-style: normal;
   box-sizing: border-box;
+  font-family: "Audiowide", serif;
+  font-style: normal;
   background: url('/Project/Images/ep_naturalblack.webp') repeat;
   user-select: none;
 }
 
-body {
-  padding: 0;
-  margin: 0;
-}
-
 .gameScreen {
   display: flex;
-  height: 100vh;
+  height: 100%;
   background: transparent;
 }
 
 .menu {
-  background: linear-gradient(to bottom, cornflowerblue, rgb(133, 187, 206));
-  background-clip: text;
-  color: transparent;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  margin: auto;
+  margin: 0 auto;
   text-align: center;
   position: relative;
 }
 
 .funnyMainMenuMSG {
+  margin-top: 13vh;
+  margin-left: 43vh;
   position: absolute;
-  right: -90px;
   rotate: 30deg;
-  font-size: 20px;
-  font-weight: 800;
+  font-size: 2vh;
+  width: 100vh;
   animation: pulse 2s infinite;
   font-family: "Audiowide", serif;
   font-weight: 400;
@@ -43,7 +34,8 @@ body {
   background: linear-gradient(to top, orange, darkorange);
   background-clip: text;
   color: transparent;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
+  text-align: center;
 }
 
 @keyframes pulse {
@@ -56,120 +48,111 @@ body {
 }
 
 .title {
+  margin-top: 10vh;
   background: linear-gradient(to bottom, cornflowerblue, rgb(133, 187, 206));
   background-clip: text;
   color: transparent;
-  text-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
+  text-shadow: 3vh 3vh 10vh rgba(0, 0, 0, 0.5);
   font-family: "Slackey", sans-serif;
   font-weight: 700;
   font-style: normal;
-  font-size: 150px;
-  padding-bottom: 10px;
-  
+  font-size: 15vh;
+  padding-bottom: 1vh;
 }
 
 .menuButtonList {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin: auto;
-  width: 650px;
+  gap: 1vh;
+  margin: 0 auto;
 }
 
 .menuElement{
-  border-radius: 5px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 0.5vh;
   background: linear-gradient(to bottom, cornflowerblue, rgb(133, 187, 206));
   background-clip: text;
   color: transparent;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-  font-size: 30px;
-  border: 4px solid orange;
-  height: 70px;
-  line-height: 70px;
-  width: 650px;
+  text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
+  font-size: 3vh;
+  border: 0.4vh solid orange;
+  height: 7vh;
+  line-height: 7vh;
+  width: 65vh;
   cursor: pointer;
   font-family: "Audiowide", serif;
   font-weight: 400;
   font-style: normal;
+  margin: 0 15vh;
 }
 
 .menuElement:hover, .backButton:hover{
   transform: scale(90%);
 }
 
-#settingsMenu, #practiceMenu, #multiPlayerMenu, #gamemodeSelectorMenu, #difficultySelectorMenu {
-  padding: 30px;
-  border-radius: 20px;
-}
-
 .username-container {
   background: transparent;
-  border-radius: 15px;
-  width: 650px;
+  border-radius: 1.5vh;
+  width: 65vh;
+  margin: 0 15vh;
 }
 
 .username {
   background: linear-gradient(to bottom, cornflowerblue, rgb(133, 187, 206));
   background-clip: text;
   color: transparent;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-  margin: 10px;
-  font-size: 40px;
+  text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
+  margin: 1vh;
+  font-size: 4vh;
   text-align: center;
+  margin: 0 15vh;
 }
 
 #username, #lobbyName, #lobbyPW {
   color: black;
   background: transparent;
   background-color: rgba(255, 255, 255, 0.9);
-  margin: 10px;
-  font-size: 40px;
+  margin: 1vh;
+  font-size: 4vh;
   text-align: center;
 }
 
 .settingsItem{
   display: flex;
   flex-direction: column;
-  padding-bottom: 40px;
+  padding-bottom: 4vh;
 }
 
 .settingsItemTitle{
   background: linear-gradient(to bottom, cornflowerblue, rgb(133, 187, 206));
   background-clip: text;
   color: transparent;  
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
   font-weight: 800;  
   font-family: "Audiowide", serif;
   font-style: normal;
-  font-size: 25px;
+  font-size: 2.5vh;
 }
 
 .settingsList{
   display: flex;
   flex-direction: row;
-  padding-top: 10px;
-  gap: 20px;
   margin: auto;
 }
 
 .activeSettingsItem {
-  border: 4px solid orange;
+  border: 0.4vh solid orange;
 }
 
 .backButton{
   background: linear-gradient(to bottom, cornflowerblue, rgb(133, 187, 206));
   background-clip: text;
   color: transparent;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: 4px solid orange;
-  height: 70px;
-  line-height: 70px;
-  width: 600px;
+  text-shadow: 1vh 1vh 1.5vh rgba(0, 0, 0, 0.5);
+  border-radius: 0.5vh;
+  border: 0.4vh solid orange;
+  height: 7vh;
+  line-height: 7vh;
+  width: 60vh;
   cursor: pointer;
   font-family: "Audiowide", serif;
   font-weight: 400;
@@ -178,13 +161,14 @@ body {
 }
 
 .credits {
-  background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
+  background: linear-gradient(to bottom, cornflowerblue, rgb(133, 187, 206));
   background-clip: text;
-  text-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
-  padding-top: 20px;
+  color: transparent;
+  text-shadow: 3vh 3vh 10vh rgba(0, 0, 0, 0.5);
+  padding-top: 2vh;
   font-family: "Audiowide", serif;
-  font-size: 50px;
-  font-weight: 900px;
+  font-size: 5vh;
+  font-weight: 90vh;
   font-style: normal;
   display: flex;
   flex-direction: column;
@@ -192,12 +176,12 @@ body {
 }
 
 .footerCredits{
-  background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
+  background: linear-gradient(to bottom, cornflowerblue, rgb(133, 187, 206));
   background-clip: text;
   color: transparent;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
   font-family: "Audiowide", serif;
-  font-weight: 600px;
+  font-weight: 60vh;
   font-style: normal;
   display: flex;
   flex-direction: column;
@@ -239,9 +223,9 @@ body {
   background: none;
   background-color: white;
   color: black;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  padding: 1vh;
+  border-radius: 0.5vh;
+  border: 0.1vh solid #ccc;
   width: max-content;
   margin: 0 auto;
   align-items: center;
@@ -255,7 +239,7 @@ body {
   color: black;
   border: none;
   outline: none;
-  font-size: 16px;
+  font-size: 1.6vh;
   cursor: pointer;
   margin: 0 auto;
   align-items: center;

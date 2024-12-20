@@ -107,10 +107,11 @@ let userLegend = {
 
 if (practiceModeFlag == "false") {
   gamemodeDisplay.innerHTML = userLegend[selectedMinigame];
-  roundDisplay.innerHTML = "ROUND: 1";
-  difficultyDisplay.innerHTML = "DIFFICULTY: " + userLegend[difficultyLevel];
+  roundDisplay.innerHTML = "ROUND 1";
+  difficultyDisplay.innerHTML = "DIFFICULTY " + userLegend[difficultyLevel];
   practiceMessage.style.display = "none";
 } else {
+  practiceMessage.style.fontSize = "4.8vh";
   roundDisplay.style.display = "none";
   difficultyDisplay.style.display = "none";
 }
@@ -175,7 +176,7 @@ goNextRoundButton.addEventListener("click", () => {
     timerInterval = setInterval(roundTimer, 1000);
     handleOverlayDisplay("hide");
     solution = chosenPresets[levelIndex];
-    roundDisplay.innerHTML = "ROUND: " + (levelIndex + 1);
+    roundDisplay.innerHTML = "ROUND " + (levelIndex + 1);
     solutionInterval = setInterval(playSolution, setBpm(bpm));
     playSolutionButton.innerHTML = "STOP SOLUTION";
     isSolutionPlaying = true;
@@ -276,7 +277,6 @@ let roundTimer = function () {
   }
   if (timer % scoreSubTimer == 0) {
     roundScore -= 25;
-    console.log("Punteggio rimanente: " + roundScore);
   }
   timer -= 1;
   timerDisplay.innerHTML = "REMAINING TIME: " + timer + "s";
@@ -370,14 +370,12 @@ if (
   if (localStorage.getItem("isHost") == "true") {
     chosenPresets = getRandomDrumPatterns(selectedPresets);
     await set(gameStructureRef, chosenPresets);
-    console.log(chosenPresets);
   } else {
     do {
       snapshot = await get(gameStructureRef);
 
       if (snapshot.exists()) {
         chosenPresets = snapshot.val();
-        console.log(chosenPresets);
       }
     } while (!snapshot.exists());
   }
@@ -404,7 +402,6 @@ Array.from(drumMachineItems).forEach((item, index) => {
     newElement.addEventListener("click", () => {
       newElement.classList.toggle("active"); // Toggles class active for proper visualization
       drumMachineController[index][i] = !drumMachineController[index][i]; // Updates logic
-      console.log(drumMachineController[index][i]); // Debug
     });
     item.appendChild(newElement); // Appends new element to the parent div
   }
@@ -514,7 +511,6 @@ if (practiceModeFlag == "true") {
 }
 
 function startMetronome() {
-  console.log("start");
   metronomeInterval = setInterval(playBeat, setBpm(bpm)); // Start the interval with the current BPM
   startStopButton.innerHTML =
     practiceModeFlag == "true" ? "STOP" : "STOP YOUR GUESS";
@@ -522,7 +518,6 @@ function startMetronome() {
 }
 
 function stopMetronome() {
-  console.log("stop");
   clearInterval(metronomeInterval); // Stop the ongoing interval
 
   Array.from(drumMachineItems).forEach((item) => {
@@ -594,8 +589,6 @@ bpmSlider.addEventListener("input", () => {
 });
 
 function checkSolution(guess, correctAnswer) {
-  console.log(guess);
-  console.log(correctAnswer);
   if (guess.length !== correctAnswer.length) {
     return false;
   }
@@ -700,8 +693,6 @@ if (practiceModeFlag == "true") {
 }
 
 checkInputButton.addEventListener("click", () => {
-  console.log(drumMachineController);
-  console.log(solution);
   if (checkSolution(drumMachineController, solution)) goodGuess();
   else wrongGuess();
   resetDrumMachine();

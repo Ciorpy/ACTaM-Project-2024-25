@@ -75,7 +75,6 @@ volumeSlider.addEventListener("input", () => {
   localStorage.setItem("mainVolume", volumeSlider.value);
 });
 
-console.log(volumeSlider.value);
 
 // Effects Volume Handler
 let effectsVolSlider = document.getElementById("effectsVolumeSlider");

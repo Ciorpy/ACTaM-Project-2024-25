@@ -1,45 +1,42 @@
 *{
     font-family: "Audiowide", serif;
-    font-weight: 400;
     font-style: normal;
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
     background: url('/Project/Images/ep_naturalblack.webp') repeat;
     user-select: none;
-}
-
-.body{
-    background: transparent;
 }
 
 .title {
     font-family: "Slackey", sans-serif;
     font-weight: 700;
     width: 100%;
-    height: 120px;
-    line-height: 120px;
-    font-size: 100px;
+    line-height: 1.2;
+    font-size: 5.5vw;
     text-align: center;
     background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
     background-clip: text;
     color: transparent;
-    text-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
+    text-shadow: 3vh 3vh 10vh rgba(0, 0, 0, 0.5);
+    margin: 0 0 auto;
 }
 
 .drumMachineScreen{
+    background: transparent;
+    height: 100%;
     display: flex;
     flex-direction: row;
-    background: transparent;
     width: 100%;
-    gap: 0px;
-    border-bottom: 3px solid orange;
+    border-bottom: 0.4vh solid orange;
+    margin: 0 0 auto;
 }
 
 .drumMachineInput {
-    background: transparent;
-    margin: auto;
-    left: 0px;
+    height: 72vh;
+    margin: 0 5vh auto;
+    padding: 3vh 0;
+    width: 74%;
+    display: flex;
+    flex-direction: column;
 }
 
 .drumMachineLegend{
@@ -52,40 +49,40 @@
 .drumMachineItem {
     background: none;
     display: flex;
-    gap: 10px;
-    padding: 5px;
     width: 100%;
 }
 
 .drumMachineImgFrame {
     margin: auto;
-
-}
-.drumMachineLegend img {
     width: 70%;
-    border: 3px solid orange;
-    border-radius: 30px;
+}
+
+.drumMachineLegend img {
+    width: 100%;
+    border: 0.4vh solid orange;
+    border-radius: 3vh;
 }
 
 .drumMachineItemTitle{
     color: white;
-    font-size: 30px;
+    font-size: 1.5vw;
     font-weight: 700;
-    padding: 10px 30px;
-    width: 300px;
+    width: 18vh;
     text-align: center;
     display: flex;
     flex-direction: row;
-    gap: 30px
+    margin: 0 0 auto;
 }
 
 .titleLabel{
-    width: 100px;
+    padding: 1vh 0;
+    width: 10vh;
 }
 
 .playSampleButton {
-    width: 45px;
-    height: 45px;
+    height: 5.3vh;
+    width: 5.3vh;
+    border-radius: 1vh;
     background-color: white;
     background-position: center;
     background-size: cover;
@@ -93,24 +90,25 @@
     background-image: url("../../Images/Speaker_Icon.svg");
     border-radius: 20%;
     cursor: pointer;
-    border: 2px solid orange
+    margin: 0.53vh 0;
+    border: 0.3vh solid orange;
 }
 
 .semicroma {
-    height: 45px;
-    width: 45px;
-    border-radius: 5px;
-    border: 2px solid grey;
+    height: 5.2vh;
+    width: 5.3vh;
+    border-radius: 1vh;
+    border: 0.3vh solid grey;
     cursor: pointer;
-    margin: auto;
+    margin: 0.5vh auto;
 }
 
 .semicroma:hover {
-    border: 5px solid orange;
+    border: 0.6vh solid orange;
 }
 
 .newQuarto {
-    margin-left: 25px;
+    margin-left: 4.5vh;
 }
 
 #BD .active { background: none; background-color: #FF0000; }
@@ -125,7 +123,7 @@
 #CR .active { background: none; background-color: #BE0AFF; }
 
 .highlighted, .highlightedSolution, .correctGuess {
-    border: 5px solid white;
+    border: 0.6 vh solid white;
 }
 
 .highlightedSolution {
@@ -133,7 +131,7 @@
 }
 
 .correctGuess {
-    border-width: 2px;
+    border-width: 0.2vh;
     border-color: green;
     background: reset;
     background: url("../../Images/Green_check.png") center / cover no-repeat !important;
@@ -145,72 +143,73 @@
 }
 
 .correctGuess:hover {
-    border: 2px solid green;
-}
-
-.userMenu, .subTitle {
-    margin-bottom: 70px;
-    padding: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    border: 0.35vh solid green;
 }
 
 .overlayMenu {
-    margin-bottom: 70px;
-    padding: 10px;
+    padding: 1vh;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
     background: transparent;
+    justify-content: space-around;
 }
 
 .userMenu, .subTitle {
-    gap: 40px;
+    padding: 1vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.userMenu, .subTitle {
     background: transparent;
 }
 
 .subTitle{
-    margin-right: 30px;
-    font-size: 25px;
+    padding: 0;
+    margin-bottom: 10vh;
     text-align: center;
 }
 
 .subTitle span {
+    font-size: 1.39vw;
+    margin: 0 0 auto;
+    padding: 0 2vw;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: space-around;
     background: linear-gradient(to top, cornflowerblue, rgb(133, 187, 206));
     background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    color: transparent;
+    text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
 }
 
 .button {
-    border-radius: 3px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-    padding: 30px;
-    border: 2px solid orange;
-    width: 300px;
+    font-size: 1.7vh;
+    border-radius: 0.2vw;
+    border: 0.15vw solid orange;
+    padding: 3.5vh 0;
+    width: 32vh;
     text-align: center;
     cursor: pointer;
     background: transparent;
     color: orange;
+    margin: 0 0.7vh; 
 }
 
 .bpmInput {
     display: flex;
     flex-direction: row;
-    gap: 10px;
-    width: 300px;
     margin: auto;
     background: linear-gradient(to top, orange, darkorange);
     background-clip: text;
     color: transparent;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
 }
 
 .bpmInput input {
-    width: 200px;
+    width: 30vh;
 }
 
 .button:hover{
@@ -221,13 +220,13 @@
 .presets {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 30px;
-    max-width: 400px;
+    gap: 1vh;
+    padding: 3vh;
+    max-width: 40vh;
 }
 
 .groove {
-    border: 2px solid black;
+    border: 0.3vh solid black;
     cursor: pointer;
     background-color: white;
 }
@@ -254,75 +253,72 @@
 }
 
 .overlayBG, .overlaySolution {
-    display: none;
+    display: flex;
     top: 0;
     left: 0;
     position: fixed;
+    z-index: 10;
     width: 100%;
     height: 100%;
     background: transparent;
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(255, 255, 255, 0.8);
     flex-direction: column;
 }
 
+.overlay{
+    border-radius: 0.35vw;
+    margin-bottom: 7vh;
+}
+
+.hide{
+    margin-top: 1.8vh;
+    margin-bottom: 0;
+}
+
 .overlaySolution {
+    display: none;
     background-color: rgba(255,255,255,0.3);
 }
 
 .overlayTitle{
-    margin: auto;
+    background: transparent;
+    margin: 10vh 10vw auto;
     display: flex;
     flex-direction: column;
-    gap: 30px;
     text-align: center;
-    font-size: 125px;
-    background: transparent;
+    font-size: 12.5vh;
+    background-color: rgba(0,0,0,0);
 }
 
 .timeOverScreen, .wrongGuessPanel, .endGamePanel {
     margin: auto;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 3vh;
     text-align: center;
-    font-size: 150px;
+    font-size: 15vh;
 }
 
-.timer {
-    margin: auto;
+.text {
+    font-size: 1.5vw;
+    margin: 0 0 auto;
+    padding: 1vw;
+    display: flex;
+    flex-direction: column;
     text-align: center;
-    font-size: 30px;
+    justify-content: space-around;
     background: linear-gradient(to top, orange, darkorange);
     background-clip: text;
     color: transparent;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.currentScore, .currentPlacement {
-    margin: auto;
-    text-align: center;
-    font-size: 30px;
-    background: linear-gradient(to top, orange, darkorange);
-    background-clip: text;
-    color: transparent;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.currentPlacement{
-    display: none;
-}
-
-#practiceMessage{
-    margin-top: 100px;
-    font-size: 40px;
+    text-shadow: 0.7vh 0.7vh 1vh rgba(0, 0, 0, 0.5);
 }
 
 .rankingTable{
     display: none;
     flex-direction: column;
-    font-size: 50px;
-    width: 1000px;
-    gap: 20px;
+    font-size: 5vh;
+    width: 100vh;
+    gap: 2vh;
     background: transparent;
     font-weight: 500;
     margin: auto;

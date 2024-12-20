@@ -55,7 +55,7 @@ let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
 let totalScore = 0;
 let currentScore;
-let timeLeft;
+let timeLeft = 120;
 let timerInterval;
 let isRoundActive = false;
 let activeRoundID = 0;
@@ -158,8 +158,8 @@ if(!practiceModeFlag){
     scoreDisplay.style.display = "none";
     timerDisplay.style.display = "none";
     hintDisplay.style.padding = "0px";
-    hintDisplay.style.fontSize = "40px";
-    levelDisplay.style.fontSize = "40px";
+    hintDisplay.style.fontSize = "4vh";
+    levelDisplay.style.fontSize = "4vh";
     levelDisplay.style.marginBottom = "0px";
     levelDisplay.innerHTML = "JUST HAVE FUN! CHORDS PLAYED WILL BE RECOGNIZED"
     piano.init();
@@ -257,6 +257,10 @@ document.addEventListener("keydown", (event) => {
     else if (note !== undefined && practiceModeFlag) identifyChord();
 });
 
+document.addEventListener("keyup", (event) => {
+    if (practiceModeFlag) hintDisplay.textContent = "";
+});
+
 document.addEventListener("click", () => {
     if (isInputDisabled) return;
     const pressedNotes = piano.getPressedNotes();
@@ -287,25 +291,20 @@ function startRound() {
         } else {
             generateNewChord();
         }; 
-    } else if (selectedMinigame === "harmony_GM") generateNewProgression(), updateResult();
+    } else if (selectedMinigame === "harmony_GM") generateNewProgression();
 }
 
 function generateNewChord() {
-    let sortedGeneratedChord;
-    do {
-        generatedChordData = generateRandomChord(firstNote, selectedLevel);
-        sortedGeneratedChord = generatedChordData.midiNotes.sort();
-    } while(sortedGeneratedChord[sortedGeneratedChord.length - 1] >= lastNote);
+    generatedChordData = generateRandomChord(firstNote, lastNote, selectedLevel);
     piano.playChord(generatedChordData.midiNotes);
 }
 
 function generateNewProgression() {
-    do {
-        progressionData = generateChordPattern(firstNote, selectedLevel);
-        missingChordDetails = progressionData.missingChordData;
-        missingChord = missingChordDetails.midiNotes
-    } while (missingChord[missingChord.length - 1] >= lastNote);
+    progressionData = generateChordPattern(firstNote, lastNote, selectedLevel);
+    missingChordDetails = progressionData.missingChordData;
+    missingChord = missingChordDetails.midiNotes
     playProgression(progressionData);
+    updateResult()
 }
 
 function playProgression(progressionData, missingChord = null) { 
@@ -521,12 +520,12 @@ function updateModeDisplay() {
 }
 
 function updateLevelDisplay() {
-    levelDisplay.innerHTML = "   DIFFICULTY: " + userLegend[selectedLevel];
+    levelDisplay.innerHTML = "   DIFFICULTY " + userLegend[selectedLevel];
 }
 
 function updateRoundDisplay() {
     let roundShowed = activeRoundID + 1; 
-    roundDisplay.innerHTML = "   ROUND: " + roundShowed;
+    roundDisplay.innerHTML = "   ROUND " + roundShowed;
 }
 
 // UTILITY -----------------------------------------------------------------------------------------------------------
@@ -551,7 +550,7 @@ function handleOverlayDisplay(overlayType) {
         overlaySubtitle.style.display = "flex";
         scoreLabel.style.display = "none";
         if (selectedMinigame === "chords_GM") overlayTitle.innerHTML = "RECOGNIZE CHORD & PLAY IT";
-        else if (selectedMinigame === "harmony_GM") overlayTitle.innerHTML = "RESOLVE CHORD PROGRESSIONS PLAYING MUTED LAST CHORD";
+        else if (selectedMinigame === "harmony_GM") overlayTitle.innerHTML = "RESOLVE CHORD CADENCES PLAYING MUTED LAST CHORD";
         overlaySubtitle.innerHTML = "PRESS START";
         startGameButton.style.display = "block";
         break;
@@ -611,16 +610,12 @@ function handleOverlayDisplay(overlayType) {
 
 // FUNZIONI MULTIPLAYER -----------------------------------------------------------------------------------------------
 async function generateChordsForRounds() {
-    let sortedGeneratedChord;
     console.log("entrato nella funzione") // togliere
     for (let i = 0; i < maxRounds; i++) {
         console.log("entrato nel ciclo, iterazione:",i) // togliere
-        do {
-            generatedChordData = generateRandomChord(firstNote, selectedLevel);
-            sortedGeneratedChord = generatedChordData.midiNotes.sort();
-        } while(sortedGeneratedChord[sortedGeneratedChord.length - 1] >= lastNote);
+        generatedChordData = generateRandomChord(firstNote, lastNote, selectedLevel);
         console.log(generatedChordData.midiNotes) // togliere
-        generatedChordsData.push(generatedChordData);
+        generatedChordData.push(generatedChordData);
     }
     await set(gameStructureRef, generatedChordsData); 
     console.log(generatedChordsData) //togliere

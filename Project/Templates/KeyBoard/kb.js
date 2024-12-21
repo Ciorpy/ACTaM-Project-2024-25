@@ -34,23 +34,25 @@ let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
 
 let multiplayerflag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
 
-const auth = getAuth(app);
-const db = getDatabase(app);
-let generatedChordsData = [];
-let generatedCadencesData; 
-let missingChordsDetails;
-let missingChords;
-if (multiplayerflag) maxRounds = localStorage.getItem("numberRoundsMP"); 
-let userID = localStorage.getItem("userID");
-let isHost = localStorage.getItem("isHost")
-let lobbyName = localStorage.getItem("lobbyName");
-let playersRef = ref(db, `lobbies/${lobbyName}/players`);
-let playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${userID}/score`);
-let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
-let updateRankingInterval = setInterval(updateRanking, 100);
-const rankingTable = document.getElementById("rankingTable");
-const placementDisplay = document.getElementById("currentPlacement"); 
-if (multiplayerflag) placementDisplay.style.display = "block"; // da vedere meglio dove metterlo
+if (multiplayerflag) {
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    let generatedChordsData = [];
+    let generatedCadencesData; 
+    let missingChordsDetails;
+    let missingChords;
+    maxRounds = localStorage.getItem("numberRoundsMP"); 
+    let userID = localStorage.getItem("userID");
+    let isHost = localStorage.getItem("isHost") == "true" ? true : false;
+    let lobbyName = localStorage.getItem("lobbyName");
+    let playersRef = ref(db, `lobbies/${lobbyName}/players`);
+    let playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${userID}/score`);
+    let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
+    let updateRankingInterval = setInterval(updateRanking, 100);
+    const rankingTable = document.getElementById("rankingTable");
+    const placementDisplay = document.getElementById("currentPlacement"); 
+    placementDisplay.style.display = "block"; // da vedere meglio dove metterlo
+}
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];

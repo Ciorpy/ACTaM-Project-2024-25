@@ -170,10 +170,12 @@ if(!practiceModeFlag){
 // EVENT LISTENERS ----------------------------------------------------------------------------------------------------
 // Avvio del gioco e passaggio al prossimo round
 startGameButton.addEventListener("click", () => {
-    if(multiplayerflag && !isHost && generatedChordsData.length) handleOverlayDisplay("wait");
-    updateRoundDisplay();
-    handleOverlayDisplay("hide");
-    if (!isRoundActive) startRound();
+    if(multiplayerflag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+    else {
+        updateRoundDisplay();
+        handleOverlayDisplay("hide");
+        if (!isRoundActive) startRound();
+    }
 });
  
 showSolutionButton.addEventListener("click", () => {

@@ -159,7 +159,7 @@ let goodGuessFlag;
 
 startGameButton.addEventListener("click", () => {
   timerInterval = setInterval(roundTimer, 1000);
-  if(multiplayerflag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+  if(localStorage.getItem("multiplayerFlag") == "true" && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
   else handleOverlayDisplay("hide");
   solutionInterval = setInterval(playSolution, setBpm(bpm));
   playSolutionButton.innerHTML = "STOP SOLUTION";

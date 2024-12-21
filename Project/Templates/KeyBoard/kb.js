@@ -171,6 +171,10 @@ if(!practiceModeFlag){
 // EVENT LISTENERS ----------------------------------------------------------------------------------------------------
 // Avvio del gioco e passaggio al prossimo round
 startGameButton.addEventListener("click", () => {
+    if (multiplayerflag){
+        if (isHost) enableInput();
+        if (isInputDisabled) return;
+    }
     updateRoundDisplay();
     handleOverlayDisplay("hide");
     if (!isRoundActive) startRound();
@@ -289,12 +293,14 @@ function startRound() {
             console.log("Multiplayer true")
             if (isHost && (!generatedChordsData.length)) generateChordsForRounds();
             startMultiplayerRound();
+            enableInput();
         } else generateNewChord(); 
     } else if (selectedMinigame === "harmony_GM") {
         if (multiplayerflag) { // --> multiplayer
             console.log("Multiplayer true")
             if (isHost && (!generatedCadencesData.length)) generateCadencesForRounds();
             startMultiplayerRound();
+            enableInput();
         } else generateNewProgression();
     }
 }

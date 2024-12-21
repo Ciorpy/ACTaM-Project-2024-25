@@ -280,7 +280,7 @@ function startRound() {
     result = "";
     delay = 0;
     activeRoundID++;
-    resetHintButton();  // -> DA RIVEDERE -> SE NON TI PIACE, COSì MI SEMBRA PIù ELEGANTE -> HA ANCORA MENO SENSO
+    resetHintButton();
     startTimer();
     enableInput();
     piano.init();
@@ -650,6 +650,7 @@ async function startMultiplayerRound() {
             if (snapshot.exists()) generatedChordsData = snapshot.val();
         } while (!snapshot.exists());
         handleOverlayDisplay("hide");
+        startTimer();
         console.log(generatedChordsData) //togliere il log
     } 
 

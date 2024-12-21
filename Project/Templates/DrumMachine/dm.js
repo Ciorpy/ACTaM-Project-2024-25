@@ -158,14 +158,17 @@ let timeOverFlag;
 let goodGuessFlag;
 
 startGameButton.addEventListener("click", () => {
-  timerInterval = setInterval(roundTimer, 1000);
   if(
     localStorage.getItem("multiplayerFlag") == "true" && 
     localStorage.getItem("isHost") == "false" && 
     !chosenPresets.length
   ) handleOverlayDisplay("wait");
-  else handleOverlayDisplay("hide");
-  solutionInterval = setInterval(playSolution, setBpm(bpm));
+  else {
+    timerInterval = setInterval(roundTimer, 1000);
+    handleOverlayDisplay("hide");
+    startMultiplayerRound();
+    solutionInterval = setInterval(playSolution, setBpm(bpm));
+  }
   playSolutionButton.innerHTML = "STOP SOLUTION";
   isSolutionPlaying = true;
 });
@@ -376,32 +379,34 @@ let updateRanking = async function () {
   placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
 };
 
-if (
-  localStorage.getItem("multiplayerFlag") == "true" &&
-  practiceModeFlag != "true"
-) {
-  playersRef = ref(db, `lobbies/${lobbyName}/players`);
-  playerScoreRef = ref(
-    db,
-    `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`
-  );
-  updateRankingInterval = setInterval(updateRanking, 100);
-
-  placementDisplay.style.display = "block";
-  maxRounds = localStorage.getItem("numberRoundsMP");
-  let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
-  if (localStorage.getItem("isHost") == "true") {
-    chosenPresets = getRandomDrumPatterns(selectedPresets);
-    await set(gameStructureRef, chosenPresets);
-  } else {
-    do {
-      snapshot = await get(gameStructureRef);
-
-      if (snapshot.exists()) {
-        chosenPresets = snapshot.val();
-      }
-    } while (!snapshot.exists());
-    handleOverlayDisplay("hide");
+let startMultiplayerRound = async function() {
+  if (
+    localStorage.getItem("multiplayerFlag") == "true" &&
+    practiceModeFlag != "true"
+  ) {
+    playersRef = ref(db, `lobbies/${lobbyName}/players`);
+    playerScoreRef = ref(
+      db,
+      `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`
+    );
+    updateRankingInterval = setInterval(updateRanking, 100);
+  
+    placementDisplay.style.display = "block";
+    maxRounds = localStorage.getItem("numberRoundsMP");
+    let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
+    if (localStorage.getItem("isHost") == "true") {
+      chosenPresets = getRandomDrumPatterns(selectedPresets);
+      await set(gameStructureRef, chosenPresets);
+    } else {
+      do {
+        snapshot = await get(gameStructureRef);
+  
+        if (snapshot.exists()) {
+          chosenPresets = snapshot.val();
+        }
+      } while (!snapshot.exists());
+      handleOverlayDisplay("hide");
+    }
   }
 }
 

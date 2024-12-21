@@ -158,11 +158,7 @@ let timeOverFlag;
 let goodGuessFlag;
 
 startGameButton.addEventListener("click", () => {
-  if(
-    localStorage.getItem("multiplayerFlag") == "true" && 
-    localStorage.getItem("isHost") == "false" && 
-    !chosenPresets.length
-  ) handleOverlayDisplay("wait");
+  if(localStorage.getItem("multiplayerFlag") == "true" && localStorage.getItem("isHost") == "false" && !chosenPresets.length) handleOverlayDisplay("wait");
   else {
     timerInterval = setInterval(roundTimer, 1000);
     handleOverlayDisplay("hide");
@@ -380,6 +376,7 @@ let updateRanking = async function () {
 };
 
 let startMultiplayerRound = async function() {
+  console.log("gnocca")
   if (
     localStorage.getItem("multiplayerFlag") == "true" &&
     practiceModeFlag != "true"

@@ -159,7 +159,8 @@ let goodGuessFlag;
 
 startGameButton.addEventListener("click", () => {
   timerInterval = setInterval(roundTimer, 1000);
-  handleOverlayDisplay("hide");
+  if(multiplayerflag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+  else handleOverlayDisplay("hide");
   solutionInterval = setInterval(playSolution, setBpm(bpm));
   playSolutionButton.innerHTML = "STOP SOLUTION";
   isSolutionPlaying = true;
@@ -245,6 +246,16 @@ let handleOverlayDisplay = function (overlayType) {
       }
       goNextRoundButton.innerHTML = "MAIN MENU";
       goNextRoundButton.style.display = "block";
+      break;
+    case "wait":
+      timeOverFlag = true;
+      overlayPanel.style.display = "flex";
+      overlayTitle.style.display = "flex";
+      overlaySubtitle.style.display = "none";
+      scoreLabel.style.display = "none";
+      overlayTitle.innerHTML = "WAIT YOUR HOST!";
+      showSolutionButton.style.display = "none";
+      goNextRoundButton.style.display = "none";
       break;
     case "hide":
       overlayPanel.style.display = "none";
@@ -386,6 +397,7 @@ if (
         chosenPresets = snapshot.val();
       }
     } while (!snapshot.exists());
+    handleOverlayDisplay("hide");
   }
 }
 

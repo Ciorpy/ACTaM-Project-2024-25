@@ -83,7 +83,6 @@ let progressionData = null;
 let result = "";
 let delay = 0;
 
-
 let userLegend = {
     chords_GM: "CHORDS",
     harmony_GM: "HARMONY",
@@ -171,11 +170,7 @@ if(!practiceModeFlag){
 // EVENT LISTENERS ----------------------------------------------------------------------------------------------------
 // Avvio del gioco e passaggio al prossimo round
 startGameButton.addEventListener("click", () => {
-    if (multiplayerflag){
-        if (isHost) enableInput();
-        if (!generatedChordsData.length) enableInput();
-        if (isInputDisabled) return;
-    }
+    if(multiplayerflag && !isHost && generatedChordsData.length) handleOverlayDisplay("wait");
     updateRoundDisplay();
     handleOverlayDisplay("hide");
     if (!isRoundActive) startRound();
@@ -294,14 +289,12 @@ function startRound() {
             console.log("Multiplayer true")
             if (isHost && (!generatedChordsData.length)) generateChordsForRounds();
             startMultiplayerRound();
-            enableInput();
         } else generateNewChord(); 
     } else if (selectedMinigame === "harmony_GM") {
         if (multiplayerflag) { // --> multiplayer
             console.log("Multiplayer true")
             if (isHost && (!generatedCadencesData.length)) generateCadencesForRounds();
             startMultiplayerRound();
-            enableInput();
         } else generateNewProgression();
     }
 }
@@ -606,6 +599,19 @@ function handleOverlayDisplay(overlayType) {
             scoreLabel.style.display = "none";
             rankingTable.style.display = "flex";
         }
+        break;
+    case "wait":
+        timeOverFlag = true;
+        overlayPanel.style.display = "flex";
+        overlayTitle.style.display = "flex";
+        overlaySubtitle.style.display = "flex";
+        scoreLabel.style.display = "none";
+        overlayTitle.innerHTML = "WAIT YOUR HOST!";
+        overlaySubtitle.innerHTML = "THEN PRESS START";
+        startGameButton.style.display = "block";
+        showSolutionButton.style.display = "none";
+        goNextRoundButton.style.display = "none";        
+        if (multiplayerflag) rankingTable.style.display = "flex";
         break;
     case "hide":
         overlayPanel.style.display = "none";

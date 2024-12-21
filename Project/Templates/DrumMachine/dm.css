@@ -167,7 +167,6 @@
 
 .subTitle{
     padding: 0;
-    margin-bottom: 10vh;
     text-align: center;
 }
 
@@ -284,7 +283,7 @@
 
 .overlayTitle{
     background: transparent;
-    margin: 10vh 10vw auto;
+    margin: 10vh 10vh auto;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -304,7 +303,6 @@
 .text {
     font-size: 1.5vw;
     margin: 0 0 auto;
-    padding: 1vw;
     display: flex;
     flex-direction: column;
     text-align: center;

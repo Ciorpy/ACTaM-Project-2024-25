@@ -381,6 +381,9 @@ if (
   }
 }
 
+if (localStorage.getItem("multiplayerFlag") == "false") timerDisplay.style.marginTop = "10vh";
+else timerDisplay.style.marginTop = "0vh", placementDisplay.style.marginTop = "5vh";
+
 /* ------------------------------------------------------------------------------------------------------ */
 
 // DYNAMIC HTML LAYOUT GENERATION ---------------------------------------------------------------------------------------------------------------------

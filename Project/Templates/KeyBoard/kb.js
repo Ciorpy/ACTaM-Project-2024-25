@@ -34,6 +34,8 @@ let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
 
 let multiplayerflag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
 
+let updateRankingInterval;
+
 const auth = getAuth(app);
 const db = getDatabase(app);
 let generatedChordsData = [];

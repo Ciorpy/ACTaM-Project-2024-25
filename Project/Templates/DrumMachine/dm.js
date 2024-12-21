@@ -203,8 +203,8 @@ let handleOverlayDisplay = function (overlayType) {
 
   switch (overlayType) {
     case "startGame":
-      if (selectedMinigame === "grooves_GM") overlayTitle.innerHTML = "RECOGNIZE GROOVES & FILL THE DRUM MACHINE WITH IT";
-      else if (selectedMinigame === "fills_GM") overlayTitle.innerHTML = "RECOGNIZE FILLS & FILL THE DRUM MACHINE WITH IT";
+      if (selectedMinigame === "grooves_GM") overlayTitle.innerHTML = "RECOGNIZE GROOVES AND FILL THE DRUM MACHINE WITH IT";
+      else if (selectedMinigame === "fills_GM") overlayTitle.innerHTML = "RECOGNIZE DRUM FILLS AND FILL THE DRUM MACHINE WITH IT";
       overlaySubtitle.innerHTML = "PRESS START";
       startGameButton.style.display = "block";
       break;
@@ -380,6 +380,9 @@ if (
     } while (!snapshot.exists());
   }
 }
+
+if (localStorage.getItem("multiplayerFlag") == "false") timerDisplay.style.marginTop = "10vh";
+else timerDisplay.style.marginTop = "0vh", placementDisplay.style.marginTop = "5vh";
 
 /* ------------------------------------------------------------------------------------------------------ */
 

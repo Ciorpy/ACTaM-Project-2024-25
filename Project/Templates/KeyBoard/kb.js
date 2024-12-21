@@ -687,6 +687,4 @@ async function updateRanking () {
   placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
 };
 
-
-
 export { isInputDisabled };

@@ -636,7 +636,17 @@ async function generateCadencesForRounds() {
 }
 
 async function startMultiplayerRound() {
-    if (!isHost) {generatedChordsData = await get(gameStructureRef).val(); console.log(generatedChordsData)} //togliere il log
+    if (!isHost) {
+        do {
+              snapshot = await get(gameStructureRef);
+        
+              if (snapshot.exists()) {
+                generatedChordsData = snapshot.val();
+              }
+            } while (!snapshot.exists());
+            console.log(generatedChordsData) //togliere il log
+        } 
+        
     if (!generatedChordsData) {
         console.error("Accordi non trovati per la modalità multiplayer!");
         return;

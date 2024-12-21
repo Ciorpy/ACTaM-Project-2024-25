@@ -32,11 +32,11 @@ let defaultRounds = 3;
 let loadedRounds = parseInt(localStorage.getItem("numberOfRounds")); 
 let maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
 
-let multiplayerflag = localStorage.getItem("multiplayerflag") == "true" ? true : false;
+let multiplayerflag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
 
 const auth = getAuth(app);
 const db = getDatabase(app);
-let generatedChordsData;
+let generatedChordsData = [];
 let generatedCadencesData; 
 let missingChordsDetails;
 let missingChords;

@@ -173,6 +173,7 @@ if(!practiceModeFlag){
 startGameButton.addEventListener("click", () => {
     if (multiplayerflag){
         if (isHost) enableInput();
+        if (!generatedChordsData.length) enableInput();
         if (isInputDisabled) return;
     }
     updateRoundDisplay();

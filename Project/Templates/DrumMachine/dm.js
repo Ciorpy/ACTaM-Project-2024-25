@@ -159,7 +159,11 @@ let goodGuessFlag;
 
 startGameButton.addEventListener("click", () => {
   timerInterval = setInterval(roundTimer, 1000);
-  if(localStorage.getItem("multiplayerFlag") == "true" && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+  if(
+    localStorage.getItem("multiplayerFlag") == "true" && 
+    localStorage.getItem("isHost") == "false" && 
+    !chosenPresets.length
+  ) handleOverlayDisplay("wait");
   else handleOverlayDisplay("hide");
   solutionInterval = setInterval(playSolution, setBpm(bpm));
   playSolutionButton.innerHTML = "STOP SOLUTION";
@@ -267,7 +271,7 @@ let handleOverlayDisplay = function (overlayType) {
 
 let selectedPresets;
 let solution;
-let chosenPresets;
+let chosenPresets = [];
 
 function getRandomDrumPatterns(array) {
   // Shuffle the array using Fisher-Yates (Knuth) algorithm

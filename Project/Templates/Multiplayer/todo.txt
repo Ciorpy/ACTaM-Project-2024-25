@@ -1,3 +1,0 @@
-Idea per classifica.
-Inserire sotto a CURRENT SCORE:... la riga CURRENT POSITION:... che si aggiorna in automatico.
-Inserire in overlay un tasto classifica per mostrarla, o mostrarla direttamente ogni qualvolta finisce il round

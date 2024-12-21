@@ -171,6 +171,7 @@ if(!practiceModeFlag){
 // Avvio del gioco e passaggio al prossimo round
 startGameButton.addEventListener("click", () => {
     if(multiplayerflag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+    else handleOverlayDisplay("hide");
     updateRoundDisplay();
     if (!isRoundActive) startRound();
 });
@@ -652,7 +653,6 @@ async function startMultiplayerRound() {
         
               if (snapshot.exists()) {
                 generatedChordsData = snapshot.val();
-                handleOverlayDisplay("hide");
               }
             } while (!snapshot.exists());
             console.log(generatedChordsData) //togliere il log

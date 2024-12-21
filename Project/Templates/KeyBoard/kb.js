@@ -671,11 +671,10 @@ async function updateScoreInDatabase() {
 
 async function updateRanking() {
     try {
-      console.log(playersRef); //togliere
+
       let playersSnapshot = await get(playersRef);
-      console.log(playersSnapshot); //togliere
       let playersData = playersSnapshot.val();
-      console.log(playersData); //togliere
+
   
       if (!playersData) {
         console.warn("Nessun dato trovato per i giocatori.");

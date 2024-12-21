@@ -218,6 +218,10 @@ let handleOverlayDisplay = function (overlayType) {
       overlaySubtitle.innerHTML = "YOU ARE A BOSS!";
       showSolutionButton.style.display = "none";
       goNextRoundButton.style.display = "block";
+      if (localStorage.getItem("multiplayerFlag") == "true") {
+        overlaySubtitle.style.display = "none";
+        rankingTable.style.display = "flex";
+      }
       break;
     case "timeOver":
       timeOverFlag = true;
@@ -225,6 +229,10 @@ let handleOverlayDisplay = function (overlayType) {
       overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT!";
       showSolutionButton.style.display = "block";
       goNextRoundButton.style.display = "block";
+      if (localStorage.getItem("multiplayerFlag") == "true") {
+        overlaySubtitle.style.display = "none";
+        rankingTable.style.display = "flex";
+      }
       break;
     case "gameOver":
       overlayTitle.innerHTML = "GAME OVER";

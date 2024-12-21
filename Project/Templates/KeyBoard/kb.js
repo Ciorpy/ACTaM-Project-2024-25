@@ -554,7 +554,7 @@ function handleOverlayDisplay(overlayType) {
         overlayTitle.style.display = "flex";
         overlaySubtitle.style.display = "flex";
         scoreLabel.style.display = "none";
-        if (selectedMinigame === "chords_GM") overlayTitle.innerHTML = "RECOGNIZE CHORD & PLAY IT";
+        if (selectedMinigame === "chords_GM") overlayTitle.innerHTML = "RECOGNIZE CHORD AND PLAY IT";
         else if (selectedMinigame === "harmony_GM") overlayTitle.innerHTML = "RESOLVE CHORD CADENCES PLAYING MUTED LAST CHORD";
         overlaySubtitle.innerHTML = "PRESS START";
         startGameButton.style.display = "block";

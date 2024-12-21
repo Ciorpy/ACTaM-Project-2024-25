@@ -217,11 +217,13 @@
 .overlayRanking{
     background: transparent;
     margin: 0vh 0vw auto;
-    display: flex;
     flex-direction: column;
     text-align: center;
     font-size: 5vh;
     background-color: rgba(0,0,0,0);
+    display: flex;
+    gap: 2vh;
+    font-weight: 500;
 }
 
 .overlayTitleSolution {

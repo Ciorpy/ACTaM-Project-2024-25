@@ -319,7 +319,7 @@
     font-size: 5vh;
     width: 100vh;
     gap: 2vh;
-    background: transparent;
+    background: none;
     font-weight: 500;
     margin: auto;
 }

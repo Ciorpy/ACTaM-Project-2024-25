@@ -669,35 +669,53 @@ async function updateScoreInDatabase() {
     console.log("punteggio db aggiornato"); //togliere
 }
 
-async function updateRanking () {
-  let playersSnapshot = await get(playersRef);
-
-  let playersArray = Object.entries(playersSnapshot.val()).map( //oppure await get(playersRef).val() direttamente
-    ([id, data]) => ({
-      id,
-      score: data.score,
-      playerName: data.playerName,
-    })
-  );
-
-  playersArray.sort((a, b) => b.score - a.score);
-
-  let playerIndex = playersArray.findIndex(
-    (player) => player.id === userID
-  );
-
-  rankingTable.innerHTML = "";
-
-  playersArray.forEach((item, index) => {
-    let newPlayerRanking = document.createElement("div");
-    newPlayerRanking.classList.add("playerRanking");
-    newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${
-      item.score
-    } points`;
-    rankingTable.append(newPlayerRanking);
-  });
-
-  placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
-};
+async function updateRanking() {
+    try {
+      console.log(playersRef); //togliere
+      let playersSnapshot = await get(playersRef);
+      console.log(playersSnapshot); //togliere
+      let playersData = playersSnapshot.val();
+      console.log(playersData); //togliere
+  
+      if (!playersData) {
+        console.warn("Nessun dato trovato per i giocatori.");
+        rankingTable.innerHTML = "Nessun giocatore nella lobby.";
+        placementDisplay.innerHTML = "PLACEMENT: N/A";
+        return; // Esce dalla funzione se non ci sono dati
+      }
+  
+      let playersArray = Object.entries(playersData).map(
+        ([id, data]) => ({
+          id,
+          score: data.score || 0, // Usa 0 come valore di default per il punteggio
+          playerName: data.playerName || "Anonimo", // Usa un valore di default per il nome
+        })
+      );
+  
+      playersArray.sort((a, b) => b.score - a.score);
+  
+      let playerIndex = playersArray.findIndex(
+        (player) => player.id === userID
+      );
+  
+      rankingTable.innerHTML = "";
+  
+      playersArray.forEach((item, index) => {
+        let newPlayerRanking = document.createElement("div");
+        newPlayerRanking.classList.add("playerRanking");
+        newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${
+          item.score
+        } points`;
+        rankingTable.append(newPlayerRanking);
+      });
+  
+      placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento del ranking:", error);
+      rankingTable.innerHTML = "Errore nel caricamento della classifica.";
+      placementDisplay.innerHTML = "PLACEMENT: N/A";
+    }
+  }
+  
 
 export { isInputDisabled };

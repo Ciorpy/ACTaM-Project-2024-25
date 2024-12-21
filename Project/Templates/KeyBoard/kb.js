@@ -637,6 +637,7 @@ async function generateCadencesForRounds() {
 
 async function startMultiplayerRound() {
     if (!isHost) {
+        let snapshot;
         do {
               snapshot = await get(gameStructureRef);
         
@@ -646,7 +647,7 @@ async function startMultiplayerRound() {
             } while (!snapshot.exists());
             console.log(generatedChordsData) //togliere il log
         } 
-        
+
     if (!generatedChordsData) {
         console.error("Accordi non trovati per la modalità multiplayer!");
         return;

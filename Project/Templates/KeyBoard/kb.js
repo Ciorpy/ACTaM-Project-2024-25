@@ -171,11 +171,8 @@ if(!practiceModeFlag){
 // Avvio del gioco e passaggio al prossimo round
 startGameButton.addEventListener("click", () => {
     if(multiplayerflag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
-    else {
-        updateRoundDisplay();
-        handleOverlayDisplay("hide");
-        if (!isRoundActive) startRound();
-    }
+    updateRoundDisplay();
+    if (!isRoundActive) startRound();
 });
  
 showSolutionButton.addEventListener("click", () => {
@@ -609,8 +606,8 @@ function handleOverlayDisplay(overlayType) {
         overlaySubtitle.style.display = "flex";
         scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "WAIT YOUR HOST!";
-        overlaySubtitle.innerHTML = "THEN PRESS START";
-        startGameButton.style.display = "block";
+        //overlaySubtitle.innerHTML = "THEN PRESS START";
+        //startGameButton.style.display = "block";
         showSolutionButton.style.display = "none";
         goNextRoundButton.style.display = "none";        
         if (multiplayerflag) rankingTable.style.display = "flex";
@@ -655,6 +652,7 @@ async function startMultiplayerRound() {
         
               if (snapshot.exists()) {
                 generatedChordsData = snapshot.val();
+                handleOverlayDisplay("hide");
               }
             } while (!snapshot.exists());
             console.log(generatedChordsData) //togliere il log

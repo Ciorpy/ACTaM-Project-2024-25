@@ -39,7 +39,7 @@ let updateRankingInterval;
 const auth = getAuth(app);
 const db = getDatabase(app);
 let generatedChordsData = [];
-let generatedCadencesData; 
+let generatedCadencesData = [];
 let missingChordsDetails;
 let missingChords;
 if (multiplayerflag) maxRounds = localStorage.getItem("numberRoundsMP"); 
@@ -564,29 +564,26 @@ function handleOverlayDisplay(overlayType) {
         timeOverFlag = true;
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
-        overlaySubtitle.style.display = "flex";
+        if(!multiplayerflag) overlaySubtitle.style.display = "flex";
         scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "TIME OVER";
         overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT!";
         showSolutionButton.style.display = "block";
-        goNextRoundButton.style.display = "block";
-        //if {multiplayerflag} displayRanking();
+        goNextRoundButton.style.display = "block";        
+        if (multiplayerflag) rankingTable.style.display = "flex";
         break;
       case "goodGuess":
         disableInput();
         goodGuessFlag = true;
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
-        overlaySubtitle.style.display = "flex";
+        if(!multiplayerflag) overlaySubtitle.style.display = "flex";
         scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "GOOD GUESS";
         overlaySubtitle.innerHTML = "YOU ARE A BOSS!";        
         showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block";
-        if (multiplayerflag) { // multiplayer
-            scoreLabel.style.display = "none"; //ordine
-            rankingTable.style.display = "flex";
-          }
+        if (multiplayerflag) rankingTable.style.display = "flex";
         break;
       case "gameOver":
         disableInput();
@@ -598,10 +595,10 @@ function handleOverlayDisplay(overlayType) {
         scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
         goNextRoundButton.innerHTML = "MAIN MENU";
         goNextRoundButton.style.display = "block";
-        if (multiplayerflag) { // multiplayer
-            scoreLabel.style.display = "none"; //ordine
+        if (multiplayerflag) {
+            scoreLabel.style.display = "none";
             rankingTable.style.display = "flex";
-          }
+        }
         break;
     case "hide":
         overlayPanel.style.display = "none";
@@ -701,7 +698,7 @@ async function updateRanking() {
   
       playersArray.forEach((item, index) => {
         let newPlayerRanking = document.createElement("div");
-        newPlayerRanking.classList.add("playerRanking");
+        newPlayerRanking.classList.add("overlayRanking");
         newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${
           item.score
         } points`;

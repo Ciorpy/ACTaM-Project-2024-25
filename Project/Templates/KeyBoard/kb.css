@@ -214,6 +214,16 @@
     background-color: rgba(0,0,0,0);
 }
 
+.overlayRanking{
+    background: transparent;
+    margin: 0vh 0vw auto;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-size: 5vh;
+    background-color: rgba(0,0,0,0);
+}
+
 .overlayTitleSolution {
     margin: 5vh 5vw auto;
     font-size: 11vh;

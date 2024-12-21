@@ -87,7 +87,7 @@ let updateLobby = async function () {
 
     if (playersCount > 1) {
       startGameButton.classList.toggle("disabled", false);
-      startGameButton.innerHTML = "Start game";
+      startGameButton.innerHTML = "START GAME";
     } else {
       startGameButton.classList.toggle("disabled", true);
       startGameButton.innerHTML = "Waiting for other players";

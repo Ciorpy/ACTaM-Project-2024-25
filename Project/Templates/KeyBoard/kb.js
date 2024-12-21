@@ -604,14 +604,11 @@ function handleOverlayDisplay(overlayType) {
         timeOverFlag = true;
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
-        overlaySubtitle.style.display = "flex";
+        overlaySubtitle.style.display = "none";
         scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "WAIT YOUR HOST!";
-        //overlaySubtitle.innerHTML = "THEN PRESS START";
-        //startGameButton.style.display = "block";
         showSolutionButton.style.display = "none";
-        goNextRoundButton.style.display = "none";        
-        if (multiplayerflag) rankingTable.style.display = "flex";
+        goNextRoundButton.style.display = "none";
         break;
     case "hide":
         overlayPanel.style.display = "none";
@@ -649,14 +646,12 @@ async function startMultiplayerRound() {
     if (!isHost) {
         let snapshot;
         do {
-              snapshot = await get(gameStructureRef);
-        
-              if (snapshot.exists()) {
-                generatedChordsData = snapshot.val();
-              }
-            } while (!snapshot.exists());
-            console.log(generatedChordsData) //togliere il log
-        } 
+            snapshot = await get(gameStructureRef);
+            if (snapshot.exists()) generatedChordsData = snapshot.val();
+        } while (!snapshot.exists());
+        handleOverlayDisplay("hide");
+        console.log(generatedChordsData) //togliere il log
+    } 
 
     if (!generatedChordsData) {
         console.error("Accordi non trovati per la modalità multiplayer!");

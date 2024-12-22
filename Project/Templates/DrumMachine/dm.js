@@ -156,15 +156,13 @@ let rankingTable = document.getElementById("rankingTable");
 
 let timeOverFlag;
 let goodGuessFlag;
+//let snapshotEmptyFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
 
 startGameButton.addEventListener("click", () => {
-  if(localStorage.getItem("multiplayerFlag") == "true" && localStorage.getItem("isHost") == "false" && !chosenPresets.length) handleOverlayDisplay("wait");
-  else {
-    timerInterval = setInterval(roundTimer, 1000);
-    handleOverlayDisplay("hide");
-    startMultiplayerRound();
-    solutionInterval = setInterval(playSolution, setBpm(bpm));
-  }
+  //while (localStorage.getItem("multiplayerFlag") == "true" && localStorage.getItem("isHost") == "false" && snapshotEmptyFlag) handleOverlayDisplay("wait");
+  timerInterval = setInterval(roundTimer, 1000);
+  handleOverlayDisplay("hide");
+  solutionInterval = setInterval(playSolution, setBpm(bpm));
   playSolutionButton.innerHTML = "STOP SOLUTION";
   isSolutionPlaying = true;
 });
@@ -375,35 +373,32 @@ let updateRanking = async function () {
   placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
 };
 
-let startMultiplayerRound = async function() {
-  console.log("gnocca")
-  if (
-    localStorage.getItem("multiplayerFlag") == "true" &&
-    practiceModeFlag != "true"
-  ) {
-    playersRef = ref(db, `lobbies/${lobbyName}/players`);
-    playerScoreRef = ref(
-      db,
-      `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`
-    );
-    updateRankingInterval = setInterval(updateRanking, 100);
-  
-    placementDisplay.style.display = "block";
-    maxRounds = localStorage.getItem("numberRoundsMP");
-    let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
-    if (localStorage.getItem("isHost") == "true") {
-      chosenPresets = getRandomDrumPatterns(selectedPresets);
-      await set(gameStructureRef, chosenPresets);
-    } else {
-      do {
-        snapshot = await get(gameStructureRef);
-  
-        if (snapshot.exists()) {
-          chosenPresets = snapshot.val();
-        }
-      } while (!snapshot.exists());
-      handleOverlayDisplay("hide");
-    }
+if (
+  localStorage.getItem("multiplayerFlag") == "true" &&
+  practiceModeFlag != "true"
+) {
+  playersRef = ref(db, `lobbies/${lobbyName}/players`);
+  playerScoreRef = ref(
+    db,
+    `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`
+  );
+  updateRankingInterval = setInterval(updateRanking, 100);
+
+  placementDisplay.style.display = "block";
+  maxRounds = localStorage.getItem("numberRoundsMP");
+  let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
+  if (localStorage.getItem("isHost") == "true") {
+    chosenPresets = getRandomDrumPatterns(selectedPresets);
+    await set(gameStructureRef, chosenPresets);
+  } else {
+    do {
+      snapshot = await get(gameStructureRef);
+
+      if (snapshot.exists()) {
+        chosenPresets = snapshot.val();
+      }
+    } while (!snapshot.exists());
+    //snapshotEmptyFlag = false;
   }
 }
 

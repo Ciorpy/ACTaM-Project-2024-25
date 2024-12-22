@@ -156,22 +156,24 @@ let rankingTable = document.getElementById("rankingTable");
 
 let timeOverFlag;
 let goodGuessFlag;
-let snapshotEmptyFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
 
 startGameButton.addEventListener("click", async () => {
   let flagRef = ref(db, `lobbies/${lobbyName}/snapshotEmptyFlag`);
+  await set(flagRef, true);
   if (localStorage.getItem("multiplayerFlag") == "true") {
     if (localStorage.getItem("isHost") == "true") {
       await set(flagRef, false);
     } else {
       handleOverlayDisplay("wait");
-
+      console.log(flagRef);
       onValue(flagRef, (snapshot) => {
         let flag = snapshot.val();
 
+        console.log(flag);
+
         if (flag === false) {
-          handleOverlayDisplay("hide");
           off(flagRef);
+          handleOverlayDisplay("hide");
           timerInterval = setInterval(roundTimer, 1000);
           solutionInterval = setInterval(playSolution, setBpm(bpm));
           playSolutionButton.innerHTML = "STOP SOLUTION";
@@ -180,12 +182,13 @@ startGameButton.addEventListener("click", async () => {
       });
       return;
     }
-  }
-  timerInterval = setInterval(roundTimer, 1000);
-  handleOverlayDisplay("hide");
-  solutionInterval = setInterval(playSolution, setBpm(bpm));
-  playSolutionButton.innerHTML = "STOP SOLUTION";
-  isSolutionPlaying = true;
+  } else {
+    timerInterval = setInterval(roundTimer, 1000);
+    handleOverlayDisplay("hide");
+    solutionInterval = setInterval(playSolution, setBpm(bpm));
+    playSolutionButton.innerHTML = "STOP SOLUTION";
+    isSolutionPlaying = true;
+  } 
 });
 
 showSolutionButton.addEventListener("click", () => {
@@ -348,6 +351,7 @@ import {
   get,
   set,
   remove,
+  onValue, off
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
 import { app } from "../../../firebase.js";
@@ -401,28 +405,22 @@ if (localStorage.getItem("multiplayerFlag") == "true" && practiceModeFlag != "tr
   placementDisplay.style.display = "block";
   maxRounds = localStorage.getItem("numberRoundsMP");
 
-  console.log(chosenPresets.length);
-
-  if (localStorage.getItem("isHost") == "true" && !chosenPresets.length) {
+  if (localStorage.getItem("isHost") == "true") {
 
     chosenPresets = getRandomDrumPatterns(selectedPresets);
     solution = chosenPresets[levelIndex];
     await set(gameStructureRef, chosenPresets);
 
-  } else if (chosenPresets.length) {
+  } else {
 
-    console.log(snapshotEmptyFlag);
     let snapshot;
     do {
       snapshot = await get(gameStructureRef);
       if (snapshot.exists()) {
         chosenPresets = snapshot.val();
         solution = chosenPresets[levelIndex];
-        if (chosenPresets.length) snapshotEmptyFlag = false;
       }
     } while (!snapshot.exists());
-
-    console.log(snapshotEmptyFlag);
 
   }
 }

@@ -285,14 +285,12 @@ function startRound() {
     enableInput();
     piano.init();
     if (selectedMinigame === "chords_GM") {
-        if (multiplayerflag) { // --> multiplayer
-            console.log("Multiplayer true")
+        if (multiplayerflag) {
             if (isHost && (!generatedChordsData.length)) generateChordsForRounds();
             startMultiplayerRound();
         } else generateNewChord(); 
     } else if (selectedMinigame === "harmony_GM") {
-        if (multiplayerflag) { // --> multiplayer
-            console.log("Multiplayer true")
+        if (multiplayerflag) {
             if (isHost && (!generatedCadencesData.length)) generateCadencesForRounds();
             startMultiplayerRound();
         } else generateNewProgression();
@@ -617,29 +615,23 @@ function handleOverlayDisplay(overlayType) {
         scoreLabel.style.display = "none";
         break;    
     default: console.log("Error: overlayType '" + overlayType + "' does not exist.");
-}
+    }
 }
 
 // FUNZIONI MULTIPLAYER -----------------------------------------------------------------------------------------------
 async function generateChordsForRounds() {
-    console.log("entrato nella funzione") // togliere
     for (let i = 0; i < maxRounds; i++) {
-        console.log("entrato nel ciclo, iterazione:",i) // togliere
         generatedChordsData.push(generateRandomChord(firstNote, lastNote, selectedLevel));
     }
     await set(gameStructureRef, generatedChordsData); 
-    console.log(generatedChordsData) //togliere
 }
 
 async function generateCadencesForRounds() {
-    console.log("entrato nella funzione") // togliere
     for (let i = 0; i < maxRounds; i++) {
-        console.log("entrato nel ciclo, iterazione:",i) // togliere
         progressionData = generateChordPattern(firstNote, lastNote, selectedLevel);
         generatedCadencesData.push(progressionData);
     }
-    await set(gameStructureRef, generatedCadencesData); 
-    console.log(generatedCadencesData) //togliere
+    await set(gameStructureRef, generatedCadencesData);
 }
 
 async function startMultiplayerRound() {
@@ -651,7 +643,6 @@ async function startMultiplayerRound() {
         } while (!snapshot.exists());
         handleOverlayDisplay("hide");
         startTimer();
-        console.log(generatedChordsData) //togliere il log
     } 
 
     if (!generatedChordsData) {
@@ -660,7 +651,6 @@ async function startMultiplayerRound() {
     }
     if (selectedMinigame === "chords_GM") {
         generatedChordData = generatedChordsData[activeRoundID-1];
-        console.log(activeRoundID, generatedChordData) //togliere
         piano.playChord(generatedChordData.midiNotes);
     } else if (selectedMinigame === "harmony_GM") {
         progressionData = generatedCadencesData[activeRoundID-1];
@@ -672,7 +662,6 @@ async function startMultiplayerRound() {
 
 async function updateScoreInDatabase() {
     await set(playerScoreRef, totalScore);
-    console.log("punteggio db aggiornato"); //togliere
 }
 
 async function updateRanking() {

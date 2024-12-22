@@ -156,16 +156,58 @@ let rankingTable = document.getElementById("rankingTable");
 
 let timeOverFlag;
 let goodGuessFlag;
-//let snapshotEmptyFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
+let snapshotEmptyFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
 
-startGameButton.addEventListener("click", () => {
-  //while (localStorage.getItem("multiplayerFlag") == "true" && localStorage.getItem("isHost") == "false" && snapshotEmptyFlag) handleOverlayDisplay("wait");
+/*startGameButton.addEventListener("click", () => {
+  if (localStorage.getItem("multiplayerFlag") == "true" && localStorage.getItem("isHost") == "false" && snapshotEmptyFlag) {
+    handleOverlayDisplay("wait");
+  }
   timerInterval = setInterval(roundTimer, 1000);
   handleOverlayDisplay("hide");
   solutionInterval = setInterval(playSolution, setBpm(bpm));
   playSolutionButton.innerHTML = "STOP SOLUTION";
   isSolutionPlaying = true;
+});*/
+
+startGameButton.addEventListener("click", () => {
+  if (localStorage.getItem("multiplayerFlag") == "true" && localStorage.getItem("isHost") == "false") {
+    if (snapshotEmptyFlag) {
+      handleOverlayDisplay("wait");
+
+      // Crea un intervallo per controllare snapshotEmptyFlag
+      let checkSnapshotInterval = setInterval(async () => {
+        if (!snapshotEmptyFlag) {
+          // Una volta che snapshotEmptyFlag diventa false, nascondi l'overlay e avvia il gioco
+          clearInterval(checkSnapshotInterval); // Ferma l'intervallo
+          handleOverlayDisplay("hide");
+
+          // Avvia le logiche del gioco
+          timerInterval = setInterval(roundTimer, 1000);
+          solutionInterval = setInterval(playSolution, setBpm(bpm));
+          playSolutionButton.innerHTML = "STOP SOLUTION";
+          isSolutionPlaying = true;
+        } else {
+          console.log("Aspettando che l'host avvii il gioco...");
+        }
+      }, 100); // Controlla ogni 100ms
+    } else {
+      // Se snapshotEmptyFlag è già false, avvia il gioco immediatamente
+      timerInterval = setInterval(roundTimer, 1000);
+      handleOverlayDisplay("hide");
+      solutionInterval = setInterval(playSolution, setBpm(bpm));
+      playSolutionButton.innerHTML = "STOP SOLUTION";
+      isSolutionPlaying = true;
+    }
+  } else {
+    // Logica per l'host o modalità single player
+    timerInterval = setInterval(roundTimer, 1000);
+    handleOverlayDisplay("hide");
+    solutionInterval = setInterval(playSolution, setBpm(bpm));
+    playSolutionButton.innerHTML = "STOP SOLUTION";
+    isSolutionPlaying = true;
+  }
 });
+
 
 showSolutionButton.addEventListener("click", () => {
   showSolution();
@@ -304,8 +346,10 @@ let roundTimer = function () {
 
 if (practiceModeFlag == "false") {
   selectedPresets = minigamePresets[selectedMinigame][difficultyLevel];
-  chosenPresets = getRandomDrumPatterns(selectedPresets);
-  solution = chosenPresets[levelIndex];
+  if (localStorage.getItem("multiplayerFlag") == "false") {
+    chosenPresets = getRandomDrumPatterns(selectedPresets);
+    solution = chosenPresets[levelIndex];
+  }    
   handleOverlayDisplay("startGame");
   preloadedEffects[0].play();
 } else {
@@ -332,12 +376,13 @@ import { app } from "../../../firebase.js";
 const auth = getAuth(app);
 const db = getDatabase(app);
 const lobbyName = localStorage.getItem("lobbyName");
-let snapshot;
 let placementDisplay = document.getElementById("currentPlacement");
 let updateRankingInterval = null;
 
-let playersRef;
-let playerScoreRef;
+let playersRef = ref(db, `lobbies/${lobbyName}/players`);
+let playerScoreRef = ref(db, `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`);
+let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
+await set(gameStructureRef, null); // Inizializza con null
 
 let updateRanking = async function () {
   await set(playerScoreRef, totalScore);
@@ -373,32 +418,34 @@ let updateRanking = async function () {
   placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
 };
 
-if (
-  localStorage.getItem("multiplayerFlag") == "true" &&
-  practiceModeFlag != "true"
-) {
-  playersRef = ref(db, `lobbies/${lobbyName}/players`);
-  playerScoreRef = ref(
-    db,
-    `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`
-  );
+if (localStorage.getItem("multiplayerFlag") == "true" && practiceModeFlag != "true") {
   updateRankingInterval = setInterval(updateRanking, 100);
-
   placementDisplay.style.display = "block";
   maxRounds = localStorage.getItem("numberRoundsMP");
-  let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
-  if (localStorage.getItem("isHost") == "true") {
+
+  console.log(chosenPresets.length);
+
+  if (localStorage.getItem("isHost") == "true" && !chosenPresets.length) {
+
     chosenPresets = getRandomDrumPatterns(selectedPresets);
+    solution = chosenPresets[levelIndex];
     await set(gameStructureRef, chosenPresets);
-  } else {
+
+  } else if (chosenPresets.length) {
+
+    console.log(snapshotEmptyFlag);
+    let snapshot;
     do {
       snapshot = await get(gameStructureRef);
-
       if (snapshot.exists()) {
         chosenPresets = snapshot.val();
+        solution = chosenPresets[levelIndex];
+        if (chosenPresets.length) snapshotEmptyFlag = false;
       }
     } while (!snapshot.exists());
-    //snapshotEmptyFlag = false;
+
+    console.log(snapshotEmptyFlag);
+
   }
 }
 

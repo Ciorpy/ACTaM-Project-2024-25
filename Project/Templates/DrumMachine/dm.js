@@ -158,8 +158,6 @@ let timeOverFlag;
 let goodGuessFlag;
 
 startGameButton.addEventListener("click", async () => {
-  let flagRef = ref(db, `lobbies/${lobbyName}/snapshotEmptyFlag`);
-  await set(flagRef, true);
   if (localStorage.getItem("multiplayerFlag") == "true") {
     if (localStorage.getItem("isHost") == "true") {
       await set(flagRef, false);
@@ -182,13 +180,12 @@ startGameButton.addEventListener("click", async () => {
       });
       return;
     }
-  } else {
-    timerInterval = setInterval(roundTimer, 1000);
-    handleOverlayDisplay("hide");
-    solutionInterval = setInterval(playSolution, setBpm(bpm));
-    playSolutionButton.innerHTML = "STOP SOLUTION";
-    isSolutionPlaying = true;
-  } 
+  }
+  timerInterval = setInterval(roundTimer, 1000);
+  handleOverlayDisplay("hide");
+  solutionInterval = setInterval(playSolution, setBpm(bpm));
+  playSolutionButton.innerHTML = "STOP SOLUTION";
+  isSolutionPlaying = true;
 });
 
 showSolutionButton.addEventListener("click", () => {
@@ -235,6 +232,7 @@ let handleOverlayDisplay = function (overlayType) {
       startGameButton.style.display = "block";
       break;
     case "wrongGuess":
+      overlaySubtitle.style.display = "flex";
       overlayTitle.innerHTML = "WRONG GUESS";
       overlaySubtitle.innerHTML = "DON'T WORRY, KEEP TRYING!";
       break;
@@ -365,6 +363,8 @@ let updateRankingInterval = null;
 let playersRef = ref(db, `lobbies/${lobbyName}/players`);
 let playerScoreRef = ref(db, `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`);
 let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
+let flagRef = ref(db, `lobbies/${lobbyName}/snapshotEmptyFlag`);
+await set(flagRef, true);
 
 let updateRanking = async function () {
   await set(playerScoreRef, totalScore);

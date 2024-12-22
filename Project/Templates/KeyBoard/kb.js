@@ -264,12 +264,28 @@ document.addEventListener("keyup", (event) => {
     if (practiceModeFlag) hintDisplay.textContent = "";
 });
 
-document.addEventListener("click", () => {
+document.addEventListener("mousedown", (event) => { 
     if (isInputDisabled) return;
-    const pressedNotes = piano.getPressedNotes();
-    if (selectedMinigame === "chords_GM" && assistantMode) piano.view.setKeyColor(pressedNotes, generatedChordData.midiNotes.includes(pressedNotes[0]) ? "green" : "red");
-    else if (selectedMinigame === "harmony_GM" && assistantMode) piano.view.setKeyColor(pressedNotes, missingChord.includes(pressedNotes[0]) ? "green" : "red");
-})
+
+    const keyElement = event.target.closest(".key");
+    if (!keyElement) return;
+    const midiNote = parseInt(keyElement.dataset.midiNote);
+
+    if (selectedMinigame === "chords_GM" && assistantMode) {
+        piano.view.setKeyColor(
+            midiNote,
+            generatedChordData.midiNotes.includes(midiNote) ? "green" : "red",
+            true
+        );
+    } else if (selectedMinigame === "harmony_GM" && assistantMode) {
+        piano.view.setKeyColor(
+            midiNote,
+            missingChord.includes(midiNote) ? "green" : "red",
+            true
+        );
+    }
+});
+
 
 // FUNZIONI PRINCIPALI -----------------------------------------------------------------------------------------------
 function startRound() {

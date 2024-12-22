@@ -79,14 +79,37 @@ class PianoView {
         const activeKeys = new Set(); // Set per i tasti attivi
     
         keys.forEach(key => {
-            key.addEventListener("mousedown", () => playCallback(parseInt(key.dataset.midiNote)));
-            key.addEventListener("mouseup", () => stopCallback(parseInt(key.dataset.midiNote)));
-            key.addEventListener("mouseleave", () => stopCallback(parseInt(key.dataset.midiNote)));
+            // Quando il mouse viene premuto, esegui playCallback
+            key.addEventListener("mousedown", () => {
+                if (isInputDisabled) return;
+                const midiNote = parseInt(key.dataset.midiNote);
+                playCallback(midiNote); // Chiama playNote con la nota MIDI
+                activeKeys.add(midiNote); // Segna la nota come attiva
+            });
+    
+            // Quando il mouse viene rilasciato, esegui stopCallback
+            key.addEventListener("mouseup", () => {
+                if (isInputDisabled) return;
+                const midiNote = parseInt(key.dataset.midiNote);
+                stopCallback(midiNote); // Chiama stopNote con la nota MIDI
+                activeKeys.delete(midiNote); // Rimuovi la nota dai tasti attivi
+            });
+    
+            // Intercetta il caso in cui il mouse lascia il tasto mentre è premuto
+            key.addEventListener("mouseleave", () => {
+                if (isInputDisabled) return;
+                const midiNote = parseInt(key.dataset.midiNote);
+                if (activeKeys.has(midiNote)) {
+                    stopCallback(midiNote); // Rilascia la nota
+                    activeKeys.delete(midiNote); // Rimuovi la nota dai tasti attivi
+                }
+            });
         });
     
+        // Listener per la tastiera fisica
         document.addEventListener("keydown", (event) => {
             if (isInputDisabled) return; // Ignora gli input se disabilitati
-
+    
             const key = event.code;
             if (this.keyMap[key] && !activeKeys.has(key)) { // Esegui solo se il tasto non è già attivo
                 activeKeys.add(key); // Aggiungi il tasto attivo
@@ -102,6 +125,7 @@ class PianoView {
             }
         });
     }
+    
     
     setKeyColor(note, color, keepActive = false) {
         const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);

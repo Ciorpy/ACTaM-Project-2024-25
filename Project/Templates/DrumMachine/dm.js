@@ -158,56 +158,35 @@ let timeOverFlag;
 let goodGuessFlag;
 let snapshotEmptyFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
 
-/*startGameButton.addEventListener("click", () => {
-  if (localStorage.getItem("multiplayerFlag") == "true" && localStorage.getItem("isHost") == "false" && snapshotEmptyFlag) {
-    handleOverlayDisplay("wait");
+startGameButton.addEventListener("click", async () => {
+  let flagRef = ref(db, `lobbies/${lobbyName}/snapshotEmptyFlag`);
+  if (localStorage.getItem("multiplayerFlag") == "true") {
+    if (localStorage.getItem("isHost") == "true") {
+      await set(flagRef, false);
+    } else {
+      handleOverlayDisplay("wait");
+
+      onValue(flagRef, (snapshot) => {
+        let flag = snapshot.val();
+
+        if (flag === false) {
+          handleOverlayDisplay("hide");
+          off(flagRef);
+          timerInterval = setInterval(roundTimer, 1000);
+          solutionInterval = setInterval(playSolution, setBpm(bpm));
+          playSolutionButton.innerHTML = "STOP SOLUTION";
+          isSolutionPlaying = true;
+        }
+      });
+      return;
+    }
   }
   timerInterval = setInterval(roundTimer, 1000);
   handleOverlayDisplay("hide");
   solutionInterval = setInterval(playSolution, setBpm(bpm));
   playSolutionButton.innerHTML = "STOP SOLUTION";
   isSolutionPlaying = true;
-});*/
-
-startGameButton.addEventListener("click", () => {
-  if (localStorage.getItem("multiplayerFlag") == "true" && localStorage.getItem("isHost") == "false") {
-    if (snapshotEmptyFlag) {
-      handleOverlayDisplay("wait");
-
-      // Crea un intervallo per controllare snapshotEmptyFlag
-      let checkSnapshotInterval = setInterval(async () => {
-        if (!snapshotEmptyFlag) {
-          // Una volta che snapshotEmptyFlag diventa false, nascondi l'overlay e avvia il gioco
-          clearInterval(checkSnapshotInterval); // Ferma l'intervallo
-          handleOverlayDisplay("hide");
-
-          // Avvia le logiche del gioco
-          timerInterval = setInterval(roundTimer, 1000);
-          solutionInterval = setInterval(playSolution, setBpm(bpm));
-          playSolutionButton.innerHTML = "STOP SOLUTION";
-          isSolutionPlaying = true;
-        } else {
-          console.log("Aspettando che l'host avvii il gioco...");
-        }
-      }, 100); // Controlla ogni 100ms
-    } else {
-      // Se snapshotEmptyFlag è già false, avvia il gioco immediatamente
-      timerInterval = setInterval(roundTimer, 1000);
-      handleOverlayDisplay("hide");
-      solutionInterval = setInterval(playSolution, setBpm(bpm));
-      playSolutionButton.innerHTML = "STOP SOLUTION";
-      isSolutionPlaying = true;
-    }
-  } else {
-    // Logica per l'host o modalità single player
-    timerInterval = setInterval(roundTimer, 1000);
-    handleOverlayDisplay("hide");
-    solutionInterval = setInterval(playSolution, setBpm(bpm));
-    playSolutionButton.innerHTML = "STOP SOLUTION";
-    isSolutionPlaying = true;
-  }
 });
-
 
 showSolutionButton.addEventListener("click", () => {
   showSolution();
@@ -382,7 +361,6 @@ let updateRankingInterval = null;
 let playersRef = ref(db, `lobbies/${lobbyName}/players`);
 let playerScoreRef = ref(db, `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/score`);
 let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
-await set(gameStructureRef, null); // Inizializza con null
 
 let updateRanking = async function () {
   await set(playerScoreRef, totalScore);

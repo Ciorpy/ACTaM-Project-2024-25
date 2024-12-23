@@ -175,7 +175,6 @@ async function createLobby(lobbyName, password, playerId, playerName) {
     playerName: playerName,
     score: 0,
     joinedAt: Date.now(), // Store the timestamp when the player joins
-    lastPing: Date.now(),
   };
 
   const lobbyData = {
@@ -233,7 +232,6 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
     playerName: playerName,
     score: 0,
     joinedAt: Date.now(), // Store the timestamp when the player joins
-    lastPing: Date.now(),
   };
 
   // Debug: Log updated players

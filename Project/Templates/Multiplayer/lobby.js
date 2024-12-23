@@ -102,29 +102,6 @@ let updateLobby = async function () {
         item.innerHTML = "";
       }
     });
-
-    let currentPlayerRef = ref(
-      db,
-      `lobbies/${lobbyName}/players/${localStorage.getItem("userID")}/lastPing`
-    );
-
-    await set(currentPlayerRef, Date.now());
-
-    if (localStorage.getItem("isHost") == "true") {
-      for (let i = 1; i < playersCount; i++) {
-        let iPlayerRef = ref(
-          db,
-          `lobbies/${lobbyName}/players/${playerKeys[i]}`
-        );
-        if (Date.now() - playersArray[i].lastPing > 10000) {
-          await remove(iPlayerRef);
-        }
-      }
-    } else {
-      if (Date.now() - playersArray[0].lastPing > 10000) {
-        await remove(dbRef);
-      }
-    }
   }
 };
 

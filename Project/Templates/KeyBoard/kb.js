@@ -25,7 +25,7 @@ const lastNote = firstNote + keysNumber;
 const deductionInterval = 30; 
 const hintInterval = 30;
 const pointsToDeduct = 25;
-const percAssistant = 50;
+const percAssistant = 30;
 
 // Variabili globali
 let defaultRounds = 3; 
@@ -52,7 +52,7 @@ let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
 if (multiplayerflag) updateRankingInterval = setInterval(updateRanking, 100);
 const rankingTable = document.getElementById("rankingTable");
 const placementDisplay = document.getElementById("currentPlacement"); 
-if (multiplayerflag) placementDisplay.style.display = "block"; // da vedere meglio dove metterlo
+if (multiplayerflag) placementDisplay.style.display = "flex";
 
 let piano = new PianoController("piano", keysNumber, firstNote);
 let previousPressedNotes = [];
@@ -82,6 +82,9 @@ let missingChordDetails = null;
 let progressionData = null;
 let result = "";
 let delay = 0;
+let assistantAvailable = false;
+let assistantAvailableTime = 60;
+let doIt = true;
 
 let userLegend = {
     chords_GM: "CHORDS",
@@ -168,7 +171,6 @@ if(!practiceModeFlag){
 }
 
 // EVENT LISTENERS ----------------------------------------------------------------------------------------------------
-// Avvio del gioco e passaggio al prossimo round
 startGameButton.addEventListener("click", () => {
     if(multiplayerflag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
     else handleOverlayDisplay("hide");
@@ -230,29 +232,27 @@ goNextRoundButton.addEventListener("click", () => {
     }
 });
 
-// Riproduzione della soluzione
 playSolutionButton.addEventListener("click", () => {
     if (selectedMinigame === "chords_GM") piano.playChord(generatedChordData.midiNotes);
     else if (selectedMinigame === "harmony_GM") playProgression(progressionData);
 });
 
-// Gestione degli hint
 hintButton.addEventListener("click", () => {
     if (hintTimer >= hintInterval) updateHints();
 });
 
-// Gestione modalità guidata
 toggleAssistantModeButton.addEventListener("click", () => {
-    assistantFlag = true;
-    assistantMode = !assistantMode;
-    toggleAssistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
+    if (assistantAvailable) {
+        assistantFlag = true;
+        assistantMode = !assistantMode;
+        toggleAssistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
+    }
 });
 
 mainMenuButton.addEventListener("click", () => {
     window.location.href = "../../gameTitleScreen.html";
 });
 
-// Mappatura tastiera
 document.addEventListener("keydown", (event) => {
     if (isInputDisabled) return; 
     const note = piano.view.keyMap[event.code];
@@ -291,12 +291,14 @@ document.addEventListener("mousedown", (event) => {
 function startRound() {
     timeOverFlag = false;
     goodGuessFlag = false;
+    assistantAvailable = false;
     assistantFlag = false;
     isRoundActive = true;
+    doIt = true;
     result = "";
     delay = 0;
     activeRoundID++;
-    resetHintButton();
+    resetButton();
     startTimer();
     enableInput();
     piano.init();
@@ -377,7 +379,7 @@ function handleCorrectGuess() {
     if (currentScore >= 0) totalScore += Math.floor(currentScore);
     else totalScore += 0;
     updateScoreDisplay();
-    if (multiplayerflag) updateScoreInDatabase(); // --> multiplayer 
+    if (multiplayerflag) updateScoreInDatabase();
     isRoundActive = false;
     preloadedEffects[1].play();
 }
@@ -414,6 +416,13 @@ function updateTimer() {
         currentScore = Math.max(0, currentScore - pointsToDeduct);
     }
     hintsToShow()
+    if (timeLeft <= assistantAvailableTime && doIt){
+        assistantAvailable = true;
+        toggleAssistantModeButton.classList.remove('no-hover');
+        toggleAssistantModeButton.classList.remove('notSelectable');
+        toggleAssistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
+        doIt = false;
+    }
     if (timeLeft <= 0) endRound();
 }
 
@@ -423,8 +432,8 @@ function hintsToShow() {
         if (hintTimer >= hintInterval * (i + 1) && flagHints[i]) {
             flagHints[i] = false;
             if (i === 0) {
-                hintButton.classList.remove('no-hover'); // Hover riattivato
-                hintButton.classList.remove('notSelectable'); // Hover riattivato
+                hintButton.classList.remove('no-hover');
+                hintButton.classList.remove('notSelectable');
                 hintDisplay.textContent = "1st HINT AVAILABLE";
             }
             if (i === 1) hintDisplay.textContent = "2nd HINT AVAILABLE";
@@ -504,10 +513,13 @@ function updateHints() {
     
 }
 
-function resetHintButton() {
-    hintButton.textContent = "HINT BLOCKED"; // -> DA RIVEDERE
-    hintButton.classList.add('no-hover'); // -> DA RIVEDERE COME SOPRA, TOGLIE HOVER QUANDO BLOCCATO (IN updateHint ovviamente lo rimetto)
-    hintButton.classList.add('notSelectable'); // -> DA RIVEDERE COME SOPRA, PULSANTE  (IN updateHint ovviamente lo rimetto)
+function resetButton() {
+    hintButton.textContent = "HINT BLOCKED";
+    hintButton.classList.add('no-hover');
+    hintButton.classList.add('notSelectable');
+    toggleAssistantModeButton.textContent = "ASSISTANT BLOCKED";
+    toggleAssistantModeButton.classList.add('no-hover');
+    toggleAssistantModeButton.classList.add('notSelectable');
 }
 
 function endRound() {
@@ -691,14 +703,14 @@ async function updateRanking() {
         console.warn("Nessun dato trovato per i giocatori.");
         rankingTable.innerHTML = "Nessun giocatore nella lobby.";
         placementDisplay.innerHTML = "PLACEMENT: N/A";
-        return; // Esce dalla funzione se non ci sono dati
+        return;
       }
   
       let playersArray = Object.entries(playersData).map(
         ([id, data]) => ({
           id,
-          score: data.score || 0, // Usa 0 come valore di default per il punteggio
-          playerName: data.playerName || "Anonimo", // Usa un valore di default per il nome
+          score: data.score || 0,
+          playerName: data.playerName || "Anonimo",
         })
       );
   
@@ -726,6 +738,5 @@ async function updateRanking() {
       placementDisplay.innerHTML = "PLACEMENT: N/A";
     }
   }
-  
 
 export { isInputDisabled };

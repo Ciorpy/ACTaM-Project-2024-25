@@ -295,6 +295,7 @@ function startRound() {
     assistantFlag = false;
     isRoundActive = true;
     doIt = true;
+    flagHintsPoint = [false, false, false];
     result = "";
     delay = 0;
     activeRoundID++;

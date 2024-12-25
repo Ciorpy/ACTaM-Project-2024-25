@@ -699,19 +699,16 @@ function handleOverlayDisplay(overlayType) {
 }
 
 function disableInput() {
-    if (practiceModeFlag) return;
     isInputDisabled = true;
 }
 
 function enableInput() {
-    if (practiceModeFlag) return;
     isInputDisabled = false;
 }
 
 // Multiplayer
 async function generateChordsForRounds() {
-    if (practiceModeFlag) return;
-    if (!multiplayerflag) return;
+    if (!multiplayerflag || practiceModeFlag) return;
     for (let i = 0; i < maxRounds; i++) {
         generatedChordsData.push(generateRandomChord(firstNote, lastNote, selectedLevel));
     }
@@ -719,8 +716,7 @@ async function generateChordsForRounds() {
 }
 
 async function generateCadencesForRounds() {
-    if (practiceModeFlag) return;
-    if (!multiplayerflag) return;
+    if (!multiplayerflag || practiceModeFlag) return;
     for (let i = 0; i < maxRounds; i++) {
         progressionData = generateChordPattern(firstNote, lastNote, selectedLevel);
         generatedCadencesData.push(progressionData);
@@ -729,8 +725,7 @@ async function generateCadencesForRounds() {
 }
 
 async function startMultiplayerRound() {
-    if (practiceModeFlag) return;
-    if (!multiplayerflag) return;
+    if (!multiplayerflag || practiceModeFlag) return;
     if (!isHost) {
         let snapshot;
         do {
@@ -756,14 +751,12 @@ async function startMultiplayerRound() {
 }
 
 async function updateScoreInDatabase() {
-    if (practiceModeFlag) return;
-    if (!multiplayerflag) return;
+    if (!multiplayerflag || practiceModeFlag) return;
     await set(playerScoreRef, totalScore);
 }
 
 async function updateRanking() {
-    if (practiceModeFlag) return;
-    if (!multiplayerflag) return;
+    if (!multiplayerflag || practiceModeFlag) return;
     try {
       let playersSnapshot = await get(playersRef);
       let playersData = playersSnapshot.val();  

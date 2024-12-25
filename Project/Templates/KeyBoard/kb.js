@@ -146,7 +146,6 @@ if (!practiceModeFlag) {
     maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
     effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
     effectsvol = Math.min(Math.max(effectsvol, 0), 1);
-
     // Multiplayer
     if (multiplayerFlag) {
         playersRef = ref(db, `lobbies/${lobbyName}/players`);
@@ -154,7 +153,6 @@ if (!practiceModeFlag) {
         gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
         updateRankingInterval = setInterval(updateRanking, 100);
     }
-
     // Effects
     effectsFiles.forEach((file, index) => {
         const effect = new Audio(file);
@@ -198,7 +196,7 @@ if (!practiceModeFlag) {
 
 // Overlay Buttons
 startGameButton.addEventListener("click", () => {
-    if(multiplayerFlag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+    if (multiplayerFlag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
     else handleOverlayDisplay("hide");
     updateRoundDisplay();
     if (!isRoundActive) startRound();
@@ -242,14 +240,14 @@ hideSolutionButton.addEventListener("click", () => {
 goNextRoundButton.addEventListener("click", () => {
     updateRoundDisplay();
     let isAssistanON = assistantModeButton.textContent === "ASSISTANT MODE ON" ? true : false;
-    if (isAssistanON){
+    if (isAssistanON) {
         assistantMode = !assistantMode;
         assistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
     }
     if (activeRoundID < maxRounds) {
         startRound();
         handleOverlayDisplay("hide");
-    }else if (activeRoundID == maxRounds) {
+    } else if (activeRoundID == maxRounds) {
         handleOverlayDisplay("gameOver");
         activeRoundID++;
         preloadedEffects[4].play();
@@ -411,8 +409,8 @@ function updateTimer() {
     if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
         currentScore = Math.max(0, currentScore - pointsToDeduct);
     }
-    hintsToShow()
-    assistantoToShow();
+    hintsToShow();
+    assistantToShow();
     if (timeLeft <= 0) endRound();
 }
 
@@ -428,13 +426,13 @@ function checkChord() {
     const pressedNotes = piano.getPressedNotes();
     if (assistantMode) handleAssistantMode(pressedNotes);
     if (pressedNotes.length < 3) return;
-    if (selectedMinigame === "chords_GM"){
+    if (selectedMinigame === "chords_GM") {
         if (arraysEqual(pressedNotes, previousPressedNotes)) return;
         previousPressedNotes = [...pressedNotes];
         if (arraysEqual(generatedChordData.midiNotes, pressedNotes)) handleCorrectGuess();
     } else if (selectedMinigame === "harmony_GM") {
         const expectedNotes = missingChord;
-        if (arraysEqual(pressedNotes, expectedNotes)) {handleCorrectGuess();}
+        if (arraysEqual(pressedNotes, expectedNotes)) handleCorrectGuess();
     }
 }
 
@@ -566,7 +564,7 @@ function updateHints() {
 }
 
 // Assistant Mode
-function assistantoToShow() {
+function assistantToShow() {
     if (practiceModeFlag) return;
     if (timeLeft <= assistantInterval && doIt) {
         assistantAvailable = true;
@@ -785,9 +783,7 @@ async function updateRanking() {
       playersArray.forEach((item, index) => {
         let newPlayerRanking = document.createElement("div");
         newPlayerRanking.classList.add("overlayRanking");
-        newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${
-          item.score
-        } points`;
+        newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${item.score} points`;
         rankingTable.append(newPlayerRanking);
       });
       placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;

@@ -127,13 +127,13 @@ const mainMenuButton = document.getElementById("mainMenu");
 const hintButton = document.getElementById("hintButton");
 const solutionDiv = document.getElementById("overlaySolution");
 const practiceModeFlag = localStorage.getItem("Practice") == "true" ? true : false;
-const multiplayerflag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
+const multiplayerFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
 const userID = localStorage.getItem("userID");
 const lobbyName = localStorage.getItem("lobbyName");
 const rankingTable = document.getElementById("rankingTable");
 const placementDisplay = document.getElementById("currentPlacement");
 const isHost = localStorage.getItem("isHost") == "true" ? true : false;
-const loadedRounds = (multiplayerflag) ? parseInt(localStorage.getItem("numberRoundsMP")) : parseInt(localStorage.getItem("numberOfRounds")); 
+const loadedRounds = (multiplayerFlag) ? parseInt(localStorage.getItem("numberRoundsMP")) : parseInt(localStorage.getItem("numberOfRounds")); 
 const loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
 
 // CONFIGURATION ------------------------------------------------------------------------------------------------------------------------------
@@ -147,11 +147,13 @@ if (!practiceModeFlag) {
     effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
     effectsvol = Math.min(Math.max(effectsvol, 0), 1);
 
-
-    playersRef = ref(db, `lobbies/${lobbyName}/players`);
-    playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${userID}/score`);
-    gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
-    updateRankingInterval = setInterval(updateRanking, 100);
+    // Multiplayer
+    if (multiplayerFlag) {
+        playersRef = ref(db, `lobbies/${lobbyName}/players`);
+        playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${userID}/score`);
+        gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
+        updateRankingInterval = setInterval(updateRanking, 100);
+    }
 
     // Effects
     effectsFiles.forEach((file, index) => {
@@ -189,14 +191,14 @@ if (!practiceModeFlag) {
     levelDisplay.style.fontSize = "4vh";
     levelDisplay.style.marginBottom = "0px";
     levelDisplay.innerHTML = "JUST HAVE FUN! CHORDS PLAYED WILL BE RECOGNIZED"
-    if (multiplayerflag) placementDisplay.style.display = "flex";
+    if (multiplayerFlag) placementDisplay.style.display = "flex";
 }
 
 // EVENT LISTENERS ---------------------------------------------------------------------------------------------------------------------------------
 
 // Overlay Buttons
 startGameButton.addEventListener("click", () => {
-    if(multiplayerflag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+    if(multiplayerFlag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
     else handleOverlayDisplay("hide");
     updateRoundDisplay();
     if (!isRoundActive) startRound();
@@ -321,12 +323,12 @@ function startRound() {
     startTimer();
     enableInput();
     if (selectedMinigame === "chords_GM") {
-        if (multiplayerflag) {
+        if (multiplayerFlag) {
             if (isHost && (!generatedChordsData.length)) generateChordsForRounds();
             startMultiplayerRound();
         } else generateNewChord(); 
     } else if (selectedMinigame === "harmony_GM") {
-        if (multiplayerflag) {
+        if (multiplayerFlag) {
             if (isHost && (!generatedCadencesData.length)) generateCadencesForRounds();
             startMultiplayerRound();
         } else generateNewProgression();
@@ -352,8 +354,8 @@ function resetVariables() {
     missingChordDetails = {};
     missingChord = [];
     progressionData = {};
-    if (multiplayerflag) generatedChordsData = [];
-    if (multiplayerflag) generatedCadencesData = [];
+    if (multiplayerFlag) generatedChordsData = [];
+    if (multiplayerFlag) generatedCadencesData = [];
 }
 
 function resetButtons() {
@@ -378,7 +380,7 @@ function handleCorrectGuess() {
     if (currentScore >= 0) totalScore += Math.floor(currentScore);
     else totalScore += 0;
     updateScoreDisplay();
-    if (multiplayerflag) updateScoreInDatabase();
+    if (multiplayerFlag) updateScoreInDatabase();
     isRoundActive = false;
     preloadedEffects[1].play();
 }
@@ -642,26 +644,26 @@ function handleOverlayDisplay(overlayType) {
         timeOverFlag = true;
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
-        if(!multiplayerflag) overlaySubtitle.style.display = "flex";
+        if(!multiplayerFlag) overlaySubtitle.style.display = "flex";
         scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "TIME OVER";
         overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT!";
         showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block";        
-        if (multiplayerflag) rankingTable.style.display = "flex";
+        if (multiplayerFlag) rankingTable.style.display = "flex";
         break;
       case "goodGuess":
         disableInput();
         goodGuessFlag = true;
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
-        if(!multiplayerflag) overlaySubtitle.style.display = "flex";
+        if(!multiplayerFlag) overlaySubtitle.style.display = "flex";
         scoreLabel.style.display = "none";
         overlayTitle.innerHTML = "GOOD GUESS";
         overlaySubtitle.innerHTML = "YOU ARE A BOSS!";        
         showSolutionButton.style.display = "block";
         goNextRoundButton.style.display = "block";
-        if (multiplayerflag) rankingTable.style.display = "flex";
+        if (multiplayerFlag) rankingTable.style.display = "flex";
         break;
       case "gameOver":
         disableInput();
@@ -673,7 +675,7 @@ function handleOverlayDisplay(overlayType) {
         scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
         goNextRoundButton.innerHTML = "MAIN MENU";
         goNextRoundButton.style.display = "block";
-        if (multiplayerflag) {
+        if (multiplayerFlag) {
             scoreLabel.style.display = "none";
             rankingTable.style.display = "flex";
         }
@@ -708,7 +710,7 @@ function enableInput() {
 
 // Multiplayer
 async function generateChordsForRounds() {
-    if (!multiplayerflag || practiceModeFlag) return;
+    if (!multiplayerFlag || practiceModeFlag) return;
     for (let i = 0; i < maxRounds; i++) {
         generatedChordsData.push(generateRandomChord(firstNote, lastNote, selectedLevel));
     }
@@ -716,7 +718,7 @@ async function generateChordsForRounds() {
 }
 
 async function generateCadencesForRounds() {
-    if (!multiplayerflag || practiceModeFlag) return;
+    if (!multiplayerFlag || practiceModeFlag) return;
     for (let i = 0; i < maxRounds; i++) {
         progressionData = generateChordPattern(firstNote, lastNote, selectedLevel);
         generatedCadencesData.push(progressionData);
@@ -725,7 +727,7 @@ async function generateCadencesForRounds() {
 }
 
 async function startMultiplayerRound() {
-    if (!multiplayerflag || practiceModeFlag) return;
+    if (!multiplayerFlag || practiceModeFlag) return;
     if (!isHost) {
         let snapshot;
         do {
@@ -751,12 +753,12 @@ async function startMultiplayerRound() {
 }
 
 async function updateScoreInDatabase() {
-    if (!multiplayerflag || practiceModeFlag) return;
+    if (!multiplayerFlag || practiceModeFlag) return;
     await set(playerScoreRef, totalScore);
 }
 
 async function updateRanking() {
-    if (!multiplayerflag || practiceModeFlag) return;
+    if (!multiplayerFlag || practiceModeFlag) return;
     try {
       let playersSnapshot = await get(playersRef);
       let playersData = playersSnapshot.val();  

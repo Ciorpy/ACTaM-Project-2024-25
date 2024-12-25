@@ -146,7 +146,6 @@ if (!practiceModeFlag) {
     maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
     effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
     effectsvol = Math.min(Math.max(effectsvol, 0), 1);
-
     // Multiplayer
     if (multiplayerFlag) {
         playersRef = ref(db, `lobbies/${lobbyName}/players`);
@@ -154,7 +153,6 @@ if (!practiceModeFlag) {
         gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
         updateRankingInterval = setInterval(updateRanking, 100);
     }
-
     // Effects
     effectsFiles.forEach((file, index) => {
         const effect = new Audio(file);
@@ -198,7 +196,7 @@ if (!practiceModeFlag) {
 
 // Overlay Buttons
 startGameButton.addEventListener("click", () => {
-    if(multiplayerFlag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+    if (multiplayerFlag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
     else handleOverlayDisplay("hide");
     if (!isRoundActive) startRound();
 });
@@ -239,18 +237,30 @@ hideSolutionButton.addEventListener("click", () => {
 })
 
 goNextRoundButton.addEventListener("click", () => {
+<<<<<<< HEAD
     updateRoundDisplay(); //è già in startRound
     let isAssistanON = assistantModeButton.textContent === "ASSISTANT MODE ON" ? true : false; //mettere in resetvariable assistantMode=false
     if (isAssistanON){
+=======
+    updateRoundDisplay();
+    let isAssistanON = assistantModeButton.textContent === "ASSISTANT MODE ON" ? true : false;
+    if (isAssistanON) {
+>>>>>>> 84a86100027fac918af025db3b434c4366207474
         assistantMode = !assistantMode;
         assistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
     }
     if (activeRoundID < maxRounds) { //si potrebbe mettere in handle guess questo controllo 
         startRound();
         handleOverlayDisplay("hide");
+<<<<<<< HEAD
     }else if (activeRoundID == maxRounds) {
         handleOverlayDisplay("gameOver"); 
         activeRoundID++; //già in resetvariable (da mettere in start round)
+=======
+    } else if (activeRoundID == maxRounds) {
+        handleOverlayDisplay("gameOver");
+        activeRoundID++;
+>>>>>>> 84a86100027fac918af025db3b434c4366207474
         preloadedEffects[4].play();
     } else {
         window.location.href = "../../gameTitleScreen.html"; //usare main menu button
@@ -411,9 +421,15 @@ function updateTimer() {
     if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
         currentScore = Math.max(0, currentScore - pointsToDeduct);
     }
+<<<<<<< HEAD
     hintsToShow()
     assistantoToShow();
     if (timeLeft <= 0) endRound(); //mettere direttamente overlay
+=======
+    hintsToShow();
+    assistantToShow();
+    if (timeLeft <= 0) endRound();
+>>>>>>> 84a86100027fac918af025db3b434c4366207474
 }
 
 // Games
@@ -427,14 +443,18 @@ function checkChord() {
     if (practiceModeFlag) return;
     const pressedNotes = piano.getPressedNotes();
     if (pressedNotes.length < 3) return;
+<<<<<<< HEAD
     if (assistantMode) handleAssistantMode(pressedNotes);
     if (selectedMinigame === "chords_GM"){
+=======
+    if (selectedMinigame === "chords_GM") {
+>>>>>>> 84a86100027fac918af025db3b434c4366207474
         if (arraysEqual(pressedNotes, previousPressedNotes)) return;
         previousPressedNotes = [...pressedNotes];
         if (arraysEqual(generatedChordData.midiNotes, pressedNotes)) handleCorrectGuess();
     } else if (selectedMinigame === "harmony_GM") {
         const expectedNotes = missingChord;
-        if (arraysEqual(pressedNotes, expectedNotes)) {handleCorrectGuess();}
+        if (arraysEqual(pressedNotes, expectedNotes)) handleCorrectGuess();
     }
 }
 
@@ -566,7 +586,11 @@ function updateHints() {
 }
 
 // Assistant Mode
+<<<<<<< HEAD
 function assistantoToShow() { //non ho capito
+=======
+function assistantToShow() {
+>>>>>>> 84a86100027fac918af025db3b434c4366207474
     if (practiceModeFlag) return;
     if (timeLeft <= assistantInterval && doIt) {
         assistantAvailable = true;
@@ -784,9 +808,7 @@ async function updateRanking() {
       playersArray.forEach((item, index) => {
         let newPlayerRanking = document.createElement("div");
         newPlayerRanking.classList.add("overlayRanking");
-        newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${
-          item.score
-        } points`;
+        newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${item.score} points`;
         rankingTable.append(newPlayerRanking);
       });
       placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;

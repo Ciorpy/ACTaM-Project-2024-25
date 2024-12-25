@@ -165,6 +165,7 @@ if (!practiceModeFlag) {
 
 // Page
 if (!practiceModeFlag) {
+    if (multiplayerFlag) placementDisplay.style.display = "flex";
     mainMenuButton.style.display = "none";
     handleOverlayDisplay("startGame");
     updateScoreDisplay();
@@ -191,7 +192,6 @@ if (!practiceModeFlag) {
     levelDisplay.style.fontSize = "4vh";
     levelDisplay.style.marginBottom = "0px";
     levelDisplay.innerHTML = "JUST HAVE FUN! CHORDS PLAYED WILL BE RECOGNIZED"
-    if (multiplayerFlag) placementDisplay.style.display = "flex";
 }
 
 // EVENT LISTENERS ---------------------------------------------------------------------------------------------------------------------------------
@@ -630,6 +630,7 @@ function handleOverlayDisplay(overlayType) {
     
     switch(overlayType) {
       case "startGame":
+        disableInput();
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
         overlaySubtitle.style.display = "flex";
@@ -681,7 +682,7 @@ function handleOverlayDisplay(overlayType) {
         }
         break;
     case "wait":
-        timeOverFlag = true;
+        disableInput();
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
         overlaySubtitle.style.display = "none";
@@ -691,6 +692,7 @@ function handleOverlayDisplay(overlayType) {
         goNextRoundButton.style.display = "none";
         break;
     case "hide":
+        disableInput();
         overlayPanel.style.display = "none";
         overlayTitle.style.display = "none";
         overlaySubtitle.style.display = "none";

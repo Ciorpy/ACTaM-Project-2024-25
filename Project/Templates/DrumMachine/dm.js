@@ -271,7 +271,6 @@ let handleOverlayDisplay = function (overlayType) {
       goNextRoundButton.style.display = "block";
       break;
     case "wait":
-      timeOverFlag = true;
       overlayPanel.style.display = "flex";
       overlayTitle.style.display = "flex";
       overlaySubtitle.style.display = "none";

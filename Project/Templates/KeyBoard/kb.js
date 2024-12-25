@@ -48,7 +48,7 @@ const userLegend = {
 };
 
 // Effects
-const effectsFiles = [
+const effectsFiles = [ 
     "/Project/Sounds/Effects/game-start.mp3",
     "/Project/Sounds/Effects/game-bonus.mp3",
     "/Project/Sounds/Effects/game-over.mp3",
@@ -67,32 +67,32 @@ let hintTimer;
 let maxRounds;
 let activeRoundID = 0;
 let result;
-let delay;
+let delay; //chiamarlo chordsProgressionDelay?
 let effectsvol;
 
 // Flags
 let isRoundActive = false;
-let assistantMode = false;
-let assistantAvailable;
-let assistantPoint;
+let assistantMode = false;  //??
+let assistantAvailable; // ?? non è lo stesso di doit?
+let doIt; // ??
+let assistantPoint; // usare assistant Mode?
 let isInputDisabled;
 let flagHintsPoint;
 let flagHints; 
 let timeOverFlag;
 let goodGuessFlag;
-let doIt;
 
 // Games
 let previousPressedNotes;
 let generatedChordData;
-let chordData;
+let chordData; //quello della practice mode? usare generatedChordData?
 let missingChordDetails;
 let missingChord;
-let progressionData;
+let progressionData; //contiene missingChordData e missingChordDetails, chiamarlo generatedCadenceData?
 let generatedChordsData;
 let generatedCadencesData;
 
-// Multiplayer
+// Multiplayer -> stanziarle direttamente dentro l'if multiplayerFlag sotto?
 let playersRef;
 let playerScoreRef;
 let gameStructureRef;
@@ -104,37 +104,37 @@ let preloadedEffects = [];
 // DOC ELEMENTS ------------------------------------------------------------------------------------------------------------------------------------
 const selectedLevel = localStorage.getItem("Difficulty");
 const selectedMinigame = localStorage.getItem("Gamemode");
+const practiceModeFlag = localStorage.getItem("Practice") == "true" ? true : false; //chiedere al team isole se vogliono uniformare i booleani
+const multiplayerFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false; 
+const userID = localStorage.getItem("userID"); //metterle nell'if multiplayerFlag
+const lobbyName = localStorage.getItem("lobbyName");
+const isHost = localStorage.getItem("isHost") == "true" ? true : false;
+const loadedRounds = (multiplayerFlag) ? parseInt(localStorage.getItem("numberRoundsMP")) : parseInt(localStorage.getItem("numberOfRounds")); 
+const loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
 const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
-const overlayPanel = document.getElementById("overlayDiv");
+const overlayPanel = document.getElementById("overlayDiv"); //rivedi nome variabile/div
 const scoreLabel = document.getElementById("scoreLabel");
 const scoreDivisionLabel = document.getElementById("scoreDivisionLabel");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlaySubtitle = document.getElementById("overlaySubtitle");
 const overlayTitleSolution = document.getElementById("overlayTitleSolution");
 const overlaySubtitleSolution = document.getElementById("overlaySubtitleSolution");
-const levelDisplay = document.getElementById("level");
-const modeDisplay = document.getElementById("mode");
-const roundDisplay = document.getElementById("round");
+const levelDisplay = document.getElementById("level"); //rivedi nome variabile/div
+const modeDisplay = document.getElementById("mode"); //rivedi nome variabile/div
+const roundDisplay = document.getElementById("round"); //rivedi nome variabile/div
 const hintDisplay = document.getElementById("hintDisplay");
-const startGameButton = document.getElementById("startGame");
-const showSolutionButton = document.getElementById("showSolution");
-const goNextRoundButton = document.getElementById("goNextRound");
+const startGameButton = document.getElementById("startGame"); //rivedi nome variabile/div
+const showSolutionButton = document.getElementById("showSolution"); //rivedi nome variabile/div
+const goNextRoundButton = document.getElementById("goNextRound"); //rivedi nome variabile/div
 const assistantModeButton = document.getElementById("toggleAssistantModeButton");
 const playSolutionButton = document.getElementById("playSolutionButton");
-const hideSolutionButton = document.getElementById("hideSolution");
-const mainMenuButton = document.getElementById("mainMenu"); 
+const hideSolutionButton = document.getElementById("hideSolution"); //rivedi nome variabile/div
+const mainMenuButton = document.getElementById("mainMenu"); //rivedi nome variabile/div
 const hintButton = document.getElementById("hintButton");
-const solutionDiv = document.getElementById("overlaySolution");
-const practiceModeFlag = localStorage.getItem("Practice") == "true" ? true : false;
-const multiplayerFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
-const userID = localStorage.getItem("userID");
-const lobbyName = localStorage.getItem("lobbyName");
+const solutionDiv = document.getElementById("overlaySolution"); //rivedi nome variabile/div
 const rankingTable = document.getElementById("rankingTable");
-const placementDisplay = document.getElementById("currentPlacement");
-const isHost = localStorage.getItem("isHost") == "true" ? true : false;
-const loadedRounds = (multiplayerFlag) ? parseInt(localStorage.getItem("numberRoundsMP")) : parseInt(localStorage.getItem("numberOfRounds")); 
-const loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
+const placementDisplay = document.getElementById("currentPlacement"); //rivedi nome variabile/div
 
 // CONFIGURATION ------------------------------------------------------------------------------------------------------------------------------
 
@@ -142,7 +142,7 @@ const loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
 piano.init();
 
 if (!practiceModeFlag) {
-    // Variables
+    // Variables -> perchè qui?
     maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
     effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
     effectsvol = Math.min(Math.max(effectsvol, 0), 1);
@@ -200,7 +200,6 @@ if (!practiceModeFlag) {
 startGameButton.addEventListener("click", () => {
     if(multiplayerFlag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
     else handleOverlayDisplay("hide");
-    updateRoundDisplay();
     if (!isRoundActive) startRound();
 });
  
@@ -240,21 +239,21 @@ hideSolutionButton.addEventListener("click", () => {
 })
 
 goNextRoundButton.addEventListener("click", () => {
-    updateRoundDisplay();
-    let isAssistanON = assistantModeButton.textContent === "ASSISTANT MODE ON" ? true : false;
+    updateRoundDisplay(); //è già in startRound
+    let isAssistanON = assistantModeButton.textContent === "ASSISTANT MODE ON" ? true : false; //mettere in resetvariable assistantMode=false
     if (isAssistanON){
         assistantMode = !assistantMode;
         assistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
     }
-    if (activeRoundID < maxRounds) {
+    if (activeRoundID < maxRounds) { //si potrebbe mettere in handle guess questo controllo 
         startRound();
         handleOverlayDisplay("hide");
     }else if (activeRoundID == maxRounds) {
-        handleOverlayDisplay("gameOver");
-        activeRoundID++;
+        handleOverlayDisplay("gameOver"); 
+        activeRoundID++; //già in resetvariable (da mettere in start round)
         preloadedEffects[4].play();
     } else {
-        window.location.href = "../../gameTitleScreen.html";
+        window.location.href = "../../gameTitleScreen.html"; //usare main menu button
     }
 });
 
@@ -268,7 +267,7 @@ hintButton.addEventListener("click", () => {
     if (hintTimer >= hintInterval) updateHints();
 });
 
-assistantModeButton.addEventListener("click", () => {
+assistantModeButton.addEventListener("click", () => { //vedi assistantoToShow
     if (assistantAvailable) {
         assistantPoint = true;
         assistantMode = !assistantMode;
@@ -318,6 +317,7 @@ document.addEventListener("mousedown", (event) => {
 // Start - Set - End
 function startRound() {
     if (practiceModeFlag) return;
+    updateRoundDisplay();
     resetVariables();
     resetButtons();
     startTimer();
@@ -336,9 +336,9 @@ function startRound() {
 }
 
 function resetVariables() {
-    if (practiceModeFlag) return;
+    if (practiceModeFlag) return; //vanno eliminati da tutte le funzioni questi controlli sulla practice, basta solo all'inizio
     currentScore = 100;
-    activeRoundID++;
+    activeRoundID++; // -> spostarlo fuori
     result = "";
     delay = 0;
     assistantAvailable = false;
@@ -350,7 +350,7 @@ function resetVariables() {
     doIt = true;
     previousPressedNotes = [];
     generatedChordData = {};
-    chordData = {};
+    chordData = {}; //? non serve per la practice?
     missingChordDetails = {};
     missingChord = [];
     progressionData = {};
@@ -371,24 +371,24 @@ function resetButtons() {
 
 function handleCorrectGuess() {
     if (practiceModeFlag) return;
-    handleOverlayDisplay("goodGuess");
-    clearInterval(timerInterval);
+    handleOverlayDisplay("goodGuess"); //fare il controllo di quanti round si è cosi si smista tra goodGuess e GameOver
+    clearInterval(timerInterval); // non è in start timer?
     if (assistantPoint) currentScore *= (1 - percAssistant / 100);
     if (flagHintsPoint[2]) currentScore -= 12;
     if (flagHintsPoint[1]) currentScore -= 8;
     if (flagHintsPoint[0]) currentScore -= 4;
     if (currentScore >= 0) totalScore += Math.floor(currentScore);
     else totalScore += 0;
-    updateScoreDisplay();
+    updateScoreDisplay(); // si potrebbe mettere in start round?
     if (multiplayerFlag) updateScoreInDatabase();
-    isRoundActive = false;
+    isRoundActive = false; //a cosa serve, non lo mettiamo mai a true
     preloadedEffects[1].play();
 }
 
-function endRound() {
+function endRound() {  //forse si potrebbe direttamente mettere handleOverlayDisplay("timeOver") in updateTimer
     if (practiceModeFlag) return;
     handleOverlayDisplay("timeOver");
-    clearInterval(timerInterval);
+    clearInterval(timerInterval); //non è in start timer?
     isRoundActive = false;
     preloadedEffects[2].play();
 }
@@ -399,7 +399,7 @@ function startTimer() {
     clearInterval(timerInterval);
     timeLeft = 120;
     hintTimer = 0;
-    updateTimerDisplay();
+    updateTimerDisplay(); // non è già in updateTimer?
     timerInterval = setInterval(updateTimer, 1000);
 }
 
@@ -413,7 +413,7 @@ function updateTimer() {
     }
     hintsToShow()
     assistantoToShow();
-    if (timeLeft <= 0) endRound();
+    if (timeLeft <= 0) endRound(); //mettere direttamente overlay
 }
 
 // Games
@@ -426,8 +426,8 @@ function generateNewChord() {
 function checkChord() {
     if (practiceModeFlag) return;
     const pressedNotes = piano.getPressedNotes();
-    if (assistantMode) handleAssistantMode(pressedNotes);
     if (pressedNotes.length < 3) return;
+    if (assistantMode) handleAssistantMode(pressedNotes);
     if (selectedMinigame === "chords_GM"){
         if (arraysEqual(pressedNotes, previousPressedNotes)) return;
         previousPressedNotes = [...pressedNotes];
@@ -566,13 +566,13 @@ function updateHints() {
 }
 
 // Assistant Mode
-function assistantoToShow() {
+function assistantoToShow() { //non ho capito
     if (practiceModeFlag) return;
     if (timeLeft <= assistantInterval && doIt) {
         assistantAvailable = true;
         assistantModeButton.classList.remove('no-hover');
         assistantModeButton.classList.remove('notSelectable');
-        assistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
+        assistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON"; // vedi assistantModeButton
         doIt = false;
     }
 }
@@ -674,8 +674,8 @@ function handleOverlayDisplay(overlayType) {
         scoreLabel.style.display = "flex";
         overlayTitle.innerHTML = "GAME OVER";
         scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
-        goNextRoundButton.innerHTML = "MAIN MENU";
-        goNextRoundButton.style.display = "block";
+        goNextRoundButton.innerHTML = "MAIN MENU"; //usare direttamente il button mainmenu della practice
+        goNextRoundButton.style.display = "block"; 
         if (multiplayerFlag) {
             scoreLabel.style.display = "none";
             rankingTable.style.display = "flex";
@@ -692,7 +692,6 @@ function handleOverlayDisplay(overlayType) {
         goNextRoundButton.style.display = "none";
         break;
     case "hide":
-        disableInput();
         overlayPanel.style.display = "none";
         overlayTitle.style.display = "none";
         overlaySubtitle.style.display = "none";

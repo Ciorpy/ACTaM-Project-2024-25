@@ -198,7 +198,7 @@ if (!practiceModeFlag) {
 
 // Overlay Buttons
 startGameButton.addEventListener("click", () => {
-    if(multiplayerFlag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+    if (multiplayerFlag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
     else handleOverlayDisplay("hide");
     if (!isRoundActive) startRound();
 });
@@ -248,7 +248,7 @@ goNextRoundButton.addEventListener("click", () => {
     if (activeRoundID < maxRounds) { //si potrebbe mettere in handle guess questo controllo 
         startRound();
         handleOverlayDisplay("hide");
-    }else if (activeRoundID == maxRounds) {
+    } else if (activeRoundID == maxRounds) {
         handleOverlayDisplay("gameOver"); 
         activeRoundID++; //già in resetvariable (da mettere in start round)
         preloadedEffects[4].play();
@@ -411,8 +411,8 @@ function updateTimer() {
     if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
         currentScore = Math.max(0, currentScore - pointsToDeduct);
     }
-    hintsToShow()
-    assistantoToShow();
+    hintsToShow();
+    assistantToShow();
     if (timeLeft <= 0) endRound(); //mettere direttamente overlay
 }
 
@@ -428,13 +428,13 @@ function checkChord() {
     const pressedNotes = piano.getPressedNotes();
     if (pressedNotes.length < 3) return;
     if (assistantMode) handleAssistantMode(pressedNotes);
-    if (selectedMinigame === "chords_GM"){
+    if (selectedMinigame === "chords_GM") {
         if (arraysEqual(pressedNotes, previousPressedNotes)) return;
         previousPressedNotes = [...pressedNotes];
         if (arraysEqual(generatedChordData.midiNotes, pressedNotes)) handleCorrectGuess();
     } else if (selectedMinigame === "harmony_GM") {
         const expectedNotes = missingChord;
-        if (arraysEqual(pressedNotes, expectedNotes)) {handleCorrectGuess();}
+        if (arraysEqual(pressedNotes, expectedNotes)) handleCorrectGuess();
     }
 }
 
@@ -566,7 +566,7 @@ function updateHints() {
 }
 
 // Assistant Mode
-function assistantoToShow() { //non ho capito
+function assistantToShow() { //non ho capito
     if (practiceModeFlag) return;
     if (timeLeft <= assistantInterval && doIt) {
         assistantAvailable = true;
@@ -784,9 +784,7 @@ async function updateRanking() {
       playersArray.forEach((item, index) => {
         let newPlayerRanking = document.createElement("div");
         newPlayerRanking.classList.add("overlayRanking");
-        newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${
-          item.score
-        } points`;
+        newPlayerRanking.innerHTML = `${index + 1}°:  ${item.playerName} - ${item.score} points`;
         rankingTable.append(newPlayerRanking);
       });
       placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;

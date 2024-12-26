@@ -64,18 +64,15 @@ let currentScore;
 let timeLeft;
 let timerInterval;
 let hintTimer;
+let playingCadenceTimer;
 let maxRounds;
 let activeRoundID = 0;
-let result;
-let delay; //chiamarlo chordsProgressionDelay?
 let effectsvol;
 
 // Flags
-let isRoundActive = false;
-let assistantMode = false;  //??
-let assistantAvailable; // ?? non è lo stesso di doit?
-let doIt; // ??
-let assistantPoint; // usare assistant Mode?
+let assistantMode = false;  //?? -> UTILE AL TOGGLE -> FALSE = ASSISTANT DISATTIVO, TRUE = ASSISTANT ATTIVO, IL PULSANTE NE SCAMBIA SEMPRE IL VALORE
+let assistantAvailable; // ?? non è lo stesso di doit? -> NO è IL CONTRARIO PERò FORSE doIt SI PUò CONCELLARE
+let assistantPoint; // usare assistant Mode? -> NO PERCHé QUESTO STA AD INDICARE CHE DURANTE IL ROUND è STATO USATO ALMENO UNA VOLTA E QUNDI IL PUNTEGGIO DEVE ESSERE DIMINUITO, SE SI USASSE L'ALTRO IL GIOCATORE POTREBBE ATTIVARLA E DISATTIVARLA E IL PUNTEGGIO SAREBBE INALTERATO
 let isInputDisabled;
 let flagHintsPoint;
 let flagHints; 
@@ -85,77 +82,87 @@ let goodGuessFlag;
 // Games
 let previousPressedNotes;
 let generatedChordData;
-let chordData; //quello della practice mode? usare generatedChordData?
+let generatedCadenceData; //contiene missingChordData e missingChordDetails, chiamarlo generatedCadenceData? Sì POSSIAMO CAMBIARGLI IL NOME NON C'è PROBLEMA
+let cadenceName;
 let missingChordDetails;
-let missingChord; // -> perche non usare direttamente generatedChordData?
-let progressionData; //contiene missingChordData e missingChordDetails, chiamarlo generatedCadenceData?
-let generatedChordsData;
-let generatedCadencesData;
+let missingChord; // -> perche non usare direttamente generatedChordData? -> PER ORDINE, SONO DUE COSE DIVERSE
+let chordData; //quello della practice mode? usare generatedChordData? -> SECONDO ME MEGLIO TENERLI SEPARATI, SEMPLICE ORDINE POI HANNO DUE COMPITI DIVERSI INOLTRE
 
-// Multiplayer -> stanziarle direttamente dentro l'if multiplayerFlag sotto?
+// Multiplayer -> stanziarle direttamente dentro l'if multiplayerFlag sotto? -> NO, VARIABILI E QUESTI DOC DEVONO ESSERE STANZIATI IN GENERALE, AL MASSIMO GLI SI PUò DARE UN VALORE IN DETERMINATI CASI
 let playersRef;
 let playerScoreRef;
 let gameStructureRef;
 let updateRankingInterval;
+let generatedChordsData;
+let generatedCadencesData;
 
 // Effects
 let preloadedEffects = [];
 
 // DOC ELEMENTS ------------------------------------------------------------------------------------------------------------------------------------
-const selectedLevel = localStorage.getItem("Difficulty");
-const selectedMinigame = localStorage.getItem("Gamemode");
-const practiceModeFlag = localStorage.getItem("Practice") == "true" ? true : false; //chiedere al team isole se vogliono uniformare i booleani
-const multiplayerFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false; 
-const userID = localStorage.getItem("userID"); //metterle nell'if multiplayerFlag
-const lobbyName = localStorage.getItem("lobbyName");
-const isHost = localStorage.getItem("isHost") == "true" ? true : false;
-const loadedRounds = (multiplayerFlag) ? parseInt(localStorage.getItem("numberRoundsMP")) : parseInt(localStorage.getItem("numberOfRounds")); 
-const loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
+
+// Game Info
+const selectedGameMode = localStorage.getItem("Gamemode");
+const gameModeDisplay = document.getElementById("gameMode");
+const selectedDifficulty = localStorage.getItem("Difficulty");
+const difficultyDisplay = document.getElementById("difficultyDisplay");
+const roundDisplay = document.getElementById("roundDisplay");
+const timerDisplay = document.getElementById("timerDisplay"); 
 const scoreDisplay = document.getElementById("scoreDisplay");
-const timerDisplay = document.getElementById("timerDisplay");
-const overlayPanel = document.getElementById("overlayDiv"); //rivedi nome variabile/div
-const scoreLabel = document.getElementById("scoreLabel");
-const scoreDivisionLabel = document.getElementById("scoreDivisionLabel");
+const hintDisplay = document.getElementById("hintDisplay");
+
+// Overlay Info
+const overlayPanel = document.getElementById("overlayDiv");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlaySubtitle = document.getElementById("overlaySubtitle");
+const overlayScoreDisplay = document.getElementById("overlayScoreDisplay");
+const overlaySolutionPanel = document.getElementById("overlaySolutionDiv");
 const overlayTitleSolution = document.getElementById("overlayTitleSolution");
 const overlaySubtitleSolution = document.getElementById("overlaySubtitleSolution");
-const levelDisplay = document.getElementById("level"); //rivedi nome variabile/div
-const modeDisplay = document.getElementById("mode"); //rivedi nome variabile/div
-const roundDisplay = document.getElementById("round"); //rivedi nome variabile/div
-const hintDisplay = document.getElementById("hintDisplay");
-const startGameButton = document.getElementById("startGame"); //rivedi nome variabile/div
-const showSolutionButton = document.getElementById("showSolution"); //rivedi nome variabile/div
-const goNextRoundButton = document.getElementById("goNextRound"); //rivedi nome variabile/div
-const assistantModeButton = document.getElementById("toggleAssistantModeButton");
+
+// Overlay Button
+const startGameButton = document.getElementById("startGame");
+const nextRoundButton = document.getElementById("nextRound");
+const showSolutionButton = document.getElementById("showSolution");
+const hideSolutionButton = document.getElementById("hideSolution");
+
+// Game Button
 const playSolutionButton = document.getElementById("playSolutionButton");
-const hideSolutionButton = document.getElementById("hideSolution"); //rivedi nome variabile/div
-const mainMenuButton = document.getElementById("mainMenu"); //rivedi nome variabile/div
+const assistantModeButton = document.getElementById("assistantModeButton");
 const hintButton = document.getElementById("hintButton");
-const solutionDiv = document.getElementById("overlaySolution"); //rivedi nome variabile/div
-const rankingTable = document.getElementById("rankingTable");
-const placementDisplay = document.getElementById("currentPlacement"); //rivedi nome variabile/div
+
+// Practice Mode
+const practiceModeFlag = localStorage.getItem("Practice") == "true" ? true : false; //chiedere al team isole se vogliono uniformare i booleani -> Sì E NO, CIOè CHISSENE FREGA... IL NOSTRO è MEGLIO AHAHAH
+const mainMenuButton = document.getElementById("mainMenu"); 
+
+// Multiplayer
+const multiplayerFlag = localStorage.getItem("multiplayerFlag") == "true" ? true : false;
+const userID = localStorage.getItem("userID"); //metterle nell'if multiplayerFlag -> NO, VARIABILI E QUESTI DOC DEVONO ESSERE STANZIATI IN GENERALE, AL MASSIMO GLI SI PUò DARE UN VALORE IN DETERMINATI CASI
+const lobbyName = localStorage.getItem("lobbyName");
+const rankingTable = document.getElementById("overlayMultiplayerRanking");
+const placementDisplay = document.getElementById("currentPlacement");
+const isHost = localStorage.getItem("isHost") == "true" ? true : false;
+
+// Loaded Settings
+const loadedRounds = (multiplayerFlag) ? parseInt(localStorage.getItem("numberRoundsMP")) : parseInt(localStorage.getItem("numberOfRounds")); 
+const loadedEffectsVolume = parseFloat(localStorage.getItem("effectsVolume"));
 
 // CONFIGURATION ------------------------------------------------------------------------------------------------------------------------------
 
 // Piano
 piano.init();
 
-if (!practiceModeFlag) {
-    // Variables -> perchè qui?
+// Variables
+effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
+effectsvol = Math.min(Math.max(effectsvol, 0), 1);
+if (!practiceModeFlag) { // -> perchè qui? -> TUTTI QUESTI CONTROLLI LI HO INSERITI PER NON ATRRIBUIRE O ATTIVARE COSE CHE IN ALCUNE MODALITà NON SERVONO
     maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
-    effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
-    effectsvol = Math.min(Math.max(effectsvol, 0), 1);
-
-    // Multiplayer
     if (multiplayerFlag) {
         playersRef = ref(db, `lobbies/${lobbyName}/players`);
         playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${userID}/score`);
         gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
         updateRankingInterval = setInterval(updateRanking, 100);
     }
-
-    // Effects
     effectsFiles.forEach((file, index) => {
         const effect = new Audio(file);
         effect.volume = effectsvol;
@@ -177,6 +184,7 @@ if (!practiceModeFlag) {
 } else {
     handleOverlayDisplay("hide");
     enableInput();
+    chordData = {};
     startGameButton.style.display = "none";
     playSolutionButton.style.display = "none";
     hintButton.style.display = "none";
@@ -189,9 +197,9 @@ if (!practiceModeFlag) {
     timerDisplay.style.display = "none";
     hintDisplay.style.padding = "0px";
     hintDisplay.style.fontSize = "4vh";
-    levelDisplay.style.fontSize = "4vh";
-    levelDisplay.style.marginBottom = "0px";
-    levelDisplay.innerHTML = "JUST HAVE FUN! CHORDS PLAYED WILL BE RECOGNIZED"
+    difficultyDisplay.style.fontSize = "4vh";
+    difficultyDisplay.style.marginBottom = "0px";
+    difficultyDisplay.innerHTML = "JUST HAVE FUN! CHORDS PLAYED WILL BE RECOGNIZED"
 }
 
 // EVENT LISTENERS ---------------------------------------------------------------------------------------------------------------------------------
@@ -200,28 +208,28 @@ if (!practiceModeFlag) {
 startGameButton.addEventListener("click", () => {
     if (multiplayerFlag && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
     else handleOverlayDisplay("hide");
-    if (!isRoundActive) startRound();
+    startRound();
 });
  
 showSolutionButton.addEventListener("click", () => {
     handleOverlayDisplay("hide")
-    solutionDiv.style.display = "flex";
-    if (selectedMinigame === "chords_GM") {
+    overlaySolutionPanel.style.display = "flex";
+    if (selectedGameMode === "chords_GM") {
         overlayTitleSolution.innerHTML = "IT'S A " + `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
         overlaySubtitleSolution.innerHTML = "";
         piano.playChord(generatedChordData.midiNotes);
         generatedChordData.midiNotes.forEach(note => {
             piano.view.setKeyColor(note, "green");
         });
-    } else if (selectedMinigame === "harmony_GM") {
-        overlayTitleSolution.innerHTML = "IT'S A " + `${progressionData.name}` + " IN " + `${missingChordDetails.noteRoot}${missingChordDetails.chordType}`;
-        overlaySubtitleSolution.innerHTML = `${result} - ${missingChordDetails.noteRoot}${missingChordDetails.chordType}`;
-        playProgression(progressionData, missingChord);
+    } else if (selectedGameMode === "harmony_GM") {
+        overlayTitleSolution.innerHTML = "IT'S A " + `${generatedCadenceData.name}` + " IN " + `${missingChordDetails.noteRoot}${missingChordDetails.chordType}`;
+        overlaySubtitleSolution.innerHTML = `${cadenceName} - ${missingChordDetails.noteRoot}${missingChordDetails.chordType}`;
+        playProgression(generatedCadenceData, missingChord);
         setTimeout(() => {
             missingChord.forEach(note => {
                 piano.view.setKeyColor(note, "green");
             });
-        }, delay);
+        }, playingCadenceTimer);
     }
 });
 
@@ -229,38 +237,37 @@ hideSolutionButton.addEventListener("click", () => {
     handleOverlayDisplay("hide");
     if (timeOverFlag) handleOverlayDisplay("timeOver");
     if (goodGuessFlag) handleOverlayDisplay("goodGuess");
-    solutionDiv.style.display = "none";
-    if (selectedMinigame === "chords_GM") generatedChordData.midiNotes.forEach(note => {
+    overlaySolutionPanel.style.display = "none";
+    if (selectedGameMode === "chords_GM") generatedChordData.midiNotes.forEach(note => {
         piano.view.resetKeyColor(note)
     });
-    else if (selectedMinigame === "harmony_GM") missingChord.forEach(note => {
+    else if (selectedGameMode === "harmony_GM") missingChord.forEach(note => {
         piano.view.resetKeyColor(note)
     });
 })
 
-goNextRoundButton.addEventListener("click", () => {
-    updateRoundDisplay(); //è già in startRound
-    let isAssistanON = assistantModeButton.textContent === "ASSISTANT MODE ON" ? true : false; //mettere in resetvariable assistantMode=false
+nextRoundButton.addEventListener("click", () => { // TOLTO UPDATE PERCHé GIà IN START ROUND, COME TOLTO isRoundActive
+    let isAssistanON = assistantModeButton.textContent === "ASSISTANT MODE ON" ? true : false; // mettere in resetvariable assistantMode=false -> GIUSTO, FATTO
     if (isAssistanON){
         assistantMode = !assistantMode;
         assistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON";
     }
-    if (activeRoundID < maxRounds) { //si potrebbe mettere in handle guess questo controllo 
-        startRound();
+    if (activeRoundID < maxRounds) { //si potrebbe mettere in handleGuess questo controllo -> NON CAPISCO PERCHé, DEVE STARE QUA, QUANDO SI CLICCA IL PULSANTE SI VA AVANTI CON I ROUND SOLO SE CE NE SONO ANCORA
         handleOverlayDisplay("hide");
-    } else if (activeRoundID == maxRounds) {
+        startRound();
+    } else if (activeRoundID == maxRounds) { // CONTINUO QUA -> NELL'ULTIMO ROUND SI VEDE PRIMA IL GOOD GUESS O TIME OVER E POI GAME OVER QUINDI I CONTROLLI DI ROUND SONO TUTTI QUA
         handleOverlayDisplay("gameOver"); 
-        activeRoundID++; //già in resetvariable (da mettere in start round)
+        activeRoundID++; //già in resetvariable (da mettere in start round) -> INOLTRE AFFINCHè SI ESCA DAL GIOCO QUANDO SI SCHIACCIA NEXT ROUND DOPO L'ULTIMO ROUND DEVE AUMENTARE activeRoundID PERCHé SENNò SI ENTRA SEMPRE IN QUESTO IF
         preloadedEffects[4].play();
     } else {
-        window.location.href = "../../gameTitleScreen.html"; //usare main menu button
+        window.location.href = "../../gameTitleScreen.html"; //usare main menu button -> NON POSSIAMO USARE IL TASTO MAIN MENU DELLA PRACTICE MODE PERCHé FA PARTE DI DUE DIVERSI GRUPPI NELL'html E PER SEMPLICITà SI MODIFICA NOME E FUNZIONAMENTO DEL TASTO NEXTROUND, UN TASTO CHE GIà C'è, IO NON MODIFICHEREI QUESTO FUNZIONAMENTO
     }
 });
 
 // Game Buttons
 playSolutionButton.addEventListener("click", () => {
-    if (selectedMinigame === "chords_GM") piano.playChord(generatedChordData.midiNotes);
-    else if (selectedMinigame === "harmony_GM") playProgression(progressionData);
+    if (selectedGameMode === "chords_GM") piano.playChord(generatedChordData.midiNotes);
+    else if (selectedGameMode === "harmony_GM") playProgression(generatedCadenceData);
 });
 
 hintButton.addEventListener("click", () => {
@@ -297,13 +304,13 @@ document.addEventListener("mousedown", (event) => {
     const keyElement = event.target.closest(".key");
     if (!keyElement) return;
     const midiNote = parseInt(keyElement.dataset.midiNote);
-    if (selectedMinigame === "chords_GM" && assistantMode) {
+    if (selectedGameMode === "chords_GM" && assistantMode) {
         piano.view.setKeyColor(
             midiNote,
             generatedChordData.midiNotes.includes(midiNote) ? "green" : "red",
             true
         );
-    } else if (selectedMinigame === "harmony_GM" && assistantMode) {
+    } else if (selectedGameMode === "harmony_GM" && assistantMode) {
         piano.view.setKeyColor(
             midiNote,
             missingChord.includes(midiNote) ? "green" : "red",
@@ -318,45 +325,45 @@ document.addEventListener("mousedown", (event) => {
 function startRound() {
     if (practiceModeFlag) return;
     updateRoundDisplay();
+    updateScoreDisplay();
     resetVariables();
     resetButtons();
     startTimer();
     enableInput();
-    if (selectedMinigame === "chords_GM") {
+    if (selectedGameMode === "chords_GM") {
         if (multiplayerFlag) {
             if (isHost && (!generatedChordsData.length)) generateChordsForRounds();
             startMultiplayerRound();
         } else generateNewChord(); 
-    } else if (selectedMinigame === "harmony_GM") {
+    } else if (selectedGameMode === "harmony_GM") {
         if (multiplayerFlag) {
             if (isHost && (!generatedCadencesData.length)) generateCadencesForRounds();
             startMultiplayerRound();
         } else generateNewProgression();
     }
+    activeRoundID++; // -> spostarlo fuori -> FATTO
 }
 
 function resetVariables() {
-    if (practiceModeFlag) return; //vanno eliminati da tutte le funzioni questi controlli sulla practice, basta solo all'inizio
+    if (practiceModeFlag) return; //vanno eliminati da tutte le funzioni questi controlli sulla practice, basta solo all'inizio -> TUTTI QUESTI CONTROLLI LI HO INSERITI PER NON ATRRIBUIRE O ATTIVARE COSE CHE IN ALCUNE MODALITà NON SERVONO
     currentScore = 100;
-    activeRoundID++; // -> spostarlo fuori
-    result = "";
-    delay = 0;
+    cadenceName = "";
+    playingCadenceTimer = 0;
     assistantAvailable = false;
     assistantPoint = false;
+    assistantMode = false
     flagHintsPoint = [false, false, false];
     flagHints = [true, true, true]; 
     timeOverFlag = false;
     goodGuessFlag = false;
-    doIt = true;
     previousPressedNotes = [];
     generatedChordData = {};
-    chordData = {}; //? non serve per la practice?
     missingChordDetails = {};
     missingChord = [];
-    progressionData = {};
+    generatedCadenceData = {};
     if (multiplayerFlag) generatedChordsData = [];
     if (multiplayerFlag) generatedCadencesData = [];
-}
+} // -> TOLTI CHORDDATA E isRoundActive
 
 function resetButtons() {
     if (practiceModeFlag) return;
@@ -371,27 +378,25 @@ function resetButtons() {
 
 function handleCorrectGuess() {
     if (practiceModeFlag) return;
-    handleOverlayDisplay("goodGuess"); //fare il controllo di quanti round si è cosi si smista tra goodGuess e GameOver
-    clearInterval(timerInterval); // non è in start timer?
+    handleOverlayDisplay("goodGuess"); //fare il controllo di quanti round si è cosi si smista tra goodGuess e GameOver -> NO, VEDI SPIEGAZIONE IN NEXTROUNDBUTTON
+    clearInterval(timerInterval); // non è in start timer? -> NON è NECESSARIO, MA VISTO CHE PER TIMEOVER LO è, LO LASCEREI ANCHE QUI
     if (assistantPoint) currentScore *= (1 - percAssistant / 100);
     if (flagHintsPoint[2]) currentScore -= 12;
     if (flagHintsPoint[1]) currentScore -= 8;
     if (flagHintsPoint[0]) currentScore -= 4;
     if (currentScore >= 0) totalScore += Math.floor(currentScore);
     else totalScore += 0;
-    updateScoreDisplay(); // si potrebbe mettere in start round?
+    //updateScoreDisplay(); // si potrebbe mettere in start round? -> NON SO, FORSE SERVE QUANDO SONO FINITI I ROUND, PERò PROVIAMO 
     if (multiplayerFlag) updateScoreInDatabase();
-    isRoundActive = false; //a cosa serve, non lo mettiamo mai a true
     preloadedEffects[1].play();
 }
 
-function endRound() {  //forse si potrebbe direttamente mettere handleOverlayDisplay("timeOver") in updateTimer
+/*function endRound() {  //forse si potrebbe direttamente mettere handleOverlayDisplay("timeOver") in updateTimer -> SI INFATTI
     if (practiceModeFlag) return;
     handleOverlayDisplay("timeOver");
     clearInterval(timerInterval); //non è in start timer?
-    isRoundActive = false;
     preloadedEffects[2].play();
-}
+}*/
 
 // Timer
 function startTimer() {
@@ -399,7 +404,7 @@ function startTimer() {
     clearInterval(timerInterval);
     timeLeft = 120;
     hintTimer = 0;
-    updateTimerDisplay(); // non è già in updateTimer?
+    updateTimerDisplay(); // non è già in updateTimer? -> SI FORSE NON SERVE -> SERVE SENNò MOSTRA UNDEFINED
     timerInterval = setInterval(updateTimer, 1000);
 }
 
@@ -413,26 +418,30 @@ function updateTimer() {
     }
     hintsToShow();
     assistantToShow();
-    if (timeLeft <= 0) endRound(); //mettere direttamente overlay
+    if (timeLeft <= 0) {
+        clearInterval(timerInterval); // NECESSARIO SENNò CONTINUA AD ENTRARCI
+        handleOverlayDisplay("timeOver");
+        preloadedEffects[2].play();
+    }
 }
 
 // Games
 function generateNewChord() {
     if (practiceModeFlag) return;
-    generatedChordData = generateRandomChord(firstNote, lastNote, selectedLevel);
+    generatedChordData = generateRandomChord(firstNote, lastNote, selectedDifficulty);
     piano.playChord(generatedChordData.midiNotes);
 }
 
 function checkChord() {
     if (practiceModeFlag) return;
     const pressedNotes = piano.getPressedNotes();
-    if (pressedNotes.length < 3) return;
     if (assistantMode) handleAssistantMode(pressedNotes);
-    if (selectedMinigame === "chords_GM") {
+    if (pressedNotes.length < 3) return; // L'AVEVI FATTO APPOSTA QUESTO CAMBIO? PERCHé è MENO FLUIDO
+    if (selectedGameMode === "chords_GM") {
         if (arraysEqual(pressedNotes, previousPressedNotes)) return;
         previousPressedNotes = [...pressedNotes];
         if (arraysEqual(generatedChordData.midiNotes, pressedNotes)) handleCorrectGuess();
-    } else if (selectedMinigame === "harmony_GM") {
+    } else if (selectedGameMode === "harmony_GM") {
         const expectedNotes = missingChord;
         if (arraysEqual(pressedNotes, expectedNotes)) handleCorrectGuess();
     }
@@ -447,42 +456,42 @@ function arraysEqual(arr1, arr2) {
 
 function generateNewProgression() {
     if (practiceModeFlag) return;
-    progressionData = generateChordPattern(firstNote, lastNote, selectedLevel);
-    missingChordDetails = progressionData.missingChordData;
+    generatedCadenceData = generateChordPattern(firstNote, lastNote, selectedDifficulty);
+    missingChordDetails = generatedCadenceData.missingChordData;
     missingChord = missingChordDetails.midiNotes
-    playProgression(progressionData);
-    updateResult()
+    playProgression(generatedCadenceData);
+    updateCadenceName()
 }
 
-function updateResult() {
+function updateCadenceName() {
     if (practiceModeFlag) return;
-    let r = ""
-    if (selectedMinigame === "harmony_GM") {
+    let n = "";
+    if (selectedGameMode === "harmony_GM") {
         let i = 0;
         do {
-            r += `${progressionData.progressionDetails[i].noteRoot}${progressionData.progressionDetails[i].chordType}`;
-            r += " - ";
+            n += `${generatedCadenceData.progressionDetails[i].noteRoot}${generatedCadenceData.progressionDetails[i].chordType}`;
+            n += " - ";
             i++;
-        } while (i < progressionData.progressionDetails.length - 1)
+        } while (i < generatedCadenceData.progressionDetails.length - 1)
     }
-    result = r.slice(0, -2);
+    cadenceName = n.slice(0, -2);
 }
 
-function playProgression(progressionData, missingChord = null) { 
+function playProgression(generatedCadenceData, missingChord = null) { 
     if (practiceModeFlag) return;
-    delay = 0;
-    progressionData.progressionDetails.forEach(chord => {
+    playingCadenceTimer = 0;
+    generatedCadenceData.progressionDetails.forEach(chord => {
         if (chord) {
             setTimeout(() => {
                 piano.playChord(chord.midiNotes);
-            }, delay);
-            delay += 1000;
+            }, playingCadenceTimer);
+            playingCadenceTimer += 1000;
         }
     });
     if (missingChord) {
         setTimeout(() => {
             piano.playChord(missingChord);
-        }, delay);
+        }, playingCadenceTimer);
     }
 }
 
@@ -532,19 +541,19 @@ function updateHints() {
             switch (currentHint) {
                 case 1:
                     flagHintsPoint[0] = true;
-                    if (selectedMinigame === "chords_GM") hintDisplay.textContent = `ROOT ${generatedChordData.noteRoot}`;
-                    else if (selectedMinigame === "harmony_GM") hintDisplay.textContent = `FIRST CHORD: 
-                        ${progressionData.progressionDetails[0].noteRoot}${progressionData.progressionDetails[0].chordType}`; 
+                    if (selectedGameMode === "chords_GM") hintDisplay.textContent = `ROOT ${generatedChordData.noteRoot}`;
+                    else if (selectedGameMode === "harmony_GM") hintDisplay.textContent = `FIRST CHORD: 
+                        ${generatedCadenceData.progressionDetails[0].noteRoot}${generatedCadenceData.progressionDetails[0].chordType}`; 
                     break;
                 case 2:
                     flagHintsPoint[1] = true;
-                    if (selectedMinigame === "chords_GM") hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
-                    else if (selectedMinigame === "harmony_GM") hintDisplay.textContent = `CHORDS PLAYED: ${result}`; 
+                    if (selectedGameMode === "chords_GM") hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType}`;
+                    else if (selectedGameMode === "harmony_GM") hintDisplay.textContent = `CHORDS PLAYED: ${cadenceName}`; 
                     break;
                 case 3:
                     flagHintsPoint[2] = true;
-                    if (selectedMinigame === "chords_GM") hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
-                    else if (selectedMinigame === "harmony_GM") hintDisplay.textContent = `COMPLETE PROGRESSION: ${result} - ${missingChordDetails.noteRoot}${missingChordDetails.chordType}`; 
+                    if (selectedGameMode === "chords_GM") hintDisplay.textContent = `${generatedChordData.noteRoot}${generatedChordData.chordType} IN ${generatedChordData.inversion}`;
+                    else if (selectedGameMode === "harmony_GM") hintDisplay.textContent = `COMPLETE PROGRESSION: ${cadenceName} - ${missingChordDetails.noteRoot}${missingChordDetails.chordType}`; 
                     break;
             }
             hintButton.textContent = "HIDE HINT";
@@ -566,26 +575,25 @@ function updateHints() {
 }
 
 // Assistant Mode
-function assistantToShow() { //non ho capito
+function assistantToShow() { //non ho capito -> CREDO TU TI RIFERSCA AL doIt, SERVE PER ESEGUIRE QUESTA PARTE SOLO UNA VOLTA, FORSE DA QUA SI PUò TOGLIERE
     if (practiceModeFlag) return;
-    if (timeLeft <= assistantInterval && doIt) {
+    if (timeLeft <= assistantInterval && !assistantAvailable) {
         assistantAvailable = true;
         assistantModeButton.classList.remove('no-hover');
         assistantModeButton.classList.remove('notSelectable');
-        assistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON"; // vedi assistantModeButton
-        doIt = false;
+        assistantModeButton.textContent = !assistantMode ? "ASSISTANT MODE OFF" : "ASSISTANT MODE ON"; // vedi assistantModeButton -> OKAY
     }
 }
 
 function handleAssistantMode(pressedNotes) {
     if (practiceModeFlag) return;
     const currentColorNotes = new Set(pressedNotes);
-    if (selectedMinigame === "chords_GM") pressedNotes.forEach(note => {
+    if (selectedGameMode === "chords_GM") pressedNotes.forEach(note => {
             piano.view.setKeyColor(note, generatedChordData.midiNotes.includes(note) ? "green" : "red");
         });
-    else if (selectedMinigame === "harmony_GM") pressedNotes.forEach(note => {
-        piano.view.setKeyColor(note, missingChord.includes(note) ? "green" : "red");
-    });
+    else if (selectedGameMode === "harmony_GM") pressedNotes.forEach(note => {
+            piano.view.setKeyColor(note, missingChord.includes(note) ? "green" : "red");
+        });
     for (let i = firstNote; i <= lastNote; i++) {
         if (!currentColorNotes.has(i)) piano.view.resetKeyColor(i);
     }
@@ -604,12 +612,12 @@ function updateTimerDisplay() {
 
 function updateModeDisplay() {
     if (practiceModeFlag) return;
-    modeDisplay.innerHTML = userLegend[selectedMinigame]
+    gameModeDisplay.innerHTML = userLegend[selectedGameMode]
 }
 
 function updateLevelDisplay() {
     if (practiceModeFlag) return;
-    levelDisplay.innerHTML = "   DIFFICULTY " + userLegend[selectedLevel];
+    difficultyDisplay.innerHTML = "   DIFFICULTY " + userLegend[selectedDifficulty];
 }
 
 function updateRoundDisplay() {
@@ -622,11 +630,10 @@ function updateRoundDisplay() {
 function handleOverlayDisplay(overlayType) {
     if (practiceModeFlag) return;
     overlayPanel.style.display = "flex";
-    scoreLabel.style.display = "none";
-    scoreDivisionLabel.style.display = "none";
+    overlayScoreDisplay.style.display = "none";
     startGameButton.style.display = "none";
     showSolutionButton.style.display = "none";    
-    goNextRoundButton.style.display = "none";
+    nextRoundButton.style.display = "none";
     
     switch(overlayType) {
       case "startGame":
@@ -634,9 +641,9 @@ function handleOverlayDisplay(overlayType) {
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
         overlaySubtitle.style.display = "flex";
-        scoreLabel.style.display = "none";
-        if (selectedMinigame === "chords_GM") overlayTitle.innerHTML = "RECOGNIZE CHORD AND PLAY IT";
-        else if (selectedMinigame === "harmony_GM") overlayTitle.innerHTML = "RESOLVE CHORD CADENCES PLAYING MUTED LAST CHORD";
+        overlayScoreDisplay.style.display = "none";
+        if (selectedGameMode === "chords_GM") overlayTitle.innerHTML = "RECOGNIZE CHORD AND PLAY IT";
+        else if (selectedGameMode === "harmony_GM") overlayTitle.innerHTML = "RESOLVE CHORD CADENCES PLAYING MUTED LAST CHORD";
         overlaySubtitle.innerHTML = "PRESS START";
         startGameButton.style.display = "block";
         break;
@@ -646,11 +653,11 @@ function handleOverlayDisplay(overlayType) {
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
         if(!multiplayerFlag) overlaySubtitle.style.display = "flex";
-        scoreLabel.style.display = "none";
+        overlayScoreDisplay.style.display = "none";
         overlayTitle.innerHTML = "TIME OVER";
         overlaySubtitle.innerHTML = "YOU DIDN'T MAKE IT!";
         showSolutionButton.style.display = "block";
-        goNextRoundButton.style.display = "block";        
+        nextRoundButton.style.display = "block";        
         if (multiplayerFlag) rankingTable.style.display = "flex";
         break;
       case "goodGuess":
@@ -659,11 +666,11 @@ function handleOverlayDisplay(overlayType) {
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
         if(!multiplayerFlag) overlaySubtitle.style.display = "flex";
-        scoreLabel.style.display = "none";
+        overlayScoreDisplay.style.display = "none";
         overlayTitle.innerHTML = "GOOD GUESS";
         overlaySubtitle.innerHTML = "YOU ARE A BOSS!";        
         showSolutionButton.style.display = "block";
-        goNextRoundButton.style.display = "block";
+        nextRoundButton.style.display = "block";
         if (multiplayerFlag) rankingTable.style.display = "flex";
         break;
       case "gameOver":
@@ -671,13 +678,13 @@ function handleOverlayDisplay(overlayType) {
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
         overlaySubtitle.style.display = "none";
-        scoreLabel.style.display = "flex";
+        overlayScoreDisplay.style.display = "flex";
         overlayTitle.innerHTML = "GAME OVER";
-        scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
-        goNextRoundButton.innerHTML = "MAIN MENU"; //usare direttamente il button mainmenu della practice
-        goNextRoundButton.style.display = "block"; 
+        overlayScoreDisplay.innerHTML = "TOTAL SCORE: " + totalScore;
+        nextRoundButton.innerHTML = "MAIN MENU"; //usare direttamente il button mainmenu della practice -> NON SI PUò VEDI SPIEGAZIONE NEXTROUNDBUTTON
+        nextRoundButton.style.display = "block"; 
         if (multiplayerFlag) {
-            scoreLabel.style.display = "none";
+            overlayScoreDisplay.style.display = "none";
             rankingTable.style.display = "flex";
         }
         break;
@@ -686,16 +693,16 @@ function handleOverlayDisplay(overlayType) {
         overlayPanel.style.display = "flex";
         overlayTitle.style.display = "flex";
         overlaySubtitle.style.display = "none";
-        scoreLabel.style.display = "none";
+        overlayScoreDisplay.style.display = "none";
         overlayTitle.innerHTML = "WAIT YOUR HOST!";
         showSolutionButton.style.display = "none";
-        goNextRoundButton.style.display = "none";
+        nextRoundButton.style.display = "none";
         break;
     case "hide":
         overlayPanel.style.display = "none";
         overlayTitle.style.display = "none";
         overlaySubtitle.style.display = "none";
-        scoreLabel.style.display = "none";
+        overlayScoreDisplay.style.display = "none";
         break;    
     default: console.log("Error: overlayType '" + overlayType + "' does not exist.");
     }
@@ -713,7 +720,7 @@ function enableInput() {
 async function generateChordsForRounds() {
     if (!multiplayerFlag || practiceModeFlag) return;
     for (let i = 0; i < maxRounds; i++) {
-        generatedChordsData.push(generateRandomChord(firstNote, lastNote, selectedLevel));
+        generatedChordsData.push(generateRandomChord(firstNote, lastNote, selectedDifficulty));
     }
     await set(gameStructureRef, generatedChordsData); 
 }
@@ -721,8 +728,8 @@ async function generateChordsForRounds() {
 async function generateCadencesForRounds() {
     if (!multiplayerFlag || practiceModeFlag) return;
     for (let i = 0; i < maxRounds; i++) {
-        progressionData = generateChordPattern(firstNote, lastNote, selectedLevel);
-        generatedCadencesData.push(progressionData);
+        generatedCadenceData = generateChordPattern(firstNote, lastNote, selectedDifficulty);
+        generatedCadencesData.push(generatedCadenceData);
     }
     await set(gameStructureRef, generatedCadencesData);
 }
@@ -742,14 +749,14 @@ async function startMultiplayerRound() {
         console.error("Accordi non trovati per la modalità multiplayer!");
         return;
     }
-    if (selectedMinigame === "chords_GM") {
+    if (selectedGameMode === "chords_GM") {
         generatedChordData = generatedChordsData[activeRoundID-1];
         piano.playChord(generatedChordData.midiNotes);
-    } else if (selectedMinigame === "harmony_GM") {
-        progressionData = generatedCadencesData[activeRoundID-1];
-        missingChordDetails = progressionData.missingChordData;
+    } else if (selectedGameMode === "harmony_GM") {
+        generatedCadenceData = generatedCadencesData[activeRoundID-1];
+        missingChordDetails = generatedCadenceData.missingChordData;
         missingChord = missingChordDetails.midiNotes
-        playProgression(progressionData);
+        playProgression(generatedCadenceData);
     }
 }
 

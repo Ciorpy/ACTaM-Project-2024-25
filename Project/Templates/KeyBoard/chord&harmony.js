@@ -1,105 +1,137 @@
+// -------------------------------------------------------------------------------------------------------------------------------------------------
+//          CHORD AND HARMONY JAVASCRIPT
+// -------------------------------------------------------------------------------------------------------------------------------------------------
+
+// CONSTANTS AND DATABASE --------------------------------------------------------------------------------------------------------------------------
+
 const notesInOctave = 12;
 
-function generateChordsMIDI(rootMIDI) {
+// Dynamic Chords Database
+function generateChords(rootMIDI) {
   return {
-    // Triadi
-    "Maj": [rootMIDI, rootMIDI + 4, rootMIDI + 7],      // Maggiore: T-4-7
-    "min": [rootMIDI, rootMIDI + 3, rootMIDI + 7],      // Minore: T-3-7
-    "dim": [rootMIDI, rootMIDI + 3, rootMIDI + 6],      // Diminuita: T-3-6
-    "aug": [rootMIDI, rootMIDI + 4, rootMIDI + 8],      // Aumentata: T-4-8
+    "Maj": [rootMIDI, rootMIDI + 4, rootMIDI + 7],
+    "min": [rootMIDI, rootMIDI + 3, rootMIDI + 7],
+    "dim": [rootMIDI, rootMIDI + 3, rootMIDI + 6],
+    "aug": [rootMIDI, rootMIDI + 4, rootMIDI + 8],
 
-    // Sospesi
-    "sus2": [rootMIDI, rootMIDI + 2, rootMIDI + 7],     // Sus2: T-2-7
-    "sus4": [rootMIDI, rootMIDI + 5, rootMIDI + 7],     // Sus4: T-5-7
+    "sus2": [rootMIDI, rootMIDI + 2, rootMIDI + 7],
+    "sus4": [rootMIDI, rootMIDI + 5, rootMIDI + 7],
 
-    // Sesta
-    "6": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9],      // Maggiore con sesta: T-4-7-9
-    "m6": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 9],      // Minore con sesta: T-3-7-9
-    "dim6": [rootMIDI, rootMIDI + 3, rootMIDI + 6, rootMIDI + 9],      // diminuita con sesta: T-3-6-9
+    "6": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9],
+    "m6": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 9],
+    "dim6": [rootMIDI, rootMIDI + 3, rootMIDI + 6, rootMIDI + 9],
 
-    // Settima
-    "Maj7": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11],      // Maggiore con settima maggiore: T-4-7-11
-    "mMaj7": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 11],     // Minore con settima maggiore: T-3-7-11
-    "7": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10],         // Dominante: T-4-7-10
-    "m7": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10],        // Minore con settima minore: T-3-7-10
-    "m7b5": [rootMIDI, rootMIDI + 3, rootMIDI + 6, rootMIDI + 10],      // Minore diminuito con settima: T-3-6-10
-    "dim7": [rootMIDI, rootMIDI + 3, rootMIDI + 6, rootMIDI + 9],       // Diminuito con settima diminuita: T-3-6-9
-    "Maj7#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 11],    // Maggiore con settima maggiore e quinta aumentata: T-4-8-11
-    "7#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10],       // Dominante con quinta aumentata: T-4-8-10
-    "m7#5": [rootMIDI, rootMIDI + 3, rootMIDI + 8, rootMIDI + 10],      // Minore con settima e quinta aumentata: T-3-8-10
+    "Maj7": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11],
+    "mMaj7": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 11],
+    "7": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10],
+    "m7": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10],
+    "m7b5": [rootMIDI, rootMIDI + 3, rootMIDI + 6, rootMIDI + 10],
+    "dim7": [rootMIDI, rootMIDI + 3, rootMIDI + 6, rootMIDI + 9],
+    "Maj7#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 11],
+    "7#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10],
+    "m7#5": [rootMIDI, rootMIDI + 3, rootMIDI + 8, rootMIDI + 10],
 
-    // Accordi di nona
-    "9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],    // Dominante con nona maggiore
-    "m9": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],   // Minore con nona maggiore
-    "Maj9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14], // Maggiore con nona maggiore
-    "7b9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 13],  // Dominante con nona bemolle
-    "7#9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 15],  // Dominante con nona diesis
-    "6b9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 13],   // Sesta con nona bemolle
-    "6#9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 15],   // Sesta con nona diesis
-    "6(9)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 14],  // Sesta con nona maggiore
+    "9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],
+    "m9": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14],
+    "Maj9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14],
+    "7b9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 13],
+    "7#9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 15],
+    "6b9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 13],
+    "6#9": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 15],
+    "6(9)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 14],
 
-    // Accordi alterati
-    "alt#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10],                // T, 3, ♯5, ♭7
-    "altb5": [rootMIDI, rootMIDI + 4, rootMIDI + 6, rootMIDI + 10],                // T, 3, ♭5, ♭7
-    "altb9": [rootMIDI, rootMIDI + 4, rootMIDI + 10, rootMIDI + 15],               // T, 3, ♭7, ♭9
-    "alt#9": [rootMIDI, rootMIDI + 4, rootMIDI + 10, rootMIDI + 17],               // T, 3, ♭7, ♯9
-    "altb9#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10, rootMIDI + 15], // T, 3, ♯5, ♭7, ♭9
-    "alt#9#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10, rootMIDI + 17], // T, 3, ♯5, ♭7, ♯9
-    "altb9b5": [rootMIDI, rootMIDI + 4, rootMIDI + 6, rootMIDI + 10, rootMIDI + 15], // T, 3, ♭5, ♭7, ♭9
-    "alt#9b5": [rootMIDI, rootMIDI + 4, rootMIDI + 6, rootMIDI + 10, rootMIDI + 17], // T, 3, ♭5, ♭7, ♯9
+    "alt#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10],
+    "altb5": [rootMIDI, rootMIDI + 4, rootMIDI + 6, rootMIDI + 10],
+    "altb9": [rootMIDI, rootMIDI + 4, rootMIDI + 10, rootMIDI + 15],
+    "alt#9": [rootMIDI, rootMIDI + 4, rootMIDI + 10, rootMIDI + 17],
+    "altb9#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10, rootMIDI + 15],
+    "alt#9#5": [rootMIDI, rootMIDI + 4, rootMIDI + 8, rootMIDI + 10, rootMIDI + 17],
+    "altb9b5": [rootMIDI, rootMIDI + 4, rootMIDI + 6, rootMIDI + 10, rootMIDI + 15],
+    "alt#9b5": [rootMIDI, rootMIDI + 4, rootMIDI + 6, rootMIDI + 10, rootMIDI + 17],
 
-    // Accordi di undicesima
-    "7(11)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 17],                // Dominante con undicesima
-    "m11": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 17],   // Minore con undicesima
-    "Maj11": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14, rootMIDI + 17], // Maggiore con undicesima
-    "6(11)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 17],                 // Sesta con undicesima
+    "7(11)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 17],
+    "m11": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 17],
+    "Maj11": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14, rootMIDI + 17],
+    "6(11)": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 9, rootMIDI + 17],
 
-    // Accordi di tredicesima
-    "13": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 21],    // Dominante con tredicesima
-    "m13": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 21],   // Minore con tredicesima
-    "Maj13": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14, rootMIDI + 21], // Maggiore con tredicesima
+    "13": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 21],
+    "m13": [rootMIDI, rootMIDI + 3, rootMIDI + 7, rootMIDI + 10, rootMIDI + 14, rootMIDI + 21],
+    "Maj13": [rootMIDI, rootMIDI + 4, rootMIDI + 7, rootMIDI + 11, rootMIDI + 14, rootMIDI + 21],
   };
 }
 
-
-// Database delle progressioni armoniche organizzato per difficoltà
-const chordPatterns = {
+// Cadences Database
+const chordCadences = {
   easyDiff: [
-    { name: "IV-V-I", degrees: [4, 5, 1], progression: ["Maj", "7", "Maj"] },
-    { name: "II-V-I", degrees: [2, 5, 1], progression: ["min", "7", "Maj"] },
-    { name: "VI-IV-I", degrees: [6, 4, 1], progression: ["min", "Maj", "Maj"] },
-    { name: "VI-V-I", degrees: [6, 5, 1], progression: ["min", "7", "Maj"] },  
+    { name: "IV-V-I", degrees: [4, 5, 1], cadence: ["Maj", "7", "Maj"] },
+    { name: "II-V-I", degrees: [2, 5, 1], cadence: ["min", "7", "Maj"] },
+    { name: "VI-IV-I", degrees: [6, 4, 1], cadence: ["min", "Maj", "Maj"] },
+    { name: "VI-V-I", degrees: [6, 5, 1], cadence: ["min", "7", "Maj"] },  
   ],
 
   mediumDiff: [
-    { name: "VI-II-V-I", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "7", "Maj7"] },
-    { name: "VII-VI-V-I", degrees: [7, 6, 5, 1], progression: ["7", "m7", "7", "Maj7"] },
-    { name: "III-VI-II-V-I", degrees: [3, 6, 2, 5, 1], progression: ["min", "min", "m7", "7", "Maj7"] },
-    { name: "IV-V-I Minor", degrees: [4, 5, 1], progression: ["min", "7", "min"]  },
-    { name: "II-V-I with Extensions", degrees: [2, 5, 1], progression: ["m7", "7#5", "Maj7"] },
-    { name: "Circle Progression", degrees: [5, 4, 5, 1], progression: ["7", "Maj7", "7", "Maj"] },
-    { name: "II-V-I Minor", degrees: [2, 5, 1], progression: ["m7b5", "altb9", "mMaj7"] },
-    { name: "Suspended Movement", degrees: [4, 5, 1], progression: ["sus4", "7", "Maj7"] }
+    { name: "VI-II-V-I", degrees: [6, 2, 5, 1], cadence: ["m7", "m7", "7", "Maj7"] },
+    { name: "VII-VI-V-I", degrees: [7, 6, 5, 1], cadence: ["7", "m7", "7", "Maj7"] },
+    { name: "III-VI-II-V-I", degrees: [3, 6, 2, 5, 1], cadence: ["min", "min", "m7", "7", "Maj7"] },
+    { name: "IV-V-I Minor", degrees: [4, 5, 1], cadence: ["min", "7", "min"]  },
+    { name: "II-V-I with Extensions", degrees: [2, 5, 1], cadence: ["m7", "7#5", "Maj7"] },
+    { name: "Circle Cadence", degrees: [5, 4, 5, 1], cadence: ["7", "Maj7", "7", "Maj"] },
+    { name: "II-V-I Minor", degrees: [2, 5, 1], cadence: ["m7b5", "altb9", "mMaj7"] },
+    { name: "Suspended Movement", degrees: [4, 5, 1], cadence: ["sus4", "7", "Maj7"] }
   ],
 
   hardDiff: [
-    { name: "II-V-I Extended", degrees: [2, 5, 1], progression: ["m7b5", "7", "Maj7"] },
-    { name: "VI-II-V-I Altered", degrees: [6, 2, 5, 1], progression: ["m7", "m7", "alt#9", "Maj7"] },
-    { name: "VII-VI-V-I Extended", degrees: [7, 3, 6, 2, 5, 1], progression: ["dim7", "min", "m7", "m7b5", "7", "Maj7"] },
-    //{ name: "Complex Jazz", degrees: [2, 4, 6, 5, 1], progression: ["m7", "Maj7", "m7", "7", "Maj7"] },
-    { name: "Advanced Circle", degrees: [7, 3, 6, 2, 5, 1], progression: ["dim7", "m7", "m7", "m7", "7", "Maj7"] },
-    { name: "II-V-I Minor Extended", degrees: [4, 2, 5, 1], progression: ["min", "m7b5", "altb9", "mMaj7"] },
-    { name: "Altered 5-Step", degrees: [5, 4, 6, 2, 1], progression: ["7b9", "Maj7", "m7", "m7b5", "mMaj7"] },
-    { name: "Dynamic Alteration", degrees: [3, 6, 2, 5, 1], progression: ["min", "m7", "m7b5", "7#9", "Maj7"] }
+    { name: "II-V-I Extended", degrees: [2, 5, 1], cadence: ["m7b5", "7", "Maj7"] },
+    { name: "VI-II-V-I Altered", degrees: [6, 2, 5, 1], cadence: ["m7", "m7", "alt#9", "Maj7"] },
+    { name: "VII-VI-V-I Extended", degrees: [7, 3, 6, 2, 5, 1], cadence: ["dim7", "min", "m7", "m7b5", "7", "Maj7"] },
+    //{ name: "Complex Jazz", degrees: [2, 4, 6, 5, 1], cadence: ["m7", "Maj7", "m7", "7", "Maj7"] },
+    { name: "Advanced Circle", degrees: [7, 3, 6, 2, 5, 1], cadence: ["dim7", "m7", "m7", "m7", "7", "Maj7"] },
+    { name: "II-V-I Minor Extended", degrees: [4, 2, 5, 1], cadence: ["min", "m7b5", "altb9", "mMaj7"] },
+    { name: "Altered 5-Step", degrees: [5, 4, 6, 2, 1], cadence: ["7b9", "Maj7", "m7", "m7b5", "mMaj7"] },
+    { name: "Dynamic Alteration", degrees: [3, 6, 2, 5, 1], cadence: ["min", "m7", "m7b5", "7#9", "Maj7"] }
   ]
 };
 
+// FUNCTIONS ---------------------------------------------------------------------------------------------------------------------------------------
 
-export function recognizeChordMIDI(inputNotes) {
+// Utility
+function arraysEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+  return arr1.every((val, index) => val === arr2[index]);
+}
+
+function midiToNoteName(midi) {
+  const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  return noteNames[midi % notesInOctave];
+}
+
+function calculateDegree(rootNote, degree) {
+  const scaleSteps = [2, 2, 1, 2, 2, 2, 1];
+  let note = rootNote;
+  for (let i = 1; i < degree; i++) {
+    note += scaleSteps[(i - 1) % scaleSteps.length];
+  }
+  return note % notesInOctave;
+}
+
+function generateInversions(chordNotes) {
+  const inversions = [];
+  const numNotes = chordNotes.length;
+  for (let i = 0; i < numNotes; i++) {
+    const inversion = chordNotes
+      .slice(i)
+      .concat(chordNotes.slice(0, i).map(note => note + 12));
+    inversions.push(inversion);
+  }
+  return inversions;
+}
+
+// Practice Mode
+export function recognizeChord(inputNotes) {
   const normalizedInput = inputNotes.map(note => note % notesInOctave);
   const normalizedAndSortedInput = [...normalizedInput].sort((a, b) => a - b);
   for (let rootMIDI = 0; rootMIDI < notesInOctave; rootMIDI++) {
-    const chords = generateChordsMIDI(rootMIDI);
+    const chords = generateChords(rootMIDI);
     for (let chordName in chords) {
       const chordNotes = chords[chordName];
       const normalizedChord = chordNotes.map(note => note % notesInOctave);
@@ -128,41 +160,7 @@ export function recognizeChordMIDI(inputNotes) {
   };
 }
 
-function arraysEqual(arr1, arr2) {
-  if (arr1.length !== arr2.length) return false;
-  return arr1.every((val, index) => val === arr2[index]);
-}
-
-function midiToNoteName(midi) {
-  const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-  return noteNames[midi % notesInOctave];
-}
-
-function calculateDegree(rootNote, degree) {
-  const scaleSteps = [2, 2, 1, 2, 2, 2, 1];
-  let note = rootNote;
-
-  for (let i = 1; i < degree; i++) {
-    note += scaleSteps[(i - 1) % scaleSteps.length];
-  }
-
-  return note % notesInOctave;
-}
-
-function generateInversions(chordNotes) {
-  const inversions = [];
-  const numNotes = chordNotes.length;
-
-  for (let i = 0; i < numNotes; i++) {
-    const inversion = chordNotes
-      .slice(i)
-      .concat(chordNotes.slice(0, i).map(note => note + 12));
-    inversions.push(inversion);
-  }
-
-  return inversions;
-}
-
+// Chords Game
 export function generateRandomChord(startNote, lastNote, difficulty = "easyDiff", root = null, type = null) {
   const chordTypesByDifficulty = {
     easyDiff: ["Maj", "min"],
@@ -176,7 +174,7 @@ export function generateRandomChord(startNote, lastNote, difficulty = "easyDiff"
     randomRoot += startNote;
     let chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
     randomChordType = type ?? chordTypes[Math.floor(Math.random() * chordTypes.length)];
-    let chords = generateChordsMIDI(randomRoot);
+    let chords = generateChords(randomRoot);
     let chord = chords[randomChordType];
     let inversions = generateInversions(chord);
     let selectedInversionIndex = Math.floor(Math.random() * inversions.length);
@@ -195,20 +193,21 @@ export function generateRandomChord(startNote, lastNote, difficulty = "easyDiff"
   };
 }
 
-export function generateChordPattern(firstNote, lastNote, difficulty = "easyDiff") {
+// Harmony Game
+export function generateRandomCadence(firstNote, lastNote, difficulty = "easyDiff") {
   const numKeys = lastNote - firstNote;
-  const patterns = chordPatterns[difficulty] || chordPatterns["easyDiff"];
+  const patterns = chordCadences[difficulty] || chordCadences["easyDiff"];
   const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
-  let rootNote, progressionDetails, missingChordData;
+  let rootNote, cadenceDetails, missingChordData;
   do {
     rootNote = firstNote + Math.floor(Math.random() * (numKeys));
-    progressionDetails = [];
+    cadenceDetails = [];
     missingChordData = null;
     const missingIndex = selectedPattern.degrees.length - 1;
     for (let index = 0; index < selectedPattern.degrees.length; index++) {
       const degree = selectedPattern.degrees[index];
       const degrees = calculateDegree(rootNote, degree);
-      const chordType = selectedPattern.progression[index];
+      const chordType = selectedPattern.cadence[index];
       const chordData = generateRandomChord(firstNote, lastNote, difficulty, degrees, chordType);
       const chordDetails = {
         midiRoot: chordData.midiRoot,
@@ -220,16 +219,18 @@ export function generateChordPattern(firstNote, lastNote, difficulty = "easyDiff
       };
       if (index === missingIndex) {
         missingChordData = chordDetails;
-        progressionDetails.push(null);
+        cadenceDetails.push(null);
       } else {
-        progressionDetails.push(chordDetails);
+        cadenceDetails.push(chordDetails);
       }
     }
   } while (!missingChordData || missingChordData.midiNotes[missingChordData.midiNotes.length - 1] >= lastNote);
   return {
     name: selectedPattern.name,
     degrees: selectedPattern.degrees,
-    progressionDetails,
+    cadenceDetails,
     missingChordData
   };
 }
+
+// -------------------------------------------------------------------------------------------------------------------------------------------------

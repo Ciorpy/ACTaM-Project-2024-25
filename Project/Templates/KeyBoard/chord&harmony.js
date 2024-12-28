@@ -199,6 +199,9 @@ export function generateRandomCadence(firstNote, lastNote, difficulty = "easyDif
   const patterns = chordCadences[difficulty] || chordCadences["easyDiff"];
   const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
   let rootNote, cadenceDetails, missingChordData;
+  let cadenceName = "";
+  let n = "";
+  let i = 0;
   do {
     rootNote = firstNote + Math.floor(Math.random() * (numKeys));
     cadenceDetails = [];
@@ -225,10 +228,17 @@ export function generateRandomCadence(firstNote, lastNote, difficulty = "easyDif
       }
     }
   } while (!missingChordData || missingChordData.midiNotes[missingChordData.midiNotes.length - 1] >= lastNote);
+  do {
+      n += `${cadenceDetails[i].noteRoot}${cadenceDetails[i].chordType}`;
+      n += " - ";
+      i++;
+  } while (i < cadenceDetails.length - 1)
+  cadenceName = n.slice(0, -2);
   return {
     name: selectedPattern.name,
     degrees: selectedPattern.degrees,
     cadenceDetails,
+    cadenceName,
     missingChordData
   };
 }

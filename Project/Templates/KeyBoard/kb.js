@@ -89,10 +89,6 @@ const defaultEffectsVolume = 0.5;
 const isSelectedChords = selectedGameMode === "chords_GM" ? true : false;
 const isSelectedHarmony = selectedGameMode === "harmony_GM" ? true : false;
 
-// Multiplayer
-const auth = getAuth(app);
-const db = getDatabase(app);
-
 // Legend
 const userLegend = {
     chords_GM: "CHORDS",
@@ -150,28 +146,29 @@ let generatedCadencesData = {};
 // Effects
 let preloadedEffects = [];
 
-// CONFIGURATION ------------------------------------------------------------------------------------------------------------------------------
-
-// Piano
-piano.init();
-
-// Variables
+// Assignment
 if (!isPracticeMode) {
     maxRounds = !isNaN(loadedRounds) ? loadedRounds : defaultRounds;
     effectsvol = !isNaN(loadedEffectsVolume) ? loadedEffectsVolume : defaultEffectsVolume;
     effectsvol = Math.min(Math.max(effectsvol, 0), 1);
-    if (isMultiplayer) {
-        playersRef = ref(db, `lobbies/${lobbyName}/players`);
-        playerScoreRef = ref(db,`lobbies/${lobbyName}/players/${userID}/score`);
-        gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
-        setInterval(updateRanking, 100);
-    }
     effectsFiles.forEach((file, index) => {
         const effect = new Audio(file);
         effect.volume = effectsvol;
         preloadedEffects[index] = effect;
     });
+    if (isMultiplayer) {
+        getAuth(app);
+        playersRef = ref(getDatabase(app), `lobbies/${lobbyName}/players`);
+        playerScoreRef = ref(getDatabase(app),`lobbies/${lobbyName}/players/${userID}/score`);
+        gameStructureRef = ref(getDatabase(app), `lobbies/${lobbyName}/gameStructure`);
+        setInterval(updateRanking, 100);
+    }
 }
+
+// CONFIGURATION ------------------------------------------------------------------------------------------------------------------------------
+
+// Piano
+piano.init();
 
 // Page
 if (!isPracticeMode) {

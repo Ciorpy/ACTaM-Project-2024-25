@@ -11,7 +11,7 @@ import PianoController from "./controller.js";
 import { generateRandomChord, generateRandomCadence, recognizeChord } from "./chord&harmony.js";
 
 // Multiplayer and Database
-// import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"; -> PROVA
+import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 import { app } from "../../../firebase.js";
 
@@ -90,7 +90,7 @@ const isSelectedChords = selectedGameMode === "chords_GM" ? true : false;
 const isSelectedHarmony = selectedGameMode === "harmony_GM" ? true : false;
 
 // Multiplayer
-// const auth = getAuth(app); -> PROVA
+const auth = getAuth(app);
 const db = getDatabase(app);
 
 // Legend
@@ -144,8 +144,8 @@ let recognizedChordData;
 let playersRef;
 let playerScoreRef;
 let gameStructureRef;
-let generatedChordsData;
-let generatedCadencesData;
+let generatedChordsData = {};
+let generatedCadencesData = {};
 
 // Effects
 let preloadedEffects = [];
@@ -209,7 +209,7 @@ if (!isPracticeMode) {
 
 // Overlay Buttons
 startGameButton.addEventListener("click", () => {
-    if (isMultiplayer && !isHost && !generatedChordsData.length) handleOverlayDisplay("wait");
+    if (isMultiplayer && !isHost && (!generatedChordsData.length || !generatedCadencesData.length)) handleOverlayDisplay("wait");
     else handleOverlayDisplay("hide");
     startRound();
 });

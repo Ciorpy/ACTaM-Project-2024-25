@@ -691,9 +691,13 @@ async function startMultiplayerRound() {
         let snapshot;
         do {
             snapshot = await get(gameStructureRef);
-            if (snapshot.exists()) generatedChordsData = snapshot.val();
+            if (snapshot.exists()) {
+                if (isSelectedChords) generatedChordsData = snapshot.val();
+                if (isSelectedHarmony) generatedCadencesData = snapshot.val();
+            }
         } while (!snapshot.exists());
         handleOverlayDisplay("hide");
+        startTimer();
     }
     if (!generatedChordsData) {
         console.error("Accordi non trovati per la modalità multiplayer!");

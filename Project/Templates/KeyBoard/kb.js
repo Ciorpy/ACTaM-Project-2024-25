@@ -173,7 +173,6 @@ piano.init();
 // Page
 if (!isPracticeMode) {
     if (isMultiplayer) placementDisplay.style.display = "flex";
-    mainMenuButton.style.display = "none";
     handleOverlayDisplay("startGame");
     updateScoreDisplay();
     updateTimerDisplay();
@@ -242,18 +241,16 @@ hideSolutionButton.addEventListener("click", () => {
     });
 })
 
-nextRoundButton.addEventListener("click", () => { // TOLTO UPDATE PERCHé GIà IN START ROUND, COME TOLTO isRoundActive, CONTROLLO SU ASSISTANT MODE ELIMINATO, DA PROVARE
-    if (activeRound < maxRounds) { //si potrebbe mettere in handleGuess questo controllo -> NON CAPISCO PERCHé, DEVE STARE QUA, QUANDO SI CLICCA IL PULSANTE SI VA AVANTI CON I ROUND SOLO SE CE NE SONO ANCORA
+nextRoundButton.addEventListener("click", () => {
+    if (activeRound < maxRounds) {
         handleOverlayDisplay("hide");
         startRound();
-    } else if (activeRound == maxRounds) { // CONTINUO QUA -> NELL'ULTIMO ROUND SI VEDE PRIMA IL GOOD GUESS O TIME OVER E POI GAME OVER QUINDI I CONTROLLI DI ROUND SONO TUTTI QUA
-        handleOverlayDisplay("gameOver"); 
-        activeRound++; //già in resetvariable (da mettere in start round) -> INOLTRE AFFINCHè SI ESCA DAL GIOCO QUANDO SI SCHIACCIA NEXT ROUND DOPO L'ULTIMO ROUND DEVE AUMENTARE activeRoundID PERCHé SENNò SI ENTRA SEMPRE IN QUESTO IF
-        preloadedEffects[4].play();
     } else {
-        window.location.href = "../../gameTitleScreen.html"; //usare main menu button -> NON POSSIAMO USARE IL TASTO MAIN MENU DELLA PRACTICE MODE PERCHé FA PARTE DI DUE DIVERSI GRUPPI NELL'html E PER SEMPLICITà SI MODIFICA NOME E FUNZIONAMENTO DEL TASTO NEXTROUND, UN TASTO CHE GIà C'è, IO NON MODIFICHEREI QUESTO FUNZIONAMENTO
+        window.location.href = "../../gameTitleScreen.html";
+        console.log("No more rounds, ignoring nextRoundButton click.");
     }
 });
+
 
 // Game Buttons
 playSolutionButton.addEventListener("click", () => {
@@ -362,21 +359,27 @@ function resetButtons() {
 }
 
 function handleCorrectGuess() {
-    clearInterval(timerInterval); //-------------------------------------------------------------------------------------------------
-    handleOverlayDisplay("goodGuess"); //fare il controllo di quanti round si è cosi si smista tra goodGuess e GameOver -> NO, VEDI SPIEGAZIONE IN NEXTROUNDBUTTON
+
     if (assistantPoint) currentScore *= (1 - percAssistant / 100);
     if (hintsPoint[2]) currentScore -= pointsHint[2];
     if (hintsPoint[1]) currentScore -= pointsHint[1];
     if (hintsPoint[0]) currentScore -= pointsHint[0];
-    if (currentScore >= 0) totalScore += Math.floor(currentScore);
-    else totalScore += 0;
+    currentScore = Math.max(0, Math.floor(currentScore));
+    totalScore += currentScore;
+
     if (isMultiplayer) updateScoreInDatabase();
     preloadedEffects[1].play();
+
+    if (activeRound < maxRounds) {
+        handleOverlayDisplay("goodGuess");
+    } else {
+        handleOverlayDisplay("gameOver");
+    }
 }
+
 
 // Timer
 function startTimer() {
-    clearInterval(timerInterval);
     timeLeft = 120;
     hintTimer = 0;
     timerInterval = setInterval(updateTimer, 1000);
@@ -386,17 +389,25 @@ function updateTimer() {
     timeLeft--;
     hintTimer++;
     updateTimerDisplay();
+
     if (timeLeft % deductionInterval === 0 && timeLeft > 0) {
         currentScore = Math.max(0, currentScore - pointsTime);
     }
     hintsToShow();
     assistantToShow();
+
     if (timeLeft <= 0) {
-        clearInterval(timerInterval); //-------------------------------------------------------------------------------------------------
-        handleOverlayDisplay("timeOver");
-        preloadedEffects[2].play();
+        clearInterval(timerInterval);
+        if (activeRound < maxRounds) {
+            handleOverlayDisplay("timeOver");
+            preloadedEffects[2].play();
+        } else {
+            handleOverlayDisplay("gameOver");
+            preloadedEffects[4].play();
+        }
     }
 }
+
 
 // Games
 function generateNewChord() {
@@ -621,8 +632,8 @@ function handleOverlayDisplay(overlayType) {
         overlayScoreDisplay.style.display = "flex";
         overlayTitle.innerHTML = "GAME OVER";
         overlayScoreDisplay.innerHTML = "TOTAL SCORE: " + totalScore;
-        nextRoundButton.innerHTML = "MAIN MENU"; //usare direttamente il button mainmenu della practice -> NON SI PUò VEDI SPIEGAZIONE NEXTROUNDBUTTON
-        nextRoundButton.style.display = "block"; 
+        nextRoundButton.style.display = "block";
+        nextRoundButton.textContent = "MAIN MENU"
         if (isMultiplayer) {
             overlayScoreDisplay.style.display = "none";
             rankingTable.style.display = "flex";

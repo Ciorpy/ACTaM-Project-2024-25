@@ -166,12 +166,12 @@
     color: orange;
 }
 
-.overlay{
+.overlay {
     border-radius: 0.35vw;
     margin-bottom: 7vh;
 }
 
-.button:hover{
+.button:hover {
     transform: scale(90%);
     background: transparent;
 }
@@ -187,7 +187,7 @@
 }
 
 .overlayBG, .overlaySolution {
-    display: flex;
+    display: none;
     top: 0;
     left: 0;
     position: fixed;
@@ -195,40 +195,45 @@
     width: 100%;
     height: 100%;
     background: transparent;
-    background-color: rgba(255, 255, 255, 0.8);
     flex-direction: column;
+}
+
+.overlayBG {
+    background-color: rgba(255,255,255,0.8);
 }
 
 .overlaySolution {
-    display: none;
     background-color: rgba(255,255,255,0.5);
 }
 
-.overlayTitle, .overlayTitleSolution{
+.overlayTitle, .overlayTitleSolution {
     background: transparent;
-    margin: 10vh 10vw auto;
     display: flex;
     flex-direction: column;
     text-align: center;
-    font-size: 10vh;
     background-color: rgba(0,0,0,0);
 }
 
-.overlayRanking{
+.overlayTitle {
+    margin: 10vh 10vw auto;
+    font-size: 10vh;
+}
+
+.overlayTitleSolution {
+    margin: 5vh 5vw auto;
+    font-size: 11vh;
+}
+
+.overlayRanking {
     background: transparent;
     margin: 0vh 0vw auto;
     flex-direction: column;
     text-align: center;
     font-size: 5vh;
     background-color: rgba(0,0,0,0);
-    display: flex;
+    display: none;
     gap: 2vh;
     font-weight: 500;
-}
-
-.overlayTitleSolution {
-    margin: 5vh 5vw auto;
-    font-size: 11vh;
 }
 
 .no-hover:hover {

@@ -261,7 +261,7 @@ export class GameView {
 
   // =============== MOSTRARE/NASCONDERE OVERLAY ===============
   handleOverlayDisplay(overlayType, model) {
-    this.overlayPanel.style.display        = "flex";
+    this.overlayPanel.style.display        = "none";
     this.overlayScoreDisplay.style.display = "none";
     this.startGameButton.style.display     = "none";
     this.showSolutionButton.style.display  = "none";
@@ -331,8 +331,8 @@ export class GameView {
 
         this.overlayTitle.innerHTML          = "GAME OVER";
         this.overlayScoreDisplay.innerHTML   = "TOTAL SCORE: " + model.totalScore;
-        this.nextRoundButton.style.display   = "block";
         this.nextRoundButton.textContent     = "MAIN MENU";
+        this.nextRoundButton.style.display   = "block";
 
         if (model.isMultiplayer && this.rankingTable) {
           this.overlayScoreDisplay.style.display = "none";
@@ -395,12 +395,20 @@ export class GameView {
   }
 
   updateModeDisplay(model) {
-    this.gameModeDisplay.innerHTML = 
-      (model.selectedGameMode === "chords_GM") ? "CHORDS" : "HARMONY";
+    const gameModeLegend = {
+      chords_GM: "CHORDS",
+      harmony_GM: "HARMONY",
+    };
+    this.gameModeDisplay.innerHTML = gameModeLegend[model.selectedGameMode];
   }
 
   updateLevelDisplay(model) {
-    this.difficultyDisplay.innerHTML = "DIFFICULTY " + model.selectedDifficulty;
+    const difficultyLegend = {
+      easyDiff: "EASY",
+      mediumDiff: "MEDIUM",
+      hardDiff: "HARD"
+    };
+    this.difficultyDisplay.innerHTML = "DIFFICULTY " + difficultyLegend[model.selectedDifficulty];
   }
 
   updateRoundDisplay(model) {

@@ -247,7 +247,6 @@ nextRoundButton.addEventListener("click", () => {
         startRound();
     } else {
         window.location.href = "../../gameTitleScreen.html";
-        console.log("No more rounds, ignoring nextRoundButton click.");
     }
 });
 
@@ -380,7 +379,7 @@ function handleCorrectGuess() {
 
 // Timer
 function startTimer() {
-    timeLeft = 120;
+    timeLeft = 3;
     hintTimer = 0;
     timerInterval = setInterval(updateTimer, 1000);
 }

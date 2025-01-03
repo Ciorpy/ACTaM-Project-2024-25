@@ -431,6 +431,7 @@ export class GameController {
   }
 
   handleCorrectGuess() {
+    clearInterval(this.timerInterval);
     this.model.applyPenalties();
     this.model.incrementTotalScoreAfterPenalties();
 

@@ -34,7 +34,14 @@ export class PianoModel {
 
 export class GameModel {
     constructor() {
+
+
+  
+
       // Impostazioni e costanti di default
+      this.firstNote  = 48;
+      this.keysNumber = 25;
+      this.lastNote   = this.firstNote + this.keysNumber;
       this.defaultRounds         = 3;
       this.defaultEffectsVolume  = 0.5;
       this.deductionInterval     = 30;

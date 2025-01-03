@@ -147,7 +147,7 @@ export class GameController {
     this.view  = new GameView();
     const checkDisabledFn = () => this.model.isInputDisabled;
     // Pianoforte (parametri come in kb.js: containerId, numberOfKeys, startMidiNote)
-    this.pianoController = new PianoController("piano", 25, 48, checkDisabledFn);
+    this.pianoController = new PianoController("piano", this.model.keysNumber, this.model.firstNote, checkDisabledFn);
 
     this.preloadedEffects = [];
     this.timerInterval    = null;
@@ -490,7 +490,7 @@ export class GameController {
   // ========== CHORD =============
   // ===============================
   generateNewChord() {
-    const chordData = generateRandomChord(48, 48+25, this.model.selectedDifficulty);
+    const chordData = generateRandomChord(this.model.firstNote, this.model.lastNote, this.model.selectedDifficulty);
     this.model.generatedChordData = chordData;
     this.pianoController.playChord(chordData.midiNotes);
   }
@@ -529,7 +529,7 @@ export class GameController {
   // ========== HARMONY ============
   // ===============================
   generateNewCadence() {
-    const cData = generateRandomCadence(48, 48+25, this.model.selectedDifficulty);
+    const cData = generateRandomCadence(this.model.firstNote, this.model.lastNote, this.model.selectedDifficulty);
     this.model.generatedCadenceData = cData;
     this.playCadence(cData);
   }
@@ -680,7 +680,7 @@ export class GameController {
       });
     }
     // Resetta i tasti non più premuti
-    for (let midi = 48; midi <= 48+25; midi++) {
+    for (let midi = this.model.firstNote; midi <= this.model.lastNote; midi++) {
       if (!currentColorNotes.has(midi)) {
         this.pianoController.view.resetKeyColor(midi);
       }
@@ -693,7 +693,7 @@ export class GameController {
   async generateChordsForRounds() {
     this.model.generatedChordsData = [];
     for (let i = 0; i < this.model.maxRounds; i++) {
-      const chordData = generateRandomChord(48, 48+25, this.model.selectedDifficulty);
+      const chordData = generateRandomChord(this.model.firstNote, this.model.lastNote, this.model.selectedDifficulty);
       this.model.generatedChordsData.push(chordData);
     }
     await set(ref(getDatabase(app), `lobbies/${this.model.lobbyName}/gameStructure`),
@@ -703,7 +703,7 @@ export class GameController {
   async generateCadencesForRounds() {
     this.model.generatedCadencesData = [];
     for (let i = 0; i < this.model.maxRounds; i++) {
-      const cadData = generateRandomCadence(48, 48+25, this.model.selectedDifficulty);
+      const cadData = generateRandomCadence(this.model.firstNote, this.model.lastNote, this.model.selectedDifficulty);
       this.model.generatedCadencesData.push(cadData);
     }
     await set(ref(getDatabase(app), `lobbies/${this.model.lobbyName}/gameStructure`),

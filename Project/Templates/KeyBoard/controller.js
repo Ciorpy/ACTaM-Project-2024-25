@@ -438,14 +438,12 @@ export class GameController {
       this.updateScoreInDatabase();
     }
 
-    if (this.preloadedEffects[1]) {
-      this.preloadedEffects[1].play();
-    }
-
     if (this.model.activeRound < this.model.maxRounds) {
       this.view.handleOverlayDisplay("goodGuess", this.model);
+      if (this.preloadedEffects[1]) this.preloadedEffects[1].play();
     } else {
       this.view.handleOverlayDisplay("gameOver", this.model);
+      if (this.preloadedEffects[4]) this.preloadedEffects[4].play();
     }
   }
 

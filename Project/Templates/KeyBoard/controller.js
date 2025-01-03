@@ -454,8 +454,7 @@ export class GameController {
   startTimer() {
     this.model.timeLeft  = 120;
     this.model.hintTimer = 0;
-    clearInterval(this.timerInterval);
-
+    
     this.timerInterval = setInterval(() => this.updateTimer(), 1000);
   }
 

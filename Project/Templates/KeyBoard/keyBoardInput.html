@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KeyBoard</title>
-    <meta author="filippoLonghi" />
-    <link rel="stylesheet" href="kb.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta author="filippoLonghi"/>
+    <link rel="stylesheet" href="kb.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link
       href="https://fonts.googleapis.com/css2?family=Audiowide&family=Rubik+Puddles&display=swap"
       rel="stylesheet"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link
       href="https://fonts.googleapis.com/css2?family=Slackey&display=swap"
       rel="stylesheet"
@@ -22,14 +22,18 @@
   </head>
   <body>
 
+    <!-- TITLE -->
     <div class="title" id="gameMode">KeyBoard</div>
 
+    <!-- GAME SCREEN -->
     <div class="container">
 
+      <!-- PIANO -->
       <div class="pianoContainer">
         <div class="piano" id="piano"></div>
       </div>
 
+      <!-- GAME INFO -->
       <div class="info">
 
         <div class="subTitle">
@@ -37,7 +41,7 @@
           <div class="subTitle" id="roundDisplay"></div>
         </div>
 
-        <div class="text" id="currentPlacement" style="display: none">PLACEMENT: 1°</div> <!--multiplayer-->
+        <div class="text" id="currentPlacement" style="display: none">PLACEMENT: 1°</div>
 
         <div class="text" id="timerDisplay"></div>
         <div class="text" id="scoreDisplay"></div>
@@ -47,6 +51,7 @@
 
     </div> 
     
+    <!-- BUTTONS -->
     <div class="userMenu">
       <div class="button" id="playSolutionButton">PLAY SOLUTION</div>
       <div class="button" id="hintButton">HINT BLOCKED</div>
@@ -54,30 +59,33 @@
       <div class="button" id="mainMenu" style="display: none">BACK TO MENU</div>
     </div>
 
-
-
+    <!-- STANDARD OVERLAY -->
     <div class="overlayBG" id="overlayDiv">
       <div class="overlayTitle" id="overlayTitle"></div>
       <div class="overlayTitle" id="overlaySubtitle"></div>
       <div class="overlayTitle" id="overlayScoreDisplay"></div>
       <div class="overlayRanking" id="overlayMultiplayerRanking"></div>
+
+      <!-- STANDARD OVERLAY BUTTONS -->
       <div class="overlayMenu">
-        <div class="button overlay" id="startGame" style="background: url('/Project/Images/ep_naturalblack.webp') repeat;">START</div>
-        <div class="button overlay" id="showSolution" style="display: none; background: url('/Project/Images/ep_naturalblack.webp') repeat;">SHOW SOLUTION</div>
-        <div class="button overlay" id="nextRound" style="display: none; background: url('/Project/Images/ep_naturalblack.webp') repeat;">NEXT ROUND</div>
+        <div class="button overlay" id="startGame">START</div>
+        <div class="button overlay" id="showSolution">SHOW SOLUTION</div>
+        <div class="button overlay" id="nextRound">NEXT ROUND</div>
       </div>
     </div>
 
-
+    <!-- SOLUTION OVERLAY -->
     <div class="overlaySolution" id="overlaySolutionDiv">
       <div class="overlayTitleSolution" id="overlayTitleSolution"></div>
       <div class="overlayTitleSolution" id="overlaySubtitleSolution"></div>
+
+      <!-- SOLUTION OVERLAY BUTTONS -->
       <div class="overlayMenu">
-        <div class="button overlay" id="hideSolution" style="background: url('/Project/Images/ep_naturalblack.webp') repeat;">HIDE SOLUTION</div>
+        <div class="button overlay" id="hideSolution">HIDE SOLUTION</div>
       </div>
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-    <script type="module" src="main.js"></script>
+    <script type="module" src="kb.js"></script>
   </body>
 </html>

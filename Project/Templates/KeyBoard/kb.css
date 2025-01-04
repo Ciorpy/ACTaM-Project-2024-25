@@ -169,11 +169,16 @@
 .overlay {
     border-radius: 0.35vw;
     margin-bottom: 7vh;
+    background: url('/Project/Images/ep_naturalblack.webp') repeat;
 }
 
 .button:hover {
     transform: scale(90%);
     background: transparent;
+}
+
+.overlay:hover{
+    background: url('/Project/Images/ep_naturalblack.webp') repeat;
 }
 
 .key.correct {

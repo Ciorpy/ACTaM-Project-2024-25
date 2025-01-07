@@ -78,7 +78,12 @@ export class PianoController {
     return this.model.getPressedNotes();
   }
 
-  playNote(note) {
+  playNote(note, forPlayChord = false) {
+    if (forPlayChord) {
+      pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "2n");
+      return;
+    }
+
     if (this.isInputDisabledFn()) return;
 
     if (this.allKeysReleased) {
@@ -90,7 +95,7 @@ export class PianoController {
 
     if (!pressedNotes.includes(note)) {
       this.view.setActiveKey(note, true);
-      pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "4n");
+      pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "2n");
       pressedNotes.push(note);
       this.model.setPressedNotes(pressedNotes);
     }
@@ -109,12 +114,6 @@ export class PianoController {
     }
 
     if (pressedNotes.length === 0) this.allKeysReleased = true;
-  }
-
-  playChord(chord) { // DA SPOSTARE IN GAME CONTROLLER
-    chord.forEach(note => {
-      pianoSampler.triggerAttackRelease(Tone.Frequency(note, "midi"), "2n");
-    });
   }
 
 }
@@ -300,7 +299,7 @@ export class GameController {
 
     if (this.model.selectedGameMode === "chords_GM") {
       const chordData = this.model.generatedChordData;
-      this.pianoController.playChord(chordData.midiNotes);
+      this.playChord(chordData.midiNotes);
       chordData.midiNotes.forEach(note => {
         this.pianoController.view.setKeyColor(note, "green");
       });
@@ -343,7 +342,7 @@ export class GameController {
   onPlaySolution() {
     if (this.model.selectedGameMode === "chords_GM") {
       const chordData = this.model.generatedChordData;
-      this.pianoController.playChord(chordData.midiNotes);
+      this.playChord(chordData.midiNotes);
     } 
     else if (this.model.selectedGameMode === "harmony_GM") {
       const cadenceData = this.model.generatedCadenceData;
@@ -450,7 +449,7 @@ export class GameController {
 
   // Timer
   startTimer() {
-    this.model.timeLeft  = 8;
+    this.model.timeLeft  = 120;
     this.model.hintTimer = 0;
     
     this.timerInterval = setInterval(() => this.updateTimer(), 1000);
@@ -481,15 +480,19 @@ export class GameController {
   generateNewChord() {
     const chordData = generateRandomChord(this.model.firstNote, this.model.lastNote, this.model.selectedDifficulty);
     this.model.generatedChordData = chordData;
-    this.pianoController.playChord(chordData.midiNotes);
+    this.playChord(chordData.midiNotes);
   }
-
-  // INSERIRE FUNZIONE playChord()
 
   generateNewCadence() {
     const cadenceData = generateRandomCadence(this.model.firstNote, this.model.lastNote, this.model.selectedDifficulty);
     this.model.generatedCadenceData = cadenceData;
     this.playCadence(cadenceData);
+  }
+
+  playChord(chord) {
+    chord.forEach(note => {
+      this.pianoController.playNote(note, true);
+    });
   }
 
   playCadence(cadenceData, missingChord = null) {
@@ -498,14 +501,14 @@ export class GameController {
     cadenceData.cadenceDetails.forEach(chord => {
       if (chord) {
         setTimeout(() => {
-          this.pianoController.playChord(chord.midiNotes);
+          this.playChord(chord.midiNotes);
         }, this.model.playingCadenceTimer);
         this.model.playingCadenceTimer += 1000;
       }
     });
 
     if (missingChord) setTimeout(() => {
-      this.pianoController.playChord(missingChord);
+      this.playChord(missingChord);
     }, this.model.playingCadenceTimer);
   }
 
@@ -682,7 +685,7 @@ export class GameController {
 
       const chordData = this.model.generatedChordsData[this.model.activeRound - 1];
       this.model.generatedChordData = chordData;
-      this.pianoController.playChord(chordData.midiNotes);
+      this.playChord(chordData.midiNotes);
     } 
     else if (this.model.selectedGameMode === "harmony_GM") {
       if (!this.model.generatedCadencesData.length) {

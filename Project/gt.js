@@ -5,8 +5,6 @@ funnyMSGS = [
   "Frare Jacques Simulator",
   'it goes: "WOWOWOWOWOWO"',
   "Weird Fishes/Arpeggi",
-  "Biliardino??",
-  "MADONNA RAGAZZI LEZZO",
 ];
 
 randomN = Math.floor(Math.random() * 7);

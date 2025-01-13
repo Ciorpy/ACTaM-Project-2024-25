@@ -52,14 +52,8 @@ The game offers features such as:
     - **Grooves and Fills Game Modes**: Develop skills in recognizing and playing drum grooves and fills using a virtual drum machine.  
 
     - **Progressive Difficulty Levels**:
-      - **Grooves Mode**: 
-                      - Easy: Basic beats with straightforward patterns.
-                      - Medium: Intermediate grooves incorporating syncopated rhythms.
-                      - Hard: Advanced grooves with intricate timing and sticking.
-      - **Fills Mode**:
-                      - Easy: Simple fills that smoothly transition between grooves.
-                      - Medium: More elaborate fills, introducing syncopation and poly-rhythms.
-                      - Hard: Fast-paced, complex fills requiring precision.
+      - **Grooves Mode**: Basic beats with straightforward patterns (easy); intermediate grooves incorporating syncopated rhythms (medium); advanced grooves with intricate timing and sticking (hard).
+      - **Fills Mode**: Simple fills that smoothly transition between grooves (easy); more elaborate fills, introducing syncopation and poly-rhythms (medium); fast-paced, complex fills requiring precision (hard).
 
     - **Interactive Drum Machine Feedback**:
       - **Drum Legend**: Explanatory figure where the different parts of the drum set are associated to their short names.

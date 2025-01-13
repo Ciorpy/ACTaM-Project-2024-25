@@ -45,10 +45,45 @@ The game offers features such as:
 ### **DrumMachine**
 - **Files**:
   - `dm.js`, `dm.css`, `drumMachineInput.html`
-  - Grooves and Fills directories (e.g., `easyFills.js`, `mediumGrooves.js`)
+  - Grooves and Fills directories
   - `presetsLoad_debug.js`
 - **Features**:
-  - Practice drum grooves and fills at various difficulty levels.
+
+    - **Grooves and Fills Game Modes**: Develop skills in recognizing and playing drum grooves and fills using a virtual drum machine.  
+
+    - **Progressive Difficulty Levels**:
+      - **Grooves Mode**: 
+                      - Easy: Basic beats with straightforward patterns.
+                      - Medium: Intermediate grooves incorporating syncopated rhythms.
+                      - Hard: Advanced grooves with intricate timing and sticking.
+      - **Fills Mode**:
+                      - Easy: Simple fills that smoothly transition between grooves.
+                      - Medium: More elaborate fills, introducing syncopation and poly-rhythms.
+                      - Hard: Fast-paced, complex fills requiring precision.
+
+    - **Interactive Drum Machine Feedback**:
+      - **Drum Legend**: Explanatory figure where the different parts of the drum set are associated to their short names.
+      - **Audio Feedback**: Each pressed icon referred to a row of the drum machine produces its corresponding sampled sound.
+      - **Visual Feedback**: Each button of the drum machine get colorized when selected.
+
+
+    - **Game Status Display**:  
+      The interface provides continuous updates on critical game metrics, such as: current round number, total score, current difficulty level and remaining time to complete the current round.
+
+    - **BPM Selector**:  
+      Slide from which the bpm can be changed. 
+
+    - **Checking System**:  
+      When the solution is being reproduced the right selected buttons are highlighted as correct and are not interactable anymore.
+
+    - **Reset Button**:  
+      Reset the drum machine display.
+      
+    - **Scoring System**:  
+      Each round starts with a base score of 100 points. Points are deducted based on: the time elapsed during the round, the number of hints used to reach the solution, whether the "Assistant Mode" is enabled.
+
+    - **Practice Mode**:  
+      In this mode players can play freely with the drum machine and try to create new drum grooves or fills.
 
 ### **KeyBoard**
 

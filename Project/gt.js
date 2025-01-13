@@ -7,7 +7,7 @@ funnyMSGS = [
   "Weird Fishes/Arpeggi",
 ];
 
-randomN = Math.floor(Math.random() * 7);
+randomN = Math.floor(Math.random() * 4);
 
 document.getElementById("funnyMSG").innerHTML = funnyMSGS[randomN];
 

@@ -720,7 +720,6 @@ export class GameController {
       }
 
       if (this.view.rankingTable) this.view.rankingTable.innerHTML = "";
-      if (this.view.placementDisplay) this.view.placementDisplay. innerHTML = `PLACEMENT: ${playerIndex+1}°`;
 
       let playersArray = Object.entries(playersData).map(([id, data]) => ({
         id,
@@ -728,18 +727,19 @@ export class GameController {
         playerName: data.playerName || "Noname"
       }));
       playersArray.sort((a, b) => b.score - a.score);
-      const playerIndex = playersArray.findIndex(p => p.id === this.model.userID);
       playersArray.forEach((item, index) => {
         const newPlayerRanking = document.createElement("div");
         newPlayerRanking.classList.add("overlayRanking");
         newPlayerRanking.innerHTML = `${index+1}°: ${item.playerName} - ${item.score} points`;
         if (this.view.rankingTable) this.view.rankingTable.append(newPlayerRanking);
       });
+      
+      const playerIndex = playersArray.findIndex(p => p.id === this.model.userID);
+      if (this.view.placementDisplay) this.view.placementDisplay. innerHTML = `PLACEMENT: ${playerIndex+1}°`;
     } catch (error) {
       console.error("Error updating ranking:", error);
 
       if (this.view.rankingTable) this.view.rankingTable.innerHTML = "Error loading ranking.";
-
       if (this.view.placementDisplay) this.view.placementDisplay.innerHTML = "PLACEMENT: N/A";
     }
   }

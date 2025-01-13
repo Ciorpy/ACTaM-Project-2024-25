@@ -59,19 +59,18 @@ The game offers features such as:
 
 - **Features**:
 
-    - **Chord and Cadence Game Modes**: 
-     Develop skills in recognizing and playing musical chords and harmonic cadences using a virtual piano interface.  
+    - **Chord and Harmony Game Modes**:
+      Develop skills in recognizing and playing musical chords and harmonic cadences using a virtual piano interface.  
 
     - **Practice Mode**:  
-     In this mode, players can play any chord on the keyboard, and the system will recognize and display the name and type of the chord being played, providing immediate feedback and enhancing learning.    
+      In this mode, players can play any chord on the keyboard, and the system will recognize and display the name and type of the chord being played, providing immediate feedback and enhancing learning.    
 
     - **Progressive Difficulty Levels**:
-      - **Chords Mode**: Major and minor chords (easy), augmented and diminished (medium), seventh chords (hard).  
-      - **Harmony Mode**: Cadences progress through three difficulty levels, increasing in harmonic complexity.
+      - **Chords**: Major and minor chords (easy), augmented and diminished (medium), seventh chords (hard).  
+      - **Harmony**: Cadences progress through three difficulty levels, increasing in harmonic complexity.
 
     - **Interactive Keyboard Feedback**:
-      - **Audio Feedback**: Each pressed key produces its corresponding sampled sound from a Yamaha C3 piano.
-      - **Visual Feedback**: Keys appear to depress when played, complete with shadows and animations.
+      Each pressed key produces its corresponding sampled sound from a Yamaha C3 piano, while visually appearing to depress with realistic shadows and animations. Players can play chords using the computer keyboard or individual notes by clicking on the keys with the mouse.  
 
     - **Game Status Display**:  
       The interface provides continuous updates on critical game metrics, such as: current round number, total score, current difficulty level and remaining time to complete the current round.
@@ -87,7 +86,7 @@ The game offers features such as:
     - **Scoring System**:  
       Each round starts with a base score of 100 points. Points are deducted based on: the time elapsed during the round, the number of hints used to reach the solution, whether the "Assistant Mode" is enabled.
 
-    - **Show Solution**: 
+    - **Show Solution**:
       At the end of each round, players have the option to hear the chord that was guessed (or missed), see which keys needed to be pressed to solve it, and view the name of the chord.
 
 

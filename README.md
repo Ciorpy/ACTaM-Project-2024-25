@@ -37,6 +37,7 @@ The game offers features such as:
    - `gt.js`: Logic for handling title screen interactions.
    - `login.js`: Firebase login integration.
 
+
 ---
 
 ## Modules and Files
@@ -58,7 +59,11 @@ The game offers features such as:
 
 - **Features**:
 
-    - **Chord and Cadence Game Modes**: Develop skills in recognizing and playing musical chords and harmonic cadences using a virtual piano interface.  
+    - **Chord and Cadence Game Modes**: 
+     Develop skills in recognizing and playing musical chords and harmonic cadences using a virtual piano interface.  
+
+    - **Practice Mode**:  
+     In this mode, players can play any chord on the keyboard, and the system will recognize and display the name and type of the chord being played, providing immediate feedback and enhancing learning.    
 
     - **Progressive Difficulty Levels**:
       - **Chords Mode**: Major and minor chords (easy), augmented and diminished (medium), seventh chords (hard).  
@@ -82,38 +87,33 @@ The game offers features such as:
     - **Scoring System**:  
       Each round starts with a base score of 100 points. Points are deducted based on: the time elapsed during the round, the number of hints used to reach the solution, whether the "Assistant Mode" is enabled.
 
+    - **Show Solution**: 
+      At the end of each round, players have the option to hear the chord that was guessed (or missed), see which keys needed to be pressed to solve it, and view the name of the chord.
+
+
 ### **Multiplayer**
+
 - **Files**:
   - `lobby.js`, `lobby.html`, `lobby.css`
-- **Features**:
-  - Create and join lobbies.
-  - Real-time multiplayer gameplay with score tracking.
 
----
+- **Features**:  
 
-## Key Features
+  - **Create and Join Lobbies**: Players can set a nickname for multiplayer mode. To create or join a lobby, users need to enter the lobby name and a password, ensuring a secure and personalized experience.  
 
-1. **Interactive Piano Keyboard**
-   - Visual and audio feedback.
-   - Practice chords and cadences.
+  - **Real-Time Multiplayer Gameplay with Score Tracking**: During the game, players can see their current position in real-time. At the end of each round, a leaderboard is displayed, showing the overall rankings and scores of all participants.  
 
-2. **Drum Machine**
-   - Learn and play drum grooves and fills.
-   - Supports multiple difficulty levels.
+### **Customization (Settings)**
 
-3. **Multiplayer Mode**
-   - Host or join lobbies to compete in real-time.
-   - Score tracking and leaderboard.
-
-4. **Customization**
-   - Adjust difficulty levels.
-   - Configure rounds and practice modes.
+- **Configure Number of Rounds**: Players can select the number of rounds to play, ranging from 1 to 5.  
+- **Music Volume**: Adjust the volume of the background music, which plays in the main menu but is not active during mini-games.  
+- **Effect Volume**: Control the volume of sound effects triggered by in-game events, such as correct answers, time over, or game over.  
+- **In-Game Volume**: Customize the volume of sounds produced by the keyboard and drum machine.  
 
 ---
 
 ## Technologies Used
 - **Frontend**: HTML, CSS, JavaScript
-- **Audio**: Web Audio API, Tone.js
+- **Audio**: Tone.js
 - **Backend**: Firebase (Authentication, Realtime Database)
 
 ---
@@ -129,5 +129,5 @@ This project was developed as part of the Advanced Coding Tools and Methodologie
 ---
 
 ## Future Enhancements
-- Add new instruments and modules.
+- Add new instruments and game mode.
 - Expand multiplayer functionalities.

@@ -164,7 +164,7 @@ export function recognizeChord(inputNotes) {
 export function generateRandomChord(startNote, lastNote, difficulty = "easyDiff", root = null, type = null) {
   const chordTypesByDifficulty = {
     easyDiff: ["Maj", "min"],
-    mediumDiff: ["6", "m6", "dim", "aug"],
+    mediumDiff: ["dim", "aug"],
     hardDiff: ["Maj7", "mMaj7", "7", "m7", "m7b5", "dim7", "Maj7#5", "7#5", "m7#5"],
   };
   const numKeys = lastNote - startNote;

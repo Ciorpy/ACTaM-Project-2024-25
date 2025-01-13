@@ -15,23 +15,20 @@ The game offers features such as:
 
 ### Main Directories:
 
-1. **Templates**
-   - Contains subdirectories for game modules:
-     - **DrumMachine**: Drum practice and games.
-     - **KeyBoard**: Chord and harmony training.
-     - **Multiplayer**: Multiplayer game and lobby setup.
+1. **Templates**: Contains subdirectories for game modules:
+   - **DrumMachine**: Drum practice and games.
+   - **KeyBoard**: Chord and harmony training.
+   - **Multiplayer**: Multiplayer game and lobby setup.
 
-2. **Sounds**
-   - Includes audio files for:
-     - **Drum Samples**
-     - **Piano Samples**
-     - **Background Music**
-     - **Effects**
+2. **Sounds**: Includes audio files for:
+   - **Drum Samples**
+   - **Piano Samples**
+   - **Background Music**
+   - **Effects**
 
-3. **Images**
-   - Contains images and icons used in the UI.
+3. **Images**: Contains images and icons used in the UI.
 
-4. **Root Files**
+4. **Root Files**:
    - `gameTitleScreen.html`: Entry point for the game.
    - `gt.css`: Styles for the title screen.
    - `gt.js`: Logic for handling title screen interactions.

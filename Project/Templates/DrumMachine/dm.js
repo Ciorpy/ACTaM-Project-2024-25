@@ -767,6 +767,7 @@ let goodGuess = function () {
   clearInterval(timerInterval);
   handleOverlayDisplay("goodGuess");
   timer = maxTimer;
+  roundScore = maxScore
   preloadedEffects[1].play();
 };
 

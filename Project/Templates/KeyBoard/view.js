@@ -288,7 +288,10 @@ export class GameView {
         this.showSolutionButton.style.display = "block";
         this.nextRoundButton.style.display    = "block";
 
-        if (model.isMultiplayer && this.rankingTable) this.rankingTable.style.display = "flex";
+        if (model.isMultiplayer) {
+          this.rankingTable.style.display = "flex";
+          this.updateRankingDisplay(model);
+        }
         else this.rankingTable.style.display = "none";
         break;
       case "goodGuess":
@@ -298,8 +301,9 @@ export class GameView {
 
         this.overlayPanel.style.display         = "flex";
         this.overlayTitle.style.display         = "flex";
-        this.overlaySubtitle.style.display      = "flex";
         this.overlayScoreDisplay.style.display  = "none";
+
+        if (!model.isMultiplayer) this.overlaySubtitle.style.display = "flex";
 
         this.overlayTitle.innerHTML     = "GOOD GUESS";
         this.overlaySubtitle.innerHTML  = "YOU ARE A BOSS!";
@@ -307,7 +311,10 @@ export class GameView {
         this.showSolutionButton.style.display = "block";
         this.nextRoundButton.style.display    = "block";
 
-        if (model.isMultiplayer && this.rankingTable) this.rankingTable.style.display = "flex";
+        if (model.isMultiplayer) {
+          this.rankingTable.style.display = "flex";
+          this.updateRankingDisplay(model);
+        }
         else this.rankingTable.style.display = "none";
         break;
       case "gameOver":
@@ -317,14 +324,17 @@ export class GameView {
         this.overlayTitle.style.display         = "flex";
         this.overlaySubtitle.style.display      = "none";
 
-        if (!model.isMultiplayer) this.overlayScoreDisplay.style.display  = "flex";
-        else if (this.rankingTable) this.rankingTable.style.display = "flex";
-        else this.overlayScoreDisplay.style.display  = "none";
-
         this.overlayTitle.innerHTML          = "GAME OVER";
 
-        if (!model.isMultiplayer) this.overlayScoreDisplay.innerHTML   = "TOTAL SCORE: " + model.totalScore;
-        
+        if (!model.isMultiplayer) {
+          this.overlayScoreDisplay.innerHTML   = "TOTAL SCORE: " + model.totalScore;
+          this.overlayScoreDisplay.style.display  = "flex";
+        }
+        else {
+          this.rankingTable.style.display = "flex";
+          this.updateRankingDisplay(model);
+        }
+
         this.mainMenuButton.style.display   = "block";
         break;
       case "wait":
@@ -412,17 +422,15 @@ export class GameView {
     model.isInputDisabled = false;
   }
 
-  showPlacement(value) {
-    if (this.placementDisplay) {
-      this.placementDisplay.innerHTML = "PLACEMENT: " + value;
-      this.placementDisplay.style.display = "block";
-    }
-  }
-  
-  hidePlacement() {
-    if (this.placementDisplay) this.placementDisplay.style.display = "none";
+  updatePlacement(model) {
+    this.placementDisplay.innerHTML = "PLACEMENT: " + model.placement;
   }
 
+  updateRankingDisplay(model) {
+    this.rankingTable.innerHTML = model.ranking.map((item, index) => 
+      `<div class="overlayRanking" style="display: flex">${index + 1}°: ${item.playerName} - ${item.score} points</div>`
+    ).join("");
+  }
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------

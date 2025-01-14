@@ -260,8 +260,8 @@ backButtonC.addEventListener("click", () => {
 
 // Audio files list
 const audioFiles = [
-  "/Project/Sounds/Music Background/Weird fishes sonicpi.mp3",
-  "/Project/Sounds/Music Background/Pjano tonejs.mp3",
+  "../Project/Sounds/Music Background/Weird fishes sonicpi.mp3",
+  "../Project/Sounds/Music Background/Pjano tonejs.mp3",
 ];
 
 // Get a random audio file and use it as source

@@ -119,6 +119,7 @@ export class GameModel {
   }
 
   // GETTER & SETTER
+
   getTotalScore()        { return this.totalScore; }
   setTotalScore(value)   { this.totalScore = value; }
   
@@ -147,9 +148,9 @@ export class GameModel {
 
   getPlacement()          { return this.placement; }
   setPlacement(value)     { this.placement = value; }
-  
-  // UTILITY
 
+  // UTILITIES
+  
   // Resets variables specific to each round.
   // Prepares the game state for the start of a new round.
    resetRoundVariables() {

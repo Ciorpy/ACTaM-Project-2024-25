@@ -90,6 +90,8 @@ export class GameModel {
     this.userID     = null;
     this.lobbyName  = null;
     this.isHost     = false;
+    this.ranking;
+    this.placement;
   }
 
   // Get & Set
@@ -115,6 +117,12 @@ export class GameModel {
   
   isInputDisabledFunc()  { return this.isInputDisabled; }
   setInputDisabled(flag) { this.isInputDisabled = flag; }
+
+  getRanking()          { return this.ranking; }
+  setRanking(value)     { this.ranking = value; }
+
+  getPlacement()          { return this.placement; }
+  setPlacement(value)     { this.placement = value; }
   
   // Utility
    resetRoundVariables() {

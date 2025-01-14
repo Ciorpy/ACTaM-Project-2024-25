@@ -199,6 +199,11 @@ export class GameController {
       this.view.updateRoundDisplay(this.model);
 
       if (this.preloadedEffects[0]) this.preloadedEffects[0].play();
+
+      if (this.model.isMultiplayer) {
+        this.view.updatePlacement(this.model);
+        this.view.placementDisplay.style.display = "flex";
+      }
     } 
     else {
       this.view.handleOverlayDisplay("hide", this.model);
@@ -210,12 +215,14 @@ export class GameController {
       this.view.hintButton.style.display          = "none";
       this.view.assistantModeButton.style.display = "none";
 
-      this.view.mainMenuButton.style.display    = "block";
-      this.view.mainMenuButton.style.textAlign  = "center";
+      this.view.backMenuButton.style.display    = "block";
+      this.view.backMenuButton.style.textAlign  = "center";
 
       this.view.roundDisplay.style.display = "none";
       this.view.scoreDisplay.style.display = "none";
       this.view.timerDisplay.style.display = "none";
+
+      this.view.placementDisplay.style.display = "none";
 
       this.view.hintDisplay.style.padding   = "0px";
       this.view.hintDisplay.style.fontSize  = "4vh";
@@ -288,7 +295,7 @@ export class GameController {
     else { 
       this.view.handleOverlayDisplay("hide", this.model);
       this.startRound();
-    }
+    }
   }
 
   onShowSolution() {
@@ -451,7 +458,7 @@ export class GameController {
   startTimer() {
     this.model.timeLeft  = 120;
     this.model.hintTimer = 0;
-    
+
     this.timerInterval = setInterval(() => this.updateTimer(), 1000);
   }
 
@@ -674,6 +681,7 @@ export class GameController {
 
       this.view.handleOverlayDisplay("hide", this.model);
 
+      this.clearInterval(this.timerInterval);
       this.startTimer();
     }
 
@@ -714,33 +722,32 @@ export class GameController {
       const playersData = snapshot.val();
       if (!playersData) {
         console.warn("No data found.");
-        if (this.view.rankingTable) this.view.rankingTable.innerHTML = "Nobody in lobby.";
-        if (this.view.placementDisplay) this.view.placementDisplay. innerHTML = "PLACEMENT: N/A";
+
+        this.model.setRanking(null);
+        this.model.setPlacement(null);
+
+        this.view.updatePlacement("N/A");
         return;
       }
-
-      if (this.view.rankingTable) this.view.rankingTable.innerHTML = "";
-
+      
       let playersArray = Object.entries(playersData).map(([id, data]) => ({
         id,
         score: data.score || 0,
         playerName: data.playerName || "Noname"
       }));
       playersArray.sort((a, b) => b.score - a.score);
-      playersArray.forEach((item, index) => {
-        const newPlayerRanking = document.createElement("div");
-        newPlayerRanking.classList.add("overlayRanking");
-        newPlayerRanking.innerHTML = `${index+1}°: ${item.playerName} - ${item.score} points`;
-        if (this.view.rankingTable) this.view.rankingTable.append(newPlayerRanking);
-      });
-      
+      this.model.setRanking(playersArray);
+
       const playerIndex = playersArray.findIndex(p => p.id === this.model.userID);
-      if (this.view.placementDisplay) this.view.placementDisplay. innerHTML = `PLACEMENT: ${playerIndex+1}°`;
+      this.model.setPlacement(playerIndex + 1);
+      this.view.updatePlacement(this.model);
     } catch (error) {
       console.error("Error updating ranking:", error);
 
-      if (this.view.rankingTable) this.view.rankingTable.innerHTML = "Error loading ranking.";
-      if (this.view.placementDisplay) this.view.placementDisplay.innerHTML = "PLACEMENT: N/A";
+      this.model.setRanking(null);
+      this.model.setPlacement(null);
+
+      this.view.updatePlacement("N/A");
     }
   }
 

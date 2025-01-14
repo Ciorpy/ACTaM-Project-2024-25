@@ -84,7 +84,6 @@ const chordCadences = {
     { name: "II-V-I Extended", degrees: [2, 5, 1], cadence: ["m7b5", "7", "Maj7"] },
     { name: "VI-II-V-I Altered", degrees: [6, 2, 5, 1], cadence: ["m7", "m7", "alt#9", "Maj7"] },
     { name: "VII-VI-V-I Extended", degrees: [7, 3, 6, 2, 5, 1], cadence: ["dim7", "min", "m7", "m7b5", "7", "Maj7"] },
-    //{ name: "Complex Jazz", degrees: [2, 4, 6, 5, 1], cadence: ["m7", "Maj7", "m7", "7", "Maj7"] },
     { name: "Advanced Circle", degrees: [7, 3, 6, 2, 5, 1], cadence: ["dim7", "m7", "m7", "m7", "7", "Maj7"] },
     { name: "II-V-I Minor Extended", degrees: [4, 2, 5, 1], cadence: ["min", "m7b5", "altb9", "mMaj7"] },
     { name: "Altered 5-Step", degrees: [5, 4, 6, 2, 1], cadence: ["7b9", "Maj7", "m7", "m7b5", "mMaj7"] },
@@ -94,17 +93,21 @@ const chordCadences = {
 
 // FUNCTIONS ---------------------------------------------------------------------------------------------------------------------------------------
 
-// Utility
+// UTILITIES
+
+// Utility function to compare two arrays for equality, ignoring order.
 function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false;
   return arr1.every((val, index) => val === arr2[index]);
 }
 
+// Converts a MIDI note number to its corresponding note name.
 function midiToNoteName(midi) {
   const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
   return noteNames[midi % notesInOctave];
 }
 
+// Calculates the note at a specific scale degree starting from the root note.
 function calculateDegree(rootNote, degree) {
   const scaleSteps = [2, 2, 1, 2, 2, 2, 1];
   let note = rootNote;
@@ -114,6 +117,7 @@ function calculateDegree(rootNote, degree) {
   return note % notesInOctave;
 }
 
+// Generates all inversions of a chord by rotating its notes and transposing.
 function generateInversions(chordNotes) {
   const inversions = [];
   const numNotes = chordNotes.length;
@@ -126,26 +130,28 @@ function generateInversions(chordNotes) {
   return inversions;
 }
 
-// Practice Mode
+// PRACTICE MODE
+
+// Recognizes a chord from a given set of MIDI note numbers.
 export function recognizeChord(inputNotes) {
-  const normalizedInput = inputNotes.map(note => note % notesInOctave);
-  const normalizedAndSortedInput = [...normalizedInput].sort((a, b) => a - b);
+  const normalizedInput = inputNotes.map(note => note % notesInOctave); // Normalize notes to a single octave.
+  const normalizedAndSortedInput = [...normalizedInput].sort((a, b) => a - b); // Sort notes for comparison.
   for (let rootMIDI = 0; rootMIDI < notesInOctave; rootMIDI++) {
-    const chords = generateChords(rootMIDI);
+    const chords = generateChords(rootMIDI); // Generate possible chords for the current root.
     for (let chordName in chords) {
       const chordNotes = chords[chordName];
-      const normalizedChord = chordNotes.map(note => note % notesInOctave);
-      const normalizedAndSortedChord = [...normalizedChord].sort((a, b) => a - b);
-      if (arraysEqual(normalizedAndSortedInput, normalizedAndSortedChord)) {
+      const normalizedChord = chordNotes.map(note => note % notesInOctave); // Normalize chord notes to one octave.
+      const normalizedAndSortedChord = [...normalizedChord].sort((a, b) => a - b); // Sort chord notes for comparison.
+      if (arraysEqual(normalizedAndSortedInput, normalizedAndSortedChord)) { // Compare input and generated chords.
         const rootIndex = normalizedInput.indexOf(rootMIDI % notesInOctave);
-        const inversionType = rootIndex === 0 ? "ROOT POSITION" : `${normalizedInput.length - rootIndex}° INVERSION`;
+        const inversionType = rootIndex === 0 ? "ROOT POSITION" : `${normalizedInput.length - rootIndex}° INVERSION`; // Determine inversion type.
         return {
           midiRoot: rootMIDI,
-          noteRoot: midiToNoteName(rootMIDI),
-          chordType: chordName,
-          inversion: inversionType,
-          midiNotes: inputNotes,
-          notes: inputNotes.map(midiToNoteName),
+          noteRoot: midiToNoteName(rootMIDI), // Root note name.
+          chordType: chordName, // Identified chord type.
+          inversion: inversionType, // Inversion type.
+          midiNotes: inputNotes, // Original MIDI notes.
+          notes: inputNotes.map(midiToNoteName), // Corresponding note names.
         };
       }
     }
@@ -157,10 +163,12 @@ export function recognizeChord(inputNotes) {
     inversion: null,
     midiNotes: [],
     notes: []
-  };
+  }; // Return "UNKNOWN" if no match is found.
 }
 
-// Chords Game
+// CHORDS
+
+// Generates a random chord based on the given parameters, including optional root note and type.
 export function generateRandomChord(startNote, lastNote, difficulty = "easyDiff", root = null, type = null) {
   const chordTypesByDifficulty = {
     easyDiff: ["Maj", "min"],
@@ -170,48 +178,50 @@ export function generateRandomChord(startNote, lastNote, difficulty = "easyDiff"
   const numKeys = lastNote - startNote;
   let updatedRoot, randomChordType, inversionType, selectedInversion;
   do {
-    let randomRoot = root ?? Math.floor(Math.random() * (numKeys));
+    let randomRoot = root ?? Math.floor(Math.random() * numKeys); // Choose a random root note if not specified.
     randomRoot += startNote;
-    let chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"];
-    randomChordType = type ?? chordTypes[Math.floor(Math.random() * chordTypes.length)];
-    let chords = generateChords(randomRoot);
+    let chordTypes = chordTypesByDifficulty[difficulty] || chordTypesByDifficulty["easyDiff"]; // Select chord types based on difficulty.
+    randomChordType = type ?? chordTypes[Math.floor(Math.random() * chordTypes.length)]; // Choose a random chord type if not specified.
+    let chords = generateChords(randomRoot); // Generate chords for the random root note.
     let chord = chords[randomChordType];
-    let inversions = generateInversions(chord);
-    let selectedInversionIndex = Math.floor(Math.random() * inversions.length);
+    let inversions = generateInversions(chord); // Generate all inversions of the chord.
+    let selectedInversionIndex = Math.floor(Math.random() * inversions.length); // Select a random inversion.
     selectedInversion = inversions[selectedInversionIndex];
     updatedRoot = selectedInversionIndex === 0 ? selectedInversion[0] : selectedInversion[selectedInversion.length - selectedInversionIndex];
-    inversionType = selectedInversionIndex === 0 ? "ROOT POSITION" : `${selectedInversionIndex}° INVERSION`;
-    selectedInversion = selectedInversion.sort();
-  } while (selectedInversion[selectedInversion.length - 1] >= lastNote);
+    inversionType = selectedInversionIndex === 0 ? "ROOT POSITION" : `${selectedInversionIndex}° INVERSION`; // Determine inversion type.
+    selectedInversion = selectedInversion.sort(); // Ensure the inversion is sorted.
+  } while (selectedInversion[selectedInversion.length - 1] >= lastNote); // Repeat if the chord exceeds the note range.
   return {
-    midiRoot: updatedRoot,
-    noteRoot: midiToNoteName(updatedRoot),
-    chordType: randomChordType,
-    inversion: inversionType,
-    midiNotes: selectedInversion,
-    notes: selectedInversion.map(midiToNoteName)
+    midiRoot: updatedRoot, // MIDI note number of the chord's root.
+    noteRoot: midiToNoteName(updatedRoot), // Name of the root note.
+    chordType: randomChordType, // Type of the chord.
+    inversion: inversionType, // Type of inversion.
+    midiNotes: selectedInversion, // MIDI note numbers of the chord.
+    notes: selectedInversion.map(midiToNoteName) // Corresponding note names.
   };
 }
 
-// Harmony Game
+// HARMONY
+
+// Generates a random cadence (chord progression) based on the selected difficulty and range.
 export function generateRandomCadence(firstNote, lastNote, difficulty = "easyDiff") {
   const numKeys = lastNote - firstNote;
-  const patterns = chordCadences[difficulty] || chordCadences["easyDiff"];
-  const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
+  const patterns = chordCadences[difficulty] || chordCadences["easyDiff"]; // Select cadence patterns based on difficulty.
+  const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)]; // Choose a random pattern.
   let rootNote, cadenceDetails, missingChordData;
   let cadenceName = "";
   let n = "";
   let i = 0;
   do {
-    rootNote = firstNote + Math.floor(Math.random() * (numKeys));
+    rootNote = firstNote + Math.floor(Math.random() * numKeys); // Choose a random root note.
     cadenceDetails = [];
     missingChordData = null;
-    const missingIndex = selectedPattern.degrees.length - 1;
+    const missingIndex = selectedPattern.degrees.length - 1; // Determine the missing chord's position.
     for (let index = 0; index < selectedPattern.degrees.length; index++) {
-      const degree = selectedPattern.degrees[index];
-      const degrees = calculateDegree(rootNote, degree);
-      const chordType = selectedPattern.cadence[index];
-      const chordData = generateRandomChord(firstNote, lastNote, difficulty, degrees, chordType);
+      const degree = selectedPattern.degrees[index]; // Scale degree of the chord.
+      const degrees = calculateDegree(rootNote, degree); // Calculate the corresponding note for the degree.
+      const chordType = selectedPattern.cadence[index]; // Chord type for this position in the cadence.
+      const chordData = generateRandomChord(firstNote, lastNote, difficulty, degrees, chordType); // Generate the chord.
       const chordDetails = {
         midiRoot: chordData.midiRoot,
         noteRoot: chordData.noteRoot,
@@ -221,25 +231,25 @@ export function generateRandomCadence(firstNote, lastNote, difficulty = "easyDif
         notes: chordData.notes
       };
       if (index === missingIndex) {
-        missingChordData = chordDetails;
-        cadenceDetails.push(null);
+        missingChordData = chordDetails; // Save the missing chord details.
+        cadenceDetails.push(null); // Add a placeholder for the missing chord.
       } else {
-        cadenceDetails.push(chordDetails);
+        cadenceDetails.push(chordDetails); // Add chord details to the cadence.
       }
     }
-  } while (!missingChordData || missingChordData.midiNotes[missingChordData.midiNotes.length - 1] >= lastNote);
+  } while (!missingChordData || missingChordData.midiNotes[missingChordData.midiNotes.length - 1] >= lastNote); // Ensure the cadence is valid.
   do {
       n += `${cadenceDetails[i].noteRoot}${cadenceDetails[i].chordType}`;
       n += " - ";
       i++;
-  } while (i < cadenceDetails.length - 1)
+  } while (i < cadenceDetails.length - 1) // Construct a descriptive name for the cadence.
   cadenceName = n.slice(0, -2);
   return {
-    name: selectedPattern.name,
-    degrees: selectedPattern.degrees,
-    cadenceDetails,
-    cadenceName,
-    missingChordData
+    name: selectedPattern.name, // Cadence name from the selected pattern.
+    degrees: selectedPattern.degrees, // Scale degrees in the cadence.
+    cadenceDetails, // Details of all chords in the cadence.
+    cadenceName, // Descriptive cadence name.
+    missingChordData // Details of the missing chord.
   };
 }
 

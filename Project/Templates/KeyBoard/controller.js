@@ -150,9 +150,9 @@ import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/1
 import { app } from "../../../firebase.js";
 
 // CLASS DEFINITION --------------------------------------------------------------------------------------------------------------------------------
+
 // GameController class: Manages the overall game logic and interaction.
 // Responsible for coordinating the game model, view, and piano controller, as well as managing game state, effects, and the timer.
-
 export class GameController {
 
   // Constructor for the GameController class.

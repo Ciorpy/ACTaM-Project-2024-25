@@ -306,17 +306,18 @@ export class GameView {
         this.overlayTitle.style.display         = "flex";
         this.overlayScoreDisplay.style.display  = "none";
 
-        this.overlayTitle.innerHTML     = "TIME OVER";
+        this.overlayTitle.innerHTML = "TIME OVER";
+
         if (model.isMultiplayer) {
           this.overlaySubtitle.style.display = "flex";
           this.overlaySubtitle.innerHTML  = "YOU DIDN'T MAKE IT!";
         }
 
-        this.showSolutionButton.style.display = "block";
-        this.nextRoundButton.style.display    = "block";
-
         if (model.isMultiplayer) this.rankingTable.style.display = "flex";
         else this.rankingTable.style.display = "none";
+
+        this.showSolutionButton.style.display = "block";
+        this.nextRoundButton.style.display    = "block";
         break;
       case "goodGuess":
         model.isShowedGoodGuess = true;
@@ -327,17 +328,18 @@ export class GameView {
         this.overlayTitle.style.display         = "flex";
         this.overlayScoreDisplay.style.display  = "none";
 
-        this.overlayTitle.innerHTML     = "GOOD GUESS";
+        this.overlayTitle.innerHTML = "GOOD GUESS";
+
         if (!model.isMultiplayer) {
           this.overlaySubtitle.style.display = "flex";
           this.overlaySubtitle.innerHTML  = "YOU ARE A BOSS!";
         }
 
-        this.showSolutionButton.style.display = "block";
-        this.nextRoundButton.style.display    = "block";
-
         if (model.isMultiplayer) this.rankingTable.style.display = "flex";
         else this.rankingTable.style.display = "none";
+
+        this.showSolutionButton.style.display = "block";
+        this.nextRoundButton.style.display    = "block";
         break;
       case "gameOver":
         this._disableInput(model);
@@ -346,12 +348,15 @@ export class GameView {
         this.overlayTitle.style.display     = "flex";
         this.overlaySubtitle.style.display  = "none";
 
-        this.overlayTitle.innerHTML          = "GAME OVER";
+        this.overlayTitle.innerHTML = "GAME OVER";
 
-        if (!model.isMultiplayer) this.overlayScoreDisplay.innerHTML   = "TOTAL SCORE: " + model.totalScore;
-        else this.rankingTable.style.display     = "flex";
+        if (!model.isMultiplayer) {
+          this.overlayScoreDisplay.style.display = "flex"
+          this.overlayScoreDisplay.innerHTML   = "TOTAL SCORE: " + model.totalScore;
+        }
+        else this.rankingTable.style.display = "flex";
 
-        this.mainMenuButton.style.display   = "block";
+        this.mainMenuButton.style.display = "block";
         break;
       case "wait":
         model.isShowedWait = true;

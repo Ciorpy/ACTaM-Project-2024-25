@@ -72,6 +72,7 @@ export class GameModel {
     this.hintsPoint           = [false, false, false];
     this.isShowedTimeOver     = false;
     this.isShowedGoodGuess    = false;
+    this.isShowedWait         = false;
     this.isPracticeMode       = false;
     this.isMultiplayer        = false;
     this.isHost               = false;

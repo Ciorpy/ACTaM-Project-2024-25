@@ -459,10 +459,13 @@ export class GameController {
     this.model.timeLeft  = 120;
     this.model.hintTimer = 0;
 
-    this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+    if (this.model.isShowedWait) return;
+    else this.timerInterval = setInterval(() => this.updateTimer(), 1000);
   }
 
   updateTimer() {
+    console.log(this.model.isShowedWait);
+
     this.model.decrementTimeLeft();
     this.model.incrementHintTimer();
 

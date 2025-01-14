@@ -279,18 +279,18 @@ export class GameView {
 
         this.overlayPanel.style.display         = "flex";
         this.overlayTitle.style.display         = "flex";
-        this.overlaySubtitle.style.display      = "flex";
         this.overlayScoreDisplay.style.display  = "none";
 
         this.overlayTitle.innerHTML     = "TIME OVER";
-        this.overlaySubtitle.innerHTML  = "YOU DIDN'T MAKE IT!";
+        if (model.isMultiplayer) {
+          this.overlaySubtitle.style.display = "flex";
+          this.overlaySubtitle.innerHTML  = "YOU DIDN'T MAKE IT!";
+        }
 
         this.showSolutionButton.style.display = "block";
         this.nextRoundButton.style.display    = "block";
 
-        if (model.isMultiplayer) {
-          this.rankingTable.style.display = "flex";
-        }
+        if (model.isMultiplayer) this.rankingTable.style.display = "flex";
         else this.rankingTable.style.display = "none";
         break;
       case "goodGuess":
@@ -302,17 +302,16 @@ export class GameView {
         this.overlayTitle.style.display         = "flex";
         this.overlayScoreDisplay.style.display  = "none";
 
-        if (!model.isMultiplayer) this.overlaySubtitle.style.display = "flex";
-
         this.overlayTitle.innerHTML     = "GOOD GUESS";
-        this.overlaySubtitle.innerHTML  = "YOU ARE A BOSS!";
+        if (!model.isMultiplayer) {
+          this.overlaySubtitle.style.display = "flex";
+          this.overlaySubtitle.innerHTML  = "YOU ARE A BOSS!";
+        }
 
         this.showSolutionButton.style.display = "block";
         this.nextRoundButton.style.display    = "block";
 
-        if (model.isMultiplayer) {
-          this.rankingTable.style.display = "flex";
-        }
+        if (model.isMultiplayer) this.rankingTable.style.display = "flex";
         else this.rankingTable.style.display = "none";
         break;
       case "gameOver":
@@ -324,17 +323,14 @@ export class GameView {
 
         this.overlayTitle.innerHTML          = "GAME OVER";
 
-        if (!model.isMultiplayer) {
-          this.overlayScoreDisplay.innerHTML   = "TOTAL SCORE: " + model.totalScore;
-          this.overlayScoreDisplay.style.display  = "flex";
-        }
-        else {
-          this.rankingTable.style.display = "flex";
-        }
+        if (!model.isMultiplayer) this.overlayScoreDisplay.innerHTML   = "TOTAL SCORE: " + model.totalScore;
+        else this.rankingTable.style.display     = "flex";
 
         this.mainMenuButton.style.display   = "block";
         break;
       case "wait":
+        model.isShowedWait = true;
+
         this._disableInput(model);
         this.overlayPanel.style.display         = "flex";
         this.overlayTitle.style.display         = "flex";

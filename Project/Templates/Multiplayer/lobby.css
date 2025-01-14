@@ -2,7 +2,7 @@
   box-sizing: border-box;
   font-family: "Audiowide", serif;
   font-style: normal;
-  background: url(https://github.com/Ciorpy/ACTaM-Project-2024-25/blob/main/Project/Images/ep_naturalblack.webp) repeat;
+  background: url('/Project/Images/ep_naturalblack.webp') repeat;
   user-select: none;
 }
 

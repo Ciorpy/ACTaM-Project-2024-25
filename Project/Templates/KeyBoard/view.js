@@ -361,6 +361,8 @@ export class GameView {
         else console.error("GameMode not recognized.");
         break;
       case "hide":
+        model.isShowedWait = false;
+
         this.enableInput(model);
 
         this.overlayPanel.style.display         = "none";

@@ -281,10 +281,7 @@ export class GameController {
   }
 
   onNextRound() {
-    if (this.model.activeRound > this.model.maxRounds) { 
-      window.location.href = "../../gameTitleScreen.html";
-    } 
-    else if (this.model.activeRound == this.model.maxRounds) { 
+    if (this.model.activeRound == this.model.maxRounds) { 
       this.view.handleOverlayDisplay("gameOver", this.model);
       if (this.preloadedEffects[4]) this.preloadedEffects[4].play();
     } 

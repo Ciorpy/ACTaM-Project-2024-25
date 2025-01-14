@@ -126,7 +126,7 @@ mainMenuButton.addEventListener("click", () => {
   window.location.href = "../../gameTitleScreen.html";
 });
 
-// Dictionary of dictionaries used to access the correct array based on specified gamemode and difficulty level
+// Dictionary of dictionaries used to access the correct array based on specified gamemode and difficulty level (UNUSED)
 let minigamePresets = {
   // Grooves Gamemode
   grooves_GM: {
@@ -159,7 +159,9 @@ let rankingTable = document.getElementById("rankingTable");
 let timeOverFlag;
 let goodGuessFlag;
 
+// Adds event listener to start game button
 startGameButton.addEventListener("click", async () => {
+  // Only executes if that's a multiplayer match
   if (localStorage.getItem("multiplayerFlag") == "true") {
     if (localStorage.getItem("isHost") == "true") {
       await set(flagRef, false);
@@ -190,28 +192,45 @@ startGameButton.addEventListener("click", async () => {
   isSolutionPlaying = true;
 });
 
+// Adds event listener to Show Solution Button, it is shown when time runs out
 showSolutionButton.addEventListener("click", () => {
   showSolution();
 });
 
+// Adds event listener to the go next round button
 goNextRoundButton.addEventListener("click", () => {
+
+  //If there are still levels to play, executes
   if (levelIndex < maxRounds) {
+    // Handles flags to guarantee correct execution
     timeOverFlag = false;
     goodGuessFlag = false;
+    
+    // Creates timer udpate interval
     timerInterval = setInterval(roundTimer, 1000);
+
+    //Hides overlay
     handleOverlayDisplay("hide");
-    solution = chosenPresets[levelIndex];
-    roundDisplay.innerHTML = "ROUND " + (levelIndex + 1);
-    solutionInterval = setInterval(playSolution, setBpm(bpm));
+
+    solution = chosenPresets[levelIndex]; // Loads new level
+    solutionInterval = setInterval(playSolution, setBpm(bpm)); // Creates solution interval so that it starts playing the pattern to guess
+
+    // Correct UI handle
     playSolutionButton.innerHTML = "STOP SOLUTION";
+    roundDisplay.innerHTML = "ROUND " + (levelIndex + 1);
+    
+    // Handles flags to guarantee correct execution
     isSolutionPlaying = true;
     hasRoundEnded = false;
-    resetDrumMachine();
+
+    resetDrumMachine(); // reset drum machine to create a new blank space to interact
   } else if (levelIndex == maxRounds) {
+    // Shows game over panel
     handleOverlayDisplay("gameOver");
-    levelIndex++;
-    preloadedEffects[4].play();
+    levelIndex++; // Updates levelIndex to guarantee correct execution
+    preloadedEffects[4].play(); // Sound effects
   } else {
+    //If levelIndex exceeds maxRounds, when the user interacts with the button is sent back to the title screen
     window.location.href = "../../gameTitleScreen.html";
   }
 });
@@ -345,14 +364,12 @@ if (practiceModeFlag == "false") {
 // MULTIPLAYER SETTINGS
 import {
   getAuth,
-  onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 import {
   getDatabase,
   ref,
   get,
   set,
-  remove,
   onValue, off
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
@@ -375,6 +392,7 @@ let updateRanking = async function () {
   await set(playerScoreRef, totalScore);
   let playersSnapshot = await get(playersRef);
 
+  // Mapping
   let playersArray = Object.entries(playersSnapshot.val()).map(
     ([id, data]) => ({
       id,
@@ -383,16 +401,18 @@ let updateRanking = async function () {
     })
   );
 
-  // Ordina l'array in base allo score in ordine decrescente
+  // Sorting array
   playersArray.sort((a, b) => b.score - a.score);
 
-  // Trova l'indice del giocatore basandosi sull'id
+  // Finds player data and stores it
   let playerIndex = playersArray.findIndex(
     (player) => player.id === localStorage.getItem("userID")
   );
 
+  // Resets ranking table HTML
   rankingTable.innerHTML = "";
 
+  // Fills ranking table HTML with every player position and score
   playersArray.forEach((item, index) => {
     let newPlayerRanking = document.createElement("div");
     newPlayerRanking.classList.add("playerRanking");
@@ -402,23 +422,28 @@ let updateRanking = async function () {
     rankingTable.append(newPlayerRanking);
   });
 
+  // Shows player current position (or final, depends if the others are still playing)
   placementDisplay.innerHTML = `PLACEMENT: ${playerIndex + 1}°`;
 };
 
+// Only executes if it's a multiplayer game
 if (localStorage.getItem("multiplayerFlag") == "true" && practiceModeFlag != "true") {
+  // Sets interval for updating the scoreboard
   updateRankingInterval = setInterval(updateRanking, 100);
   placementDisplay.style.display = "block";
   maxRounds = localStorage.getItem("numberRoundsMP");
 
+  // Only executes if player is host, otherwise executes else branch
   if (localStorage.getItem("isHost") == "true") {
-
+    // Creates the levels for the game and loads them in order to make them available for all players
     chosenPresets = getRandomDrumPatterns(selectedPresets);
     solution = chosenPresets[levelIndex];
+
+    // Backend interaction
     await set(gameStructureRef, chosenPresets);
-
   } else {
-
     let snapshot;
+    // Waits until the host has loaded the game levels, then loads them
     do {
       snapshot = await get(gameStructureRef);
       if (snapshot.exists()) {
@@ -430,6 +455,7 @@ if (localStorage.getItem("multiplayerFlag") == "true" && practiceModeFlag != "tr
   }
 }
 
+// CSS Adjustments based on gamemode
 if (localStorage.getItem("multiplayerFlag") == "false") timerDisplay.style.marginTop = "10vh";
 else timerDisplay.style.marginTop = "0vh", placementDisplay.style.marginTop = "5vh";
 
@@ -709,8 +735,6 @@ playSolutionButton.addEventListener("click", () => {
 });
 
 let currentScore = document.getElementById("currentScore");
-let finalScreen = document.getElementById("fScreen");
-let finalScore = document.getElementById("finalScreenPanel");
 
 if (practiceModeFlag == "true") {
   currentScore.style.display = "none";
@@ -785,16 +809,21 @@ hideSolutionButton.addEventListener("click", () => {
 // Function that hides the solution
 let hideSolution = function () {
   resetDrumMachine();
+
+  // Overlay handling
   if (timeOverFlag) handleOverlayDisplay("timeOver");
   if (goodGuessFlag) handleOverlayDisplay("goodGuess");
   solutionDiv.style.display = "none";
+
+  // Clears interval so that it stops playing
   clearInterval(solutionInterval);
 };
 
-// Function that builds the solution in each round 
+// Function that builds the solution in each round, so that it can be shown to the user if he doesn't guess it correctly in time
 let buildSolution = function () {
   drumMachineController = solution;
 
+  //Iterates over the semicromas and turns active the one that are set "true" in the solution
   Array.from(drumMachineItems).forEach((item, index) => {
     for (let i = 0; i < semicrome; i++) {
       item

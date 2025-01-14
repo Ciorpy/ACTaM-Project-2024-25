@@ -725,7 +725,6 @@ let goodGuess = function () {
 
   clearInterval(timerInterval);
   handleOverlayDisplay("goodGuess");
-  roundScore = maxScore;
   timer = maxTimer;
   preloadedEffects[1].play();
 };
@@ -750,6 +749,7 @@ let timeOver = function (overlayType) {
   clearInterval(timerInterval);
   handleOverlayDisplay(overlayType);
   preloadedEffects[2].play();
+  roundScore = maxScore;
 };
 
 let checkInputButton = document.getElementById("checkInputButton");

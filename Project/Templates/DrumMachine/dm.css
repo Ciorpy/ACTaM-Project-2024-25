@@ -2,7 +2,7 @@
     font-family: "Audiowide", serif;
     font-style: normal;
     box-sizing: border-box;
-    background: url('/Project/Images/ep_naturalblack.webp') repeat;
+    background: url(https://github.com/Ciorpy/ACTaM-Project-2024-25/blob/main/Project/Images/ep_naturalblack.webp) repeat;
     user-select: none;
 }
 
@@ -87,7 +87,7 @@
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    background-image: url("../../Images/Speaker_Icon.svg");
+    background-image: url(https://github.com/Ciorpy/ACTaM-Project-2024-25/blob/main/Project/Images/Speaker_Icon.svg);
     border-radius: 20%;
     cursor: pointer;
     margin: 0.53vh 0;
@@ -134,7 +134,7 @@
     border-width: 0.2vh;
     border-color: green;
     background: reset;
-    background: url("../../Images/Green_check.png") center / cover no-repeat !important;
+    background: url(https://github.com/Ciorpy/ACTaM-Project-2024-25/blob/main/Project/Images/Green_check.png) center / cover no-repeat !important;
     background-color: white !important;
     cursor: default;
     background-position: center;

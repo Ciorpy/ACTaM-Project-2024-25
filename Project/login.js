@@ -10,6 +10,7 @@ let usernameField = document.getElementById("username");
 let hostButton = document.getElementById("host");
 let partecipateButton = document.getElementById("partecipate");
 
+// Hides host button and participate button
 hostButton.style.pointerEvents = "none";
 partecipateButton.style.pointerEvents = "none";
 
@@ -17,8 +18,9 @@ let userCredential = await signInAnonymously(auth);
 let user = userCredential.user;
 localStorage.setItem("userID", user.uid);
 
-let maxPlayers = 6;
+let maxPlayers = 6; // When a lobby reaches 6 players is considered full
 
+// Anonymous login function
 const signInAnonymouslyUser = async () => {
   try {
     userCredential = await signInAnonymously(auth);
@@ -31,33 +33,40 @@ const signInAnonymouslyUser = async () => {
   }
 };
 
+// Adds event listener to the usernameField
 usernameField.addEventListener("input", () => {
+  // If the username field has been filled, the interaction with the buttons is possible
   if (usernameField.value.trim() != "") {
+    // Updates CSS
     hostButton.classList.toggle("notSelectable", false);
     partecipateButton.classList.toggle("notSelectable", false);
 
+    // Enables user interaction
     hostButton.style.pointerEvents = "auto";
     partecipateButton.style.pointerEvents = "auto";
   } else {
+    // Updates CSS
     hostButton.classList.toggle("notSelectable", true);
     partecipateButton.classList.toggle("notSelectable", true);
 
+    // Disable user interaction
     hostButton.style.pointerEvents = "none";
     partecipateButton.style.pointerEvents = "none";
   }
 });
 
+// Adds event listener to the host Button
 hostButton.addEventListener("click", () => {
-  signInAnonymouslyUser();
-  handleLobbyMenuLayout("host");
+  signInAnonymouslyUser(); // LOGIN
+  handleLobbyMenuLayout("host"); // UI update
 });
 
+// Adds event listener to the partecipate Button
 partecipateButton.addEventListener("click", () => {
-  signInAnonymouslyUser();
-  handleLobbyMenuLayout("player");
+  signInAnonymouslyUser(); // LOGIN
+  handleLobbyMenuLayout("player"); // UI update
 });
 
-/** CODICE DA SPOSTARE (GESTIONE LOBBY) ---------------------------------------------------------------------------------------------------------------- */
 let multiPlayerMenu = document.getElementById("multiPlayerMenu");
 let lobbyMenu = document.getElementById("lobbySelector");
 let lobbyTitle = document.getElementById("lobbyTitle");
@@ -65,6 +74,7 @@ let lobbyTitle = document.getElementById("lobbyTitle");
 let createButton = document.getElementById("CREATE");
 let joinButton = document.getElementById("JOIN");
 
+// Function that handles the lobby menu layout based on the role
 let handleLobbyMenuLayout = function (role) {
   multiPlayerMenu.style.display = "none";
   lobbyMenu.style.display = "block";
@@ -81,6 +91,7 @@ let handleLobbyMenuLayout = function (role) {
 
 let backToMP_MenuButton = document.getElementById("backLS");
 
+// Adds an event listener that let's user go back to the MultiPlayer menu
 backToMP_MenuButton.addEventListener("click", () => {
   multiPlayerMenu.style.display = "block";
   lobbyMenu.style.display = "none";
@@ -89,38 +100,47 @@ backToMP_MenuButton.addEventListener("click", () => {
 let nameField = document.getElementById("lobbyName");
 let pwField = document.getElementById("lobbyPW");
 
+// Adds event listener to the name field
 nameField.addEventListener("input", () => {
+  // If both name field and password field have been filled allows interaction
   if (nameField.value.trim() != "" && pwField.value.trim() != "") {
     createButton.classList.toggle("notSelectable", false);
     joinButton.classList.toggle("notSelectable", false);
 
+    // Enables user interaction
     createButton.style.pointerEvents = "auto";
     joinButton.style.pointerEvents = "auto";
   } else {
     createButton.classList.toggle("notSelectable", true);
     joinButton.classList.toggle("notSelectable", true);
 
+    // Disables user interaction
     createButton.style.pointerEvents = "none";
     joinButton.style.pointerEvents = "none";
   }
 });
 
+// Adds event listener to the password field
 pwField.addEventListener("input", () => {
+  // If both name field and password field have been filled allows interaction
   if (nameField.value.trim() != "" && pwField.value.trim() != "") {
     createButton.classList.toggle("notSelectable", false);
     joinButton.classList.toggle("notSelectable", false);
 
+    // Enables user interaction
     createButton.style.pointerEvents = "auto";
     joinButton.style.pointerEvents = "auto";
   } else {
     createButton.classList.toggle("notSelectable", true);
     joinButton.classList.toggle("notSelectable", true);
 
+    // Disables user interaction
     createButton.style.pointerEvents = "none";
     joinButton.style.pointerEvents = "none";
   }
 });
 
+// Import firebase DB functions in order to allow interaction
 import {
   getDatabase,
   ref,
@@ -128,36 +148,11 @@ import {
   set,
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
-const db = getDatabase(app);
+const db = getDatabase(app); // DB reference
 
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1)); // Random index
-    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-  }
-}
-
-let minigamePages = {
-  chords_GM: "./Templates/KeyBoard/keyBoardInput.html",
-  harmony_GM: "./Templates/KeyBoard/keyBoardInput.html",
-  grooves_GM: "./Templates/DrumMachine/drumMachineInput.html",
-  fills_GM: "./Templates/DrumMachine/drumMachineInput.html",
-};
-
-let gameModes = ["chords_GM", "harmony_GM", "grooves_GM", "fills_GM"];
-let difficulties = ["easyDiff", "mediumDiff", "hardDiff"];
-let numRounds = 2 * 4;
-
-let createMinigamesOrder = function () {
-  let gameModeOrder = shuffleArray(gameModes);
-
-  let levels = [];
-
-  for (let i = 0; i < numRounds; i++) {}
-
-  return levels;
-};
-
+/**
+ *  Function that let users create a new lobby
+ *  */
 async function createLobby(lobbyName, password, playerId, playerName) {
   const hashedPassword = btoa(password); // Simple base64 encoding (use bcrypt for production)
 
@@ -183,13 +178,15 @@ async function createLobby(lobbyName, password, playerId, playerName) {
       [playerId]: playerData, // Set playerName as the key for the player
     },
     status: "open",
-    minigamesOrder: createMinigamesOrder(),
   };
 
   // Create the lobby
   await set(lobbyRef, lobbyData);
 }
 
+/**
+ *  Function that let users join an existing lobby
+ *  */
 async function joinLobby(lobbyName, password, playerId, playerName) {
   // Get a reference to the lobby
   const lobbyRef = ref(db, `lobbies/${lobbyName}`);
@@ -220,6 +217,7 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
 
   let playersArray = Object.values(players); // Convert the object to an array
 
+  // Cannot join a full lobby
   if (playersArray.length >= maxPlayers) throw new Error("Lobby is full.");
 
   // Check if the player already exists
@@ -243,39 +241,53 @@ async function joinLobby(lobbyName, password, playerId, playerName) {
   console.log("Joined the lobby successfully.");
 }
 
+// Adds event listener to create button (async function)
 createButton.addEventListener("click", async () => {
   try {
+    // Tries to create lobby with specific function
     await createLobby(
-      nameField.value,
-      pwField.value,
-      user.uid,
-      localStorage.getItem("userNickname")
+      nameField.value, // Gets value in the lobby name field
+      pwField.value, // Gets value in the lobby password field
+      user.uid, // Gets user ID value
+      localStorage.getItem("userNickname") // Gets user nickname from local storage
     );
     alert("Lobby created successfully!");
+
+    // Saves in local storage important data so that they can be retrieved in the next page
     localStorage.setItem("lobbyName", nameField.value);
     localStorage.setItem("lobbyPw", pwField.value);
     localStorage.setItem("isHost", true);
+
+    // Loads lobby HTML template
     window.location.href = "./Templates/Multiplayer/lobby.html";
   } catch (error) {
+    // In case of error, this code is executed
     console.error("Error creating lobby:", error);
     alert(error.message);
   }
 });
 
+// Adds event listener to join button (async function)
 joinButton.addEventListener("click", async () => {
   try {
+    // Tries to join lobby with specific function
     await joinLobby(
-      nameField.value,
-      pwField.value,
-      user.uid,
-      localStorage.getItem("userNickname")
+      nameField.value, // Gets value in the lobby name field
+      pwField.value, // Gets value in the lobby password field
+      user.uid, // Gets user ID value
+      localStorage.getItem("userNickname") // Gets user nickname from local storage
     );
     alert("Successfully joined the lobby!");
+
+    // Saves in local storage important data so that they can be retrieved in the next page
     localStorage.setItem("lobbyName", nameField.value);
     localStorage.setItem("lobbyPw", pwField.value);
-    localStorage.setItem("isHost", false);
+    localStorage.setItem("isHost", false); // User that joins a lobby is not a host
+
+    // Loads lobby HTML template
     window.location.href = "./Templates/Multiplayer/lobby.html";
   } catch (error) {
+    // In case of error, this code is executed
     console.error("Error joining lobby:", error);
     alert(error.message);
   }

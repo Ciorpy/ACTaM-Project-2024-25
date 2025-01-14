@@ -126,7 +126,7 @@ mainMenuButton.addEventListener("click", () => {
   window.location.href = "../../gameTitleScreen.html";
 });
 
-// Dictionary of dictionaries used to access the correct array based on specified gamemode and difficulty level (UNUSED)
+// Dictionary of dictionaries used to access the correct array based on specified gamemode and difficulty level
 let minigamePresets = {
   // Grooves Gamemode
   grooves_GM: {
@@ -246,6 +246,7 @@ let handleOverlayDisplay = function (overlayType) {
   showSolutionButton.style.display = "none";
   goNextRoundButton.style.display = "none";
 
+  // Switch that grants the correct overlay handling
   switch (overlayType) {
     case "startGame":
       if (selectedMinigame === "grooves_GM") overlayTitle.innerHTML = "RECOGNIZE GROOVES AND FILL THE DRUM MACHINE WITH IT";
@@ -264,6 +265,8 @@ let handleOverlayDisplay = function (overlayType) {
       overlaySubtitle.innerHTML = "YOU ARE A BOSS!";
       showSolutionButton.style.display = "none";
       goNextRoundButton.style.display = "block";
+
+      // Only executes if multiplayer
       if (localStorage.getItem("multiplayerFlag") == "true") {
         overlaySubtitle.style.display = "none";
         rankingTable.style.display = "flex";
@@ -285,6 +288,8 @@ let handleOverlayDisplay = function (overlayType) {
       overlaySubtitle.style.display = "none";
       scoreLabel.style.display = "flex";
       scoreLabel.innerHTML = "TOTAL SCORE: " + totalScore;
+
+      // Only executes if multiplayer
       if (localStorage.getItem("multiplayerFlag") == "true") {
         scoreLabel.style.display = "none";
         rankingTable.style.display = "flex";
@@ -301,7 +306,7 @@ let handleOverlayDisplay = function (overlayType) {
       showSolutionButton.style.display = "none";
       goNextRoundButton.style.display = "none";
       break;
-    case "hide":
+    case "hide": // Used to hide the overlay
       overlayPanel.style.display = "none";
       break;
     default:
@@ -333,27 +338,36 @@ if (practiceModeFlag == "true") {
 
 // Function that updates the timer and its related features like scoring or round 
 let roundTimer = function () {
+  // If timer runs out, executes
   if (timer <= 0) {
-    clearInterval(timerInterval);
-    levelIndex = levelIndex + 1;
-    timer = maxTimer;
+    clearInterval(timerInterval); // Clears time interval
+    levelIndex = levelIndex + 1; // update level index
+    timer = maxTimer; // Reset timer to max timer
     timeOver("timeOver");
+
+    //Update control boolean
     hasRoundEnded = true;
   }
+
+  // Every 1/4 of time subs 25 from the gained score
   if (timer % scoreSubTimer == 0) {
     roundScore -= 25;
   }
-  timer -= 1;
+
+  timer -= 1; // 1s passed
+  
+  // Updates UI so that user knows how much time is left
   timerDisplay.innerHTML = "REMAINING TIME: " + timer + "s";
 };
 
+// Only loads game levels if the page is opened in game mode, otherwise does nothing
 if (practiceModeFlag == "false") {
   selectedPresets = minigamePresets[selectedMinigame][difficultyLevel];
   if (localStorage.getItem("multiplayerFlag") == "false") {
     chosenPresets = getRandomDrumPatterns(selectedPresets);
     solution = chosenPresets[levelIndex];
   }    
-  handleOverlayDisplay("startGame");
+  handleOverlayDisplay("startGame"); // Overlay handling
   preloadedEffects[0].play();
 } else {
   selectedPresets = null;

@@ -128,15 +128,15 @@ mainMenuButton.addEventListener("click", () => {
 let minigamePresets = {
   // Grooves Gamemode
   grooves_GM: {
-    easyDiff: easyGrooves, // Easy Diff
-    mediumDiff: mediumGrooves, // Medium Diff
-    hardDiff: hardGrooves, // Hard Diff
+    easyDiff: easyGrooves,
+    mediumDiff: mediumGrooves,
+    hardDiff: hardGrooves,
   },
   // Fills Gamemode
   fills_GM: {
-    easyDiff: easyFills, // Easy Diff
-    mediumDiff: mediumFills, // Medium Diff
-    hardDiff: hardFills, // Hard Diff
+    easyDiff: easyFills,
+    mediumDiff: mediumFills,
+    hardDiff: hardFills,
   },
 };
 
@@ -291,6 +291,7 @@ let selectedPresets;
 let solution;
 let chosenPresets = [];
 
+// Function that takes the elements from the grooves/fills chosen directory
 function getRandomDrumPatterns(array) {
   // Shuffle the array using Fisher-Yates (Knuth) algorithm
   for (let i = array.length - 1; i > 0; i--) {
@@ -298,7 +299,7 @@ function getRandomDrumPatterns(array) {
     [array[i], array[j]] = [array[j], array[i]]; // Swap elements
   }
 
-  // Return the first 3 elements of the shuffled array
+  // Return the first n elements of the shuffled array, where n is the selected number of rounds
   return array.slice(0, maxRounds);
 }
 
@@ -308,6 +309,7 @@ if (practiceModeFlag == "true") {
   timerDisplay.style.display = "none";
 }
 
+// Function that updates the timer and its related features like scoring or round 
 let roundTimer = function () {
   if (timer <= 0) {
     clearInterval(timerInterval);
@@ -365,6 +367,7 @@ let gameStructureRef = ref(db, `lobbies/${lobbyName}/gameStructure`);
 let flagRef = ref(db, `lobbies/${lobbyName}/snapshotEmptyFlag`);
 await set(flagRef, true);
 
+// Function that updates the ranking in multiplayer mode
 let updateRanking = async function () {
   await set(playerScoreRef, totalScore);
   let playersSnapshot = await get(playersRef);

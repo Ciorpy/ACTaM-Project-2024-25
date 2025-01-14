@@ -1,2 +1,2 @@
 // Loads main page
-window.location.href = "./gameTitleScreen.html";
+window.location.href = "./Project/gameTitleScreen.html";

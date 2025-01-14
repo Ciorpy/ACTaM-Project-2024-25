@@ -416,7 +416,7 @@ export class GameController {
     clearInterval(this.timerInterval);
 
     this.model.applyPenalties();
-    this.model.incrementTotalScoreAfterPenalties();
+    this.model.incrementTotalScore();
 
     if (this.model.isMultiplayer) this.updateScoreInDatabase();
 
@@ -681,7 +681,7 @@ export class GameController {
 
       this.view.handleOverlayDisplay("hide", this.model);
 
-      this.clearInterval(this.timerInterval);
+      clearInterval(this.timerInterval);
       this.startTimer();
     }
 
@@ -726,6 +726,7 @@ export class GameController {
         this.model.setRanking(null);
         this.model.setPlacement(null);
 
+        this.view.updateRankingDisplay(null);
         this.view.updatePlacement("N/A");
         return;
       }
@@ -737,6 +738,7 @@ export class GameController {
       }));
       playersArray.sort((a, b) => b.score - a.score);
       this.model.setRanking(playersArray);
+      this.view.updateRankingDisplay(this.model);
 
       const playerIndex = playersArray.findIndex(p => p.id === this.model.userID);
       this.model.setPlacement(playerIndex + 1);
@@ -747,6 +749,7 @@ export class GameController {
       this.model.setRanking(null);
       this.model.setPlacement(null);
 
+      this.view.updateRankingDisplay(null);
       this.view.updatePlacement("N/A");
     }
   }

@@ -290,7 +290,6 @@ export class GameView {
 
         if (model.isMultiplayer) {
           this.rankingTable.style.display = "flex";
-          this.updateRankingDisplay(model);
         }
         else this.rankingTable.style.display = "none";
         break;
@@ -313,16 +312,15 @@ export class GameView {
 
         if (model.isMultiplayer) {
           this.rankingTable.style.display = "flex";
-          this.updateRankingDisplay(model);
         }
         else this.rankingTable.style.display = "none";
         break;
       case "gameOver":
         this._disableInput(model);
 
-        this.overlayPanel.style.display         = "flex";
-        this.overlayTitle.style.display         = "flex";
-        this.overlaySubtitle.style.display      = "none";
+        this.overlayPanel.style.display     = "flex";
+        this.overlayTitle.style.display     = "flex";
+        this.overlaySubtitle.style.display  = "none";
 
         this.overlayTitle.innerHTML          = "GAME OVER";
 
@@ -332,7 +330,6 @@ export class GameView {
         }
         else {
           this.rankingTable.style.display = "flex";
-          this.updateRankingDisplay(model);
         }
 
         this.mainMenuButton.style.display   = "block";
@@ -368,7 +365,7 @@ export class GameView {
         else console.error("GameMode not recognized.");
         break;
       case "hide":
-        this._disableInput(model);
+        this.enableInput(model);
 
         this.overlayPanel.style.display         = "none";
         this.overlayTitle.style.display         = "none";
@@ -427,6 +424,10 @@ export class GameView {
   }
 
   updateRankingDisplay(model) {
+    if (model == null) {
+      this.rankingTable.innerHTML = "Error on Ranking";
+      return;
+    }
     this.rankingTable.innerHTML = model.ranking.map((item, index) => 
       `<div class="overlayRanking" style="display: flex">${index + 1}°: ${item.playerName} - ${item.score} points</div>`
     ).join("");

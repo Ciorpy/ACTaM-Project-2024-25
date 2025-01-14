@@ -143,11 +143,6 @@ export class GameModel {
     this.generatedCadenceData = {};
   }
   
-  resetMultiplayerData() {
-    this.generatedChordsData   = [];
-    this.generatedCadencesData = [];
-  }
-  
   applyPenalties() {
     if (this.assistantPoint) this.currentScore *= (1 - this.percAssistant / 100);
 
@@ -166,7 +161,7 @@ export class GameModel {
     return this.timeLeft--;
   }
   
-  incrementTotalScoreAfterPenalties() {
+  incrementTotalScore() {
     this.totalScore += this.currentScore;
   }
 

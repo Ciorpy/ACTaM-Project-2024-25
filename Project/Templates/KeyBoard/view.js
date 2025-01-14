@@ -153,6 +153,7 @@ export class GameView {
     // Overlay Buttons
     this.startGameButton      = document.getElementById("startGame");
     this.nextRoundButton      = document.getElementById("nextRound");
+    this.mainMenuButton       = document.getElementById("mainMenu");
     this.showSolutionButton   = document.getElementById("showSolution");
     this.hideSolutionButton   = document.getElementById("hideSolution");
 
@@ -168,7 +169,7 @@ export class GameView {
     this.playSolutionButton   = document.getElementById("playSolutionButton");
     this.assistantModeButton  = document.getElementById("assistantModeButton");
     this.hintButton           = document.getElementById("hintButton");
-    this.mainMenuButton       = document.getElementById("mainMenu");
+    this.backMenuButton       = document.getElementById("backMenuButton");
 
     // Multiplayer
     this.rankingTable     = document.getElementById("overlayMultiplayerRanking");
@@ -205,6 +206,10 @@ export class GameView {
       if (callbacks.onToggleAssistant) callbacks.onToggleAssistant();
     });
     
+    if (this.backMenuButton) this.backMenuButton.addEventListener("click", () => {
+      if (callbacks.onMainMenu) callbacks.onMainMenu();
+    });
+
     if (this.mainMenuButton) this.mainMenuButton.addEventListener("click", () => {
       if (callbacks.onMainMenu) callbacks.onMainMenu();
     });
@@ -320,8 +325,7 @@ export class GameView {
 
         if (!model.isMultiplayer) this.overlayScoreDisplay.innerHTML   = "TOTAL SCORE: " + model.totalScore;
         
-        this.nextRoundButton.textContent     = "MAIN MENU";
-        this.nextRoundButton.style.display   = "block";
+        this.mainMenuButton.style.display   = "block";
         break;
       case "wait":
         this._disableInput(model);
@@ -393,8 +397,7 @@ export class GameView {
   }
 
   updateRoundDisplay(model) {
-    const roundShowed = model.activeRound + 1;
-    this.roundDisplay.innerHTML = "ROUND " + roundShowed;
+    this.roundDisplay.innerHTML = "ROUND " + model.activeRound;
   }
 
   hintDisplayText(text) {

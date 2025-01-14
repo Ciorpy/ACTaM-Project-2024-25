@@ -393,8 +393,7 @@ export class GameView {
   }
 
   updateRoundDisplay(model) {
-    const roundShowed = model.activeRound + 1;
-    this.roundDisplay.innerHTML = "ROUND " + roundShowed;
+    this.roundDisplay.innerHTML = "ROUND " + model.activeRound;
   }
 
   hintDisplayText(text) {

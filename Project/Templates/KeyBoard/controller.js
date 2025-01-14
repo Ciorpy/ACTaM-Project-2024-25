@@ -281,16 +281,17 @@ export class GameController {
   }
 
   onNextRound() {
-    this.model.incrementRound();
-    if (this.model.activeRound < this.model.maxRounds) {
-      this.view.handleOverlayDisplay("hide", this.model);
-      this.startRound();
+    if (this.model.activeRound > this.model.maxRounds) { 
+      window.location.href = "../../gameTitleScreen.html";
     } 
-    else if (this.model.activeRound == this.model.maxRounds) {
+    else if (this.model.activeRound == this.model.maxRounds) { 
       this.view.handleOverlayDisplay("gameOver", this.model);
       if (this.preloadedEffects[4]) this.preloadedEffects[4].play();
     } 
-    else window.location.href = "../../gameTitleScreen.html";
+    else { 
+      this.view.handleOverlayDisplay("hide", this.model);
+      this.startRound();
+    }
   }
 
   onShowSolution() {
@@ -369,6 +370,8 @@ export class GameController {
 
   // Game Logic
   startRound() {
+    this.model.incrementRound();
+
     this.view.updateRoundDisplay(this.model);
     this.view.updateScoreDisplay(this.model);
 

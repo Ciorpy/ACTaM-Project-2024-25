@@ -33,11 +33,11 @@ const audioFiles = [
 // Effects
 let preloadedEffects = [];
 const effectsFiles = [
-  "/Project/Sounds/Effects/game-start.mp3",
-  "/Project/Sounds/Effects/game-bonus.mp3",
-  "/Project/Sounds/Effects/game-over.mp3",
-  "/Project/Sounds/Effects/fail.mp3",
-  "/Project/Sounds/Effects/game-finished.mp3",
+  "../../Sounds/Effects/game-start.mp3",
+  "../../Sounds/Effects/game-bonus.mp3",
+  "../../Sounds/Effects/game-over.mp3",
+  "../../Sounds/Effects/fail.mp3",
+  "../../Sounds/Effects/game-finished.mp3",
 ];
 
 let defaultEffectsVolume = 0.5;

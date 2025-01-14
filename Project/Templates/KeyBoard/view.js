@@ -2,9 +2,14 @@
 //          PIANO VIEW JAVASCRIPT
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 
-// CLASS DEFINITION
+// CLASS DEFINITION --------------------------------------------------------------------------------------------------------------------------------
+
+// PianoView class: Manages the rendering and user interaction for the virtual piano keyboard.
+// This class handles creating the keyboard, visual updates for key presses, and binding user events to interact with the keyboard.
 export class PianoView {
 
+  // Constructor for the PianoView class.
+  // Sets up the configuration for the keyboard, including the container ID, number of keys, starting MIDI note, and key mappings.
   constructor(containerId, numberOfKeys, startMidiNote) {
     this.containerId    = containerId;
     this.numberOfKeys   = numberOfKeys;
@@ -20,6 +25,8 @@ export class PianoView {
     this.keyMap = {};
   }
 
+  // Renders the virtual piano keyboard in the specified container.
+  // Dynamically creates DOM elements for each key, calculates their positions, and sets their attributes.
   renderKeyboard() {
     const pianoContainer = document.getElementById(this.containerId);
 
@@ -63,7 +70,9 @@ export class PianoView {
       pianoContainer.appendChild(key);
     }
   } 
-
+  
+  // Highlights a specific key as active (pressed) or resets its active state.
+  // Provides visual feedback for key presses/releases.
   setActiveKey(note, isActive) {
     const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);
     if (!keyElement) return;
@@ -72,6 +81,8 @@ export class PianoView {
     else keyElement.classList.remove("active");
   }
 
+  // Binds user events (mouse and keyboard) to play and stop notes on the virtual keyboard.
+  // Handles mouse interactions and maps computer keyboard keys to MIDI notes.
   bindNoteEvents(playCallback, stopCallback) {
     const keys = document.querySelectorAll(".key");
     const activeKeys = new Set();
@@ -114,6 +125,7 @@ export class PianoView {
     });
   }
     
+  // Sets the color of a key to provide visual feedback (e.g., for assistant mode).
   setKeyColor(note, color, keepActive = false) {
     const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);
     if (keyElement) {
@@ -122,6 +134,7 @@ export class PianoView {
     }
   }
     
+  // Resets the color of a specific key to its default state.
   resetKeyColor(note) {
     const keyElement = document.querySelector(`.key[data-midi-note="${note}"]`);
     if (keyElement) {
@@ -136,12 +149,16 @@ export class PianoView {
 //          GAME VIEW JAVASCRIPT
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 
-// CLASS DEFINITION
+// CLASS DEFINITION --------------------------------------------------------------------------------------------------------------------------------
+
+// GameView class: Manages the rendering and user interaction for the game UI.
+// This class handles binding UI events, updating game displays, and interacting with overlays for various game states.
 export class GameView {
 
-  // getElementById
+  // Constructor for the GameView class.
+  // Initializes references to all key UI elements used in the game, such as overlays, buttons, and game displays.
   constructor() {
-    // Overlay Info
+    // Overlay Info: Elements displayed in overlay screens
     this.overlayPanel             = document.getElementById("overlayDiv");
     this.overlayTitle             = document.getElementById("overlayTitle");
     this.overlaySubtitle          = document.getElementById("overlaySubtitle");
@@ -150,14 +167,14 @@ export class GameView {
     this.overlayTitleSolution     = document.getElementById("overlayTitleSolution");
     this.overlaySubtitleSolution  = document.getElementById("overlaySubtitleSolution");
 
-    // Overlay Buttons
+    // Overlay Buttons: Buttons displayed in overlays for navigating or interacting with the game.
     this.startGameButton      = document.getElementById("startGame");
     this.nextRoundButton      = document.getElementById("nextRound");
     this.mainMenuButton       = document.getElementById("mainMenu");
     this.showSolutionButton   = document.getElementById("showSolution");
     this.hideSolutionButton   = document.getElementById("hideSolution");
 
-    // Game Info
+    // Game Info: UI elements that display dynamic game information such as mode, difficulty, score, etc.
     this.gameModeDisplay      = document.getElementById("gameMode");
     this.difficultyDisplay    = document.getElementById("difficultyDisplay");
     this.roundDisplay         = document.getElementById("roundDisplay");
@@ -165,18 +182,21 @@ export class GameView {
     this.scoreDisplay         = document.getElementById("scoreDisplay");
     this.hintDisplay          = document.getElementById("hintDisplay");
 
-    // Game Button
+    // Game Buttons: Buttons used during gameplay for actions like hints or assistant toggles.
     this.playSolutionButton   = document.getElementById("playSolutionButton");
     this.assistantModeButton  = document.getElementById("assistantModeButton");
     this.hintButton           = document.getElementById("hintButton");
     this.backMenuButton       = document.getElementById("backMenuButton");
 
-    // Multiplayer
+    // Multiplayer: Elements specific to multiplayer mode for displaying rankings and placement.
     this.rankingTable     = document.getElementById("overlayMultiplayerRanking");
     this.placementDisplay = document.getElementById("currentPlacement");
   }
 
-  // Binding Events
+  // BINDING EVENTS 
+
+  // Binds UI buttons to their respective event callbacks.
+  // Links UI actions (e.g., starting a game, showing hints) to the corresponding methods in the controller.
   bindUIEvents(callbacks) {
     if (this.startGameButton) this.startGameButton.addEventListener("click", () => {
       if (callbacks.onStart) callbacks.onStart();
@@ -214,7 +234,9 @@ export class GameView {
       if (callbacks.onMainMenu) callbacks.onMainMenu();
     });
   }
-
+  
+  // Binds global event listeners for keyboard and mouse inputs.
+  // Handles real-time interaction with the game elements, such as key presses for playing notes.
   bindGlobalListeners(model, callbacks) {
     document.addEventListener("keydown", (event) => {
       if (model.isInputDisabled) return;
@@ -248,7 +270,10 @@ export class GameView {
     });
   }
 
-  // Overlay
+  // OVERLAY
+
+  // Handles the display of overlay panels in the game based on the game state or specific events.
+  // Depending on the `overlayType`, it adjusts visibility and content for various game states (e.g., start, time over, good guess, game over).
   handleOverlayDisplay(overlayType, model) {
     this.overlayPanel.style.display        = "none";
     this.overlayScoreDisplay.style.display = "none";
@@ -375,15 +400,20 @@ export class GameView {
     }
   }
 
-  // UI Methods
+  // UI METHODS
+
+  // Updates the score display with the current total score.
   updateScoreDisplay(model) {
     this.scoreDisplay.innerHTML = "CURRENT SCORE: " + model.totalScore;
   }
 
+  // Updates the timer display with the remaining time in seconds.
   updateTimerDisplay(model) {
     this.timerDisplay.innerHTML = "REMAINING TIME: " + model.timeLeft + "s";
   }
 
+  // Updates the game mode display based on the selected game mode.
+  // Maps internal game mode identifiers to user-friendly labels.
   updateModeDisplay(model) {
     const gameModeLegend = {
       chords_GM: "CHORDS",
@@ -392,6 +422,8 @@ export class GameView {
     this.gameModeDisplay.innerHTML = gameModeLegend[model.selectedGameMode];
   }
 
+  // Updates the level display with the current difficulty level.
+  // Maps internal difficulty identifiers to user-friendly labels
   updateLevelDisplay(model) {
     const difficultyLegend = {
       easyDiff: "EASY",
@@ -401,26 +433,33 @@ export class GameView {
     this.difficultyDisplay.innerHTML = "DIFFICULTY " + difficultyLegend[model.selectedDifficulty];
   }
 
+  // Updates the round display with the current active round number.
   updateRoundDisplay(model) {
     this.roundDisplay.innerHTML = "ROUND " + model.activeRound;
   }
 
+  // Displays a custom hint text in the hint display area.
   hintDisplayText(text) {
     this.hintDisplay.textContent = text;
   }
 
+  // Disables user input by setting the corresponding model flag.
   _disableInput(model) {
     model.isInputDisabled = true;
   }
   
+  // Enables user input by clearing the corresponding model flag.
   enableInput(model) {
     model.isInputDisabled = false;
   }
 
+  // Updates the placement display with the player's current position in multiplayer mode.
   updatePlacement(model) {
     this.placementDisplay.innerHTML = "PLACEMENT: " + model.placement;
   }
 
+  // Updates the ranking table with the current multiplayer ranking data.
+  // If the model is `null`, displays an error message instead.
   updateRankingDisplay(model) {
     if (model == null) {
       this.rankingTable.innerHTML = "Error on Ranking";

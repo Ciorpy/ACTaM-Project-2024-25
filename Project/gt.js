@@ -96,6 +96,7 @@ inGameVolumeSlider.addEventListener("input", () => {
   localStorage.setItem("gameVolume", inGameVolumeSlider.value);
 });
 
+// Number of rounds selector
 let numberOfRounds = document.getElementById("numberRounds");
 
 numberOfRounds.value = localStorage.getItem("numberOfRounds")
@@ -106,33 +107,13 @@ numberOfRounds.addEventListener("input", () => {
   localStorage.setItem("numberOfRounds", numberOfRounds.value);
 });
 
+// Game mode selector
 let loadGamemodeSelector = function () {
   mainMenu.style.display = "none";
   gamemodeSelectorMenu.style.display = "block";
 };
 
 let gamemodeSelectorMenu = document.getElementById("gamemodeSelectorMenu");
-
-let backButtonS = document.getElementById("backS");
-let backButtonGMS = document.getElementById("backGMS");
-
-backButtonGMS.addEventListener("click", () => {
-  mainMenu.style.display = "block";
-  multiPlayerMenu.style.display = "none";
-  settingsMenu.style.display = "none";
-  practiceMenu.style.display = "none";
-  creditsMenu.style.display = "none";
-  gamemodeSelectorMenu.style.display = "none";
-});
-
-backButtonS.addEventListener("click", () => {
-  mainMenu.style.display = "block";
-  multiPlayerMenu.style.display = "none";
-  settingsMenu.style.display = "none";
-  practiceMenu.style.display = "none";
-  creditsMenu.style.display = "none";
-  gamemodeSelectorMenu.style.display = "none";
-});
 
 let chordsGamemodeButton = document.getElementById("chords_GM");
 let harmonyGamemodeButton = document.getElementById("harmony_GM");
@@ -146,24 +127,14 @@ let gamemodeButtons = [
   fillsGamemodeButton,
 ];
 
+
+// Difficulty Selector
 let difficultySelectorMenu = document.getElementById("difficultySelectorMenu");
 gamemodeButtons.forEach((item) => {
   item.addEventListener("click", () => {
     localStorage.setItem("Gamemode", item.id);
     loadDifficultySelectorMenu();
   });
-});
-
-let backButton2GM = document.getElementById("back2GM");
-
-backButton2GM.addEventListener("click", () => {
-  mainMenu.style.display = "none";
-  multiPlayerMenu.style.display = "none";
-  settingsMenu.style.display = "none";
-  practiceMenu.style.display = "none";
-  creditsMenu.style.display = "none";
-  gamemodeSelectorMenu.style.display = "block";
-  difficultySelectorMenu.style.display = "none";
 });
 
 let loadDifficultySelectorMenu = function () {
@@ -185,6 +156,8 @@ difficultyButtons.forEach((item) => {
   });
 });
 
+// Minigames initialization and loading
+
 let minigamePages = {
   chords_GM: "./Templates/KeyBoard/keyBoardInput.html",
   harmony_GM: "./Templates/KeyBoard/keyBoardInput.html",
@@ -196,6 +169,7 @@ loadGamePage = function () {
   window.location.href = minigamePages[localStorage.getItem("Gamemode")];
 };
 
+// Practice mode 
 let PracticeDmButton = document.getElementById("PracticeDM");
 let PracticeKbButton = document.getElementById("PracticeKB");
 
@@ -211,6 +185,42 @@ PracticeButtons.forEach((item, index) => {
     localStorage.setItem("Practice", true);
     window.location.href = practicePages[index];
   });
+});
+
+// Back to menu buttons
+
+let backButtonGMS = document.getElementById("backGMS");
+
+backButtonGMS.addEventListener("click", () => {
+  mainMenu.style.display = "block";
+  multiPlayerMenu.style.display = "none";
+  settingsMenu.style.display = "none";
+  practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "none";
+});
+
+let backButtonS = document.getElementById("backS");
+
+backButtonS.addEventListener("click", () => {
+  mainMenu.style.display = "block";
+  multiPlayerMenu.style.display = "none";
+  settingsMenu.style.display = "none";
+  practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "none";
+});
+
+let backButton2GM = document.getElementById("back2GM");
+
+backButton2GM.addEventListener("click", () => {
+  mainMenu.style.display = "none";
+  multiPlayerMenu.style.display = "none";
+  settingsMenu.style.display = "none";
+  practiceMenu.style.display = "none";
+  creditsMenu.style.display = "none";
+  gamemodeSelectorMenu.style.display = "block";
+  difficultySelectorMenu.style.display = "none";
 });
 
 let backButtonMP = document.getElementById("backMP");
@@ -248,35 +258,32 @@ backButtonC.addEventListener("click", () => {
 
 // AUDIO MENU
 
-// Elenco dei file audio
+// Audio files list
 const audioFiles = [
   "/Project/Sounds/Music Background/Weird fishes sonicpi.mp3",
   "/Project/Sounds/Music Background/Pjano tonejs.mp3",
 ];
 
-// Seleziona casualmente un file audio
+// Get a random audio file and use it as source
 const randomIndex = Math.floor(Math.random() * audioFiles.length);
 const selectedAudio = audioFiles[randomIndex];
-
-// Imposta il file selezionato come sorgente dell'audio
 const audio = document.getElementById("background-music");
 audio.src = selectedAudio;
 
-// Imposta il volume iniziale dell'audio in base allo slider
 audio.volume = parseFloat(volumeSlider.value);
 
 volumeSlider.addEventListener("input", () => {
   audio.volume = parseFloat(volumeSlider.value);
 });
 
-// Fallback se l'autoplay non funziona
+// Fallback if autoplay doesn't work
 audio.addEventListener("error", () => {
-  console.log("Autoplay bloccato. Richiesta interazione utente.");
+  console.log("Autoplay blocked. Required user interaction.");
   document.body.addEventListener(
     "click",
     () => {
       audio.play();
     },
     { once: true }
-  ); // Avvia solo al primo clic
+  );
 });

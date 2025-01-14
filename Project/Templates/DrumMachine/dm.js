@@ -105,6 +105,7 @@ let userLegend = {
   hardDiff: "HARD",
 };
 
+// Overlay handler
 if (practiceModeFlag == "false") {
   gamemodeDisplay.innerHTML = userLegend[selectedMinigame];
   roundDisplay.innerHTML = "ROUND 1";
@@ -116,6 +117,7 @@ if (practiceModeFlag == "false") {
   difficultyDisplay.style.display = "none";
 }
 
+// Overlay handler
 let mainMenuButton = document.getElementById("mainMenuButton");
 
 if (practiceModeFlag == "true") mainMenuButton.style.display = "block";
@@ -487,7 +489,8 @@ let playSound = function (sampleID) {
   }
 };
 
-let playBeat = function () {
+// Function that plays the guess given by the user
+let playGuess = function () {
   let toTurnOff = guessIndex == 0 ? 15 : guessIndex - 1;
 
   Array.from(drumMachineItems).forEach((item) => {
@@ -524,6 +527,7 @@ let playBeat = function () {
   guessIndex = (guessIndex + 1) % semicrome;
 };
 
+// Function that plays the given solution
 let playSolution = function () {
   let toTurnOff = solutionIndex == 0 ? 15 : solutionIndex - 1;
 
@@ -548,6 +552,7 @@ let playSolution = function () {
   solutionIndex = (solutionIndex + 1) % semicrome;
 };
 
+// Function that sets the BPM
 function setBpm(n) {
   let minute = 1000 * 60;
   return minute / n / 4;
@@ -559,13 +564,15 @@ if (practiceModeFlag == "true") {
   startStopButton.innerHTML = "PLAY";
 }
 
+// Function that starts the metronome
 function startMetronome() {
-  metronomeInterval = setInterval(playBeat, setBpm(bpm)); // Start the interval with the current BPM
+  metronomeInterval = setInterval(playGuess, setBpm(bpm)); // Start the interval with the current BPM
   startStopButton.innerHTML =
     practiceModeFlag == "true" ? "STOP" : "STOP YOUR GUESS";
   isPlaying = true;
 }
 
+// Function that stops the metronome
 function stopMetronome() {
   clearInterval(metronomeInterval); // Stop the ongoing interval
 
@@ -580,6 +587,7 @@ function stopMetronome() {
   isPlaying = false;
 }
 
+// Function that reset the drum machine
 function resetDrumMachine() {
   Array.from(drumMachineItems).forEach((item) => {
     for (let i = 0; i < semicrome; i++) {
@@ -599,6 +607,7 @@ function resetDrumMachine() {
   );
 }
 
+// Button to start or stop the reproduction of the given groove/fill
 startStopButton.addEventListener("click", () => {
   guessIndex = 0;
   if (isPlaying) {
@@ -611,6 +620,7 @@ startStopButton.addEventListener("click", () => {
   }
 });
 
+// Button to reset the drum machine
 let resetButton = document.getElementById("resetButton");
 resetButton.addEventListener("click", () => {
   resetDrumMachine();
@@ -619,6 +629,7 @@ resetButton.addEventListener("click", () => {
 let bpmSlider = document.getElementById("bpmSlider");
 let bpmDisplay = document.getElementById("bpmDisplay");
 
+// BPM slider controller
 bpmSlider.addEventListener("input", () => {
   let newBpm = bpmSlider.value;
   bpmDisplay.innerHTML = "BPM: " + bpmSlider.value;
@@ -627,7 +638,7 @@ bpmSlider.addEventListener("input", () => {
 
     if (isPlaying) {
       clearInterval(metronomeInterval);
-      metronomeInterval = setInterval(playBeat, setBpm(bpm));
+      metronomeInterval = setInterval(playGuess, setBpm(bpm));
     }
 
     if (isSolutionPlaying) {
@@ -637,7 +648,8 @@ bpmSlider.addEventListener("input", () => {
   }
 });
 
-function checkSolution(guess, correctAnswer) {
+// Function that checks if the solution is correct
+function checkUserGuess(guess, correctAnswer) {
   if (guess.length !== correctAnswer.length) {
     return false;
   }
@@ -659,6 +671,7 @@ if (practiceModeFlag == "true") {
   playSolutionButton.style.display = "none";
 }
 
+//Function that starts the solution
 function startSolution() {
   if (isPlaying) {
     stopMetronome();
@@ -668,6 +681,7 @@ function startSolution() {
   isSolutionPlaying = true;
 }
 
+// Function that stops the solution
 function stopSolution() {
   clearInterval(solutionInterval);
   solutionInterval = null;
@@ -700,6 +714,7 @@ if (practiceModeFlag == "true") {
   currentScore.style.display = "none";
 }
 
+// Function that updates the game to the next round
 let goodGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
@@ -715,6 +730,7 @@ let goodGuess = function () {
   preloadedEffects[1].play();
 };
 
+// Function that executes when a wrong solution is given
 let wrongGuess = function () {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
@@ -726,6 +742,7 @@ let wrongGuess = function () {
   }, 2000);
 };
 
+// Function that ends the round when the time is over
 let timeOver = function (overlayType) {
   if (isSolutionPlaying) stopSolution();
   if (isPlaying) stopMetronome();
@@ -742,13 +759,14 @@ if (practiceModeFlag == "true") {
 }
 
 checkInputButton.addEventListener("click", () => {
-  if (checkSolution(drumMachineController, solution)) goodGuess();
+  if (checkUserGuess(drumMachineController, solution)) goodGuess();
   else wrongGuess();
   resetDrumMachine();
 });
 
 let solutionDiv = document.getElementById("overlaySolution");
 
+// Function that shows the right solution after a time over
 let showSolution = function () {
   buildSolution();
   handleOverlayDisplay("hide");
@@ -762,6 +780,7 @@ hideSolutionButton.addEventListener("click", () => {
   hideSolution();
 });
 
+// Function that hides the solution
 let hideSolution = function () {
   resetDrumMachine();
   if (timeOverFlag) handleOverlayDisplay("timeOver");
@@ -770,6 +789,7 @@ let hideSolution = function () {
   clearInterval(solutionInterval);
 };
 
+// Function that builds the solution in each round 
 let buildSolution = function () {
   drumMachineController = solution;
 

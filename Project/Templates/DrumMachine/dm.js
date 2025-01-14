@@ -216,6 +216,7 @@ goNextRoundButton.addEventListener("click", () => {
   }
 });
 
+// Function that loads the new screen depending on the overlay type
 let handleOverlayDisplay = function (overlayType) {
   // Default settings
   overlayPanel.style.display = "flex";
@@ -482,6 +483,7 @@ audioFiles.forEach((file, index) => {
   preloadedSounds[index] = audio;
 });
 
+// Function that plays the samples associated to the drum set
 let playSound = function (sampleID) {
   if (preloadedSounds[sampleID]) {
     preloadedSounds[sampleID].currentTime = 0;

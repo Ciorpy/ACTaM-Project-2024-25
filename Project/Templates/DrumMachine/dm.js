@@ -332,6 +332,7 @@ function getRandomDrumPatterns(array) {
 
 let timerDisplay = document.getElementById("timer");
 
+// UI handle
 if (practiceModeFlag == "true") {
   timerDisplay.style.display = "none";
 }

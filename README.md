@@ -63,7 +63,7 @@ The game offers features such as:
 
     - **Reset Button**: Reset the drum machine display.
       
-    - **Scoring System**: Each round starts with a base score of 100 points. Points are deducted based on: the time elapsed during the round, the number of hints used to reach the solution, whether the "Assistant Mode" is enabled.
+    - **Scoring System**: Each round starts with a base score of 100 points. Points are deducted based on the time elapsed during the round.
 
     - **Practice Mode**: In this mode players can play freely with the drum machine and try to create new drum grooves or fills.
 

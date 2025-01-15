@@ -1,15 +1,5 @@
-// Funny msg print handler
-funnyMSGS = [
-  "Da Cremona tutto bene?",
-  "Good Morning Sir!",
-  "Frare Jacques Simulator",
-  'it goes: "WOWOWOWOWOWO"',
-  "Weird Fishes/Arpeggi",
-];
 
-randomN = Math.floor(Math.random() * 4);
-
-document.getElementById("funnyMSG").innerHTML = funnyMSGS[randomN];
+document.getElementById("funnyMSG").innerHTML = "Ear training, but funnier!";
 
 // Menu navigation system
 let mainMenu = document.getElementById("mainMenu");

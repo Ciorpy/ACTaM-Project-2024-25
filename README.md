@@ -3,6 +3,8 @@
 ## Overview
 MusicMind is a web-based application that transforms music education into an entertaining experience, providing games and challenges that help players improve their skills in a fun and social way.
 
+You can play it following this link: [MusicMind](https://ciorpy.github.io/ACTaM-Project-2024-25/)
+
 The game offers features such as:
 - **Keyboard**: Recognize chords and cadences.
 - **Drum Machine**: Recognize grooves and fills.

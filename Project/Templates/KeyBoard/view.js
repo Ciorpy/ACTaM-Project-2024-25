@@ -308,7 +308,7 @@ export class GameView {
 
         this.overlayTitle.innerHTML = "TIME OVER";
 
-        if (model.isMultiplayer) {
+        if (!model.isMultiplayer) {
           this.overlaySubtitle.style.display = "flex";
           this.overlaySubtitle.innerHTML  = "YOU DIDN'T MAKE IT!";
         }
